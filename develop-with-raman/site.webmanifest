@@ -1,0 +1,11 @@
+{
+  "name": "Develop with Raman",
+  "short_name": "Raman",
+  "description": "Launch-ready websites, AI workflows, dashboards, and portfolio builds by Raman Manohar Singh.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": []
+}
