@@ -12,7 +12,7 @@ I build practical projects across web development, machine learning, data analys
 - Helped build [oemlinker.com](https://oemlinker.com) using Emergent
 - Interested in AI tools, prompt design, business sales management, and real-world product workflows
 - Active community service participant through the Daan Utsav drive led by BHS to Hope Foundation Kolkata
-- Tech team member with Indian Society of Rehabilitation, Kolkata, including digital media sector work in reel making and video editing
+- Tech team member with Indian Society of Rehabilitation, Kolkata
 - Two-time participant in the Indo-Japanese exchange program through BHS
 
 ## Academics, Leadership, Sports & Activities
@@ -39,7 +39,6 @@ I build practical projects across web development, machine learning, data analys
 
 - Active participation in community service through the Daan Utsav drive led by BHS to Hope Foundation Kolkata
 - Tech team member with Indian Society of Rehabilitation, Kolkata
-- Digital media sector member with reel making and video editing experience
 
 ### Sports
 
@@ -63,12 +62,6 @@ A sports matchmaking web app with location-based player discovery, region-priori
 
 **Tech:** HTML, CSS, JavaScript  
 **Highlights:** Match Lab, rating updates after matches, console/network event logging
-
-### Raman Builds Freelance Services
-A minimalist service website for student freelance work: AI-assisted websites, landing pages, prompt workflows, simple dashboards, business website refreshes, and competition demo polish.
-
-**Live page:** [Freelance Services](https://ramanmanoharsingh.github.io/portfolio/freelance/)  
-**Focus:** Clear services, professional workflow, proof, and launch-ready positioning
 
 ### Plant Disease Detector
 An AI prototype that classifies plant leaf disease images using transfer learning and explains predictions with Grad-CAM heatmaps in a Streamlit app.
@@ -98,9 +91,9 @@ Helped my father make the OEMLinker website using Emergent, gaining practical ex
 - Data: notebooks, CSV workflows, Kaggle-style submissions
 - Product: feature design, demo flows, event logging, user-focused UI
 - Prompting: prompt engineering, AI-assisted building, structured instructions, iterative refinement
-- Business/Freelancing: sales management thinking, product positioning, client workflow design, scoped services, handoff planning
+- Business: sales management thinking, product positioning, workflow design
 - Leadership: robotics leadership, council work, sports captaincy, event participation
-- Community: Daan Utsav service work, Hope Foundation Kolkata drive, rehabilitation tech team volunteering, digital media, reel making, video editing
+- Community: Daan Utsav service work, Hope Foundation Kolkata drive, rehabilitation tech team volunteering
 - Sports: basketball, football, skating, athletics, karate, yoga
 
 ## Current Focus
