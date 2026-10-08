@@ -18,54 +18,18 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      color: var(--text);
-      background:
-        linear-gradient(135deg, rgba(118,167,255,0.18), transparent 34%),
-        radial-gradient(circle at 88% 10%, rgba(94,224,160,0.16), transparent 28%),
-        var(--bg);
-    }
+    body { margin: 0; color: var(--text); background: linear-gradient(135deg, rgba(118,167,255,0.18), transparent 34%), radial-gradient(circle at 88% 10%, rgba(94,224,160,0.16), transparent 28%), var(--bg); }
     a { color: inherit; text-decoration: none; }
     .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 1px solid var(--line);
-      background: rgba(11,16,32,0.82);
-      backdrop-filter: blur(16px);
-    }
-    nav {
-      min-height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
+    header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--line); background: rgba(11,16,32,0.82); backdrop-filter: blur(16px); }
+    nav { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
     .brand { font-weight: 900; letter-spacing: 0; }
     .nav-links { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-weight: 700; font-size: 0.92rem; }
     .hero { padding: 72px 0 46px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 32px; align-items: center; }
-    .eyebrow {
-      display: inline-flex;
-      width: max-content;
-      border: 1px solid rgba(118,167,255,0.32);
-      border-radius: 999px;
-      padding: 7px 11px;
-      color: var(--accent);
-      background: rgba(118,167,255,0.1);
-      font-size: 0.78rem;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
+    .eyebrow { display: inline-flex; width: max-content; border: 1px solid rgba(118,167,255,0.32); border-radius: 999px; padding: 7px 11px; color: var(--accent); background: rgba(118,167,255,0.1); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; }
     h1 { margin: 16px 0 12px; font-size: clamp(2.3rem, 7vw, 4.8rem); line-height: 1.02; letter-spacing: 0; }
     .lead { max-width: 680px; color: var(--muted); font-size: 1.06rem; line-height: 1.7; font-weight: 600; }
-    .hero-card, .project, .roadmap, .skill-card {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(17,25,54,0.88);
-      box-shadow: 0 22px 70px rgba(0,0,0,0.24);
-    }
+    .hero-card, .project, .roadmap, .skill-card { border: 1px solid var(--line); border-radius: 12px; background: rgba(17,25,54,0.88); box-shadow: 0 22px 70px rgba(0,0,0,0.24); }
     .hero-card { padding: 22px; display: grid; gap: 14px; }
     .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .metric { padding: 16px; border-radius: 10px; background: var(--panel-2); border: 1px solid var(--line); }
@@ -88,189 +52,48 @@
     .roadmap { padding: 20px; }
     .roadmap ol { margin: 0; padding-left: 22px; color: var(--muted); line-height: 1.9; font-weight: 650; }
     footer { padding: 34px 0 48px; color: var(--muted); text-align: center; }
-    @media (max-width: 820px) {
-      .hero, .projects, .skills { grid-template-columns: 1fr; }
-      nav, .section-head { align-items: flex-start; flex-direction: column; }
-    }
+    @media (max-width: 820px) { .hero, .projects, .skills { grid-template-columns: 1fr; } nav, .section-head { align-items: flex-start; flex-direction: column; } }
   </style>
 </head>
 <body>
   <header>
     <nav class="wrap">
       <div class="brand">Raman Manohar Singh</div>
-      <div class="nav-links">
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#roadmap">Next Builds</a>
-      </div>
+      <div class="nav-links"><a href="#projects">Projects</a><a href="#achievements">Competitions</a><a href="#skills">Skills</a><a href="#roadmap">Next Builds</a></div>
     </nav>
   </header>
-
   <main class="wrap">
     <section class="hero">
-      <div>
-        <span class="eyebrow">Web + AI + Data + Prompting Portfolio</span>
-        <h1>Building practical projects with real demo value.</h1>
-        <p class="lead">A portfolio of frontend apps, machine learning prototypes, data workflows, prompting skills, business workflows, and competition-ready product demos.</p>
-      </div>
-      <aside class="hero-card">
-        <div class="metric-grid">
-          <div class="metric"><b>98.2%</b><span>CBSE Class 10</span></div>
-          <div class="metric"><b>1st</b><span>Hackathon + prompting wins</span></div>
-          <div class="metric"><b>AI</b><span>TensorFlow + Streamlit</span></div>
-          <div class="metric"><b>15+</b><span>Sports medals</span></div>
-        </div>
-      </aside>
+      <div><span class="eyebrow">Web + AI + Data + Prompting Portfolio</span><h1>Building practical projects with real demo value.</h1><p class="lead">A portfolio of frontend apps, machine learning prototypes, data workflows, prompting skills, business workflows, and competition-ready product demos.</p></div>
+      <aside class="hero-card"><div class="metric-grid"><div class="metric"><b>98.2%</b><span>CBSE Class 10</span></div><div class="metric"><b>1st</b><span>Hackathon + prompting wins</span></div><div class="metric"><b>AI</b><span>TensorFlow + Streamlit</span></div><div class="metric"><b>15+</b><span>Sports medals</span></div></div></aside>
     </section>
-
     <section id="achievements">
-      <div class="section-head">
-        <div>
-          <h2>Achievements</h2>
-          <p>Competition wins and real-world website/business experience.</p>
-        </div>
-      </div>
+      <div class="section-head"><div><h2>Competitions & Achievements</h2><p>Competition wins, qualifications, Olympiad results, and technology workshops.</p></div></div>
       <div class="projects">
-        <article class="project">
-          <h3>Academic Excellence</h3>
-          <p>98.2% in CBSE Class 10 with 3rd overall rank. Scores include Maths 99, AI full marks, English 98, SST 98, and Science 96.</p>
-          <div class="tags"><span class="tag">Academics</span><span class="tag">CBSE</span><span class="tag">AI</span></div>
-        </article>
-        <article class="project">
-          <h3>1st Place - MP Birla Hackathon Event</h3>
-          <p>Recognized for building a strong competition project with clear product logic and demo value.</p>
-          <div class="tags"><span class="tag">Hackathon</span><span class="tag">Product Demo</span></div>
-        </article>
-        <article class="project">
-          <h3>1st Place - Prompt Engineering Event</h3>
-          <p>Demonstrated strong prompting skills: clear instructions, iterative refinement, structured outputs, and AI-assisted problem solving.</p>
-          <div class="tags"><span class="tag">Prompting</span><span class="tag">AI Workflow</span></div>
-        </article>
-        <article class="project">
-          <h3>Leadership & International Exposure</h3>
-          <p>Robotics Club leader, School Council Member, Sports Secretary, hackathon participant, and two-time Indo-Japanese exchange program participant through BHS.</p>
-          <div class="tags"><span class="tag">Leadership</span><span class="tag">Robotics</span><span class="tag">Indo-Japanese Exchange</span></div>
-        </article>
-        <article class="project">
-          <h3>Community Service & Tech Team Work</h3>
-          <p>Active community service through the Daan Utsav drive led by BHS to Hope Foundation Kolkata, plus tech team membership with Indian Society of Rehabilitation, Kolkata.</p>
-          <div class="tags"><span class="tag">Community Service</span><span class="tag">Daan Utsav</span><span class="tag">Tech Team</span></div>
-        </article>
-        <article class="project">
-          <h3>Web Development Competition Winner</h3>
-          <p>Winner of web development competitions at both intra-school and inter-school levels, including the Lakshmipat Singhania School competition.</p>
-          <div class="tags"><span class="tag">Web Development</span><span class="tag">Competition</span><span class="tag">Winner</span></div>
-        </article>
-        <article class="project">
-          <h3>National Robotics Competition Qualifier</h3>
-          <p>Qualified for a national-level robotics competition hosted by Manan Devi Birla World Academy.</p>
-          <div class="tags"><span class="tag">Robotics</span><span class="tag">National Level</span></div>
-        </article>
-        <article class="project">
-          <h3>Science Olympiad - Overall 3rd</h3>
-          <p>Secured 3rd overall position and a Silver medal in the SilverZone Science Olympiad.</p>
-          <div class="tags"><span class="tag">Science Olympiad</span><span class="tag">SilverZone</span><span class="tag">Silver</span></div>
-        </article>
-        <article class="project">
-          <h3>IIT Madras Data Science & ML</h3>
-          <p>Participated in the IIT Madras Data Science and Machine Learning program and qualified for Stage 2.</p>
-          <div class="tags"><span class="tag">IIT Madras</span><span class="tag">Data Science</span><span class="tag">Machine Learning</span></div>
-        </article>
-        <article class="project">
-          <h3>AI Workshops & Inter-School Programs</h3>
-          <p>Participated in Times of India AI workshops and several other inter-school technology and academic workshops.</p>
-          <div class="tags"><span class="tag">AI</span><span class="tag">Workshops</span><span class="tag">Technology</span></div>
-        </article>
-        <article class="project">
-          <h3>Sports & Activities</h3>
-          <p>Senior School Basketball Team, qualified for Junior and Senior Football teams, inter-house basketball champion under captaincy, two-time inter-house football winner, two-time District Skating Champion, 15+ medals, Karate, and 2nd place in Kaliyogachari Yoga Competition 2025.</p>
-          <div class="tags"><span class="tag">Basketball</span><span class="tag">Football</span><span class="tag">Skating</span><span class="tag">Yoga</span></div>
-        </article>
+        <article class="project"><h3>Academic Excellence</h3><p>98.2% in CBSE Class 10 with 3rd overall rank. Scores include Maths 99, AI full marks, English 98, SST 98, and Science 96.</p><div class="tags"><span class="tag">Academics</span><span class="tag">CBSE</span><span class="tag">AI</span></div></article>
+        <article class="project"><h3>1st Place - MP Birla Hackathon Event</h3><p>Recognized for building a strong competition project with clear product logic and demo value.</p><div class="tags"><span class="tag">Hackathon</span><span class="tag">Product Demo</span></div></article>
+        <article class="project"><h3>1st Place - Prompt Engineering Event</h3><p>Demonstrated strong prompting skills: clear instructions, iterative refinement, structured outputs, and AI-assisted problem solving.</p><div class="tags"><span class="tag">Prompting</span><span class="tag">AI Workflow</span></div></article>
+        <article class="project"><h3>2-Time Web Development Competition Winner</h3><p>Won web development competitions at both intra-school and inter-school levels, including a competition hosted by Lakshmipat Singhania School.</p><div class="tags"><span class="tag">Web Development</span><span class="tag">Winner</span><span class="tag">Intra & Inter-School</span></div></article>
+        <article class="project"><h3>National-Level Robotics Competition Qualifier</h3><p>Qualified for a national-level robotics competition hosted by Manan Devi Birla World Academy.</p><div class="tags"><span class="tag">Robotics</span><span class="tag">National Level</span><span class="tag">Qualifier</span></div></article>
+        <article class="project"><h3>Science Olympiad - Overall 3rd</h3><p>Secured 3rd overall position and a Silver medal in the SilverZone Science Olympiad.</p><div class="tags"><span class="tag">Science Olympiad</span><span class="tag">SilverZone</span><span class="tag">Silver</span></div></article>
+        <article class="project"><h3>IIT Madras Data Science & ML - Stage 2 Qualifier</h3><p>Participated in the IIT Madras Data Science and Machine Learning program and qualified for Stage 2.</p><div class="tags"><span class="tag">IIT Madras</span><span class="tag">Data Science</span><span class="tag">Machine Learning</span></div></article>
+        <article class="project"><h3>AI Workshops & Inter-School Programs</h3><p>Participated in Times of India AI workshops and several other inter-school technology and academic workshops.</p><div class="tags"><span class="tag">AI</span><span class="tag">Workshops</span><span class="tag">Technology</span></div></article>
+        <article class="project"><h3>Leadership & International Exposure</h3><p>Robotics Club leader, School Council Member, Sports Secretary, hackathon participant, and two-time Indo-Japanese exchange program participant through BHS.</p><div class="tags"><span class="tag">Leadership</span><span class="tag">Robotics</span><span class="tag">Indo-Japanese Exchange</span></div></article>
+        <article class="project"><h3>Community Service & Tech Team Work</h3><p>Active community service through the Daan Utsav drive led by BHS to Hope Foundation Kolkata, plus tech team membership with Indian Society of Rehabilitation, Kolkata.</p><div class="tags"><span class="tag">Community Service</span><span class="tag">Daan Utsav</span><span class="tag">Tech Team</span></div></article>
+        <article class="project"><h3>Sports & Activities</h3><p>Senior School Basketball Team, qualified for Junior and Senior Football teams, inter-house basketball champion under captaincy, two-time inter-house football winner, two-time District Skating Champion, 15+ medals, Karate, and 2nd place in Kaliyogachari Yoga Competition 2025.</p><div class="tags"><span class="tag">Basketball</span><span class="tag">Football</span><span class="tag">Skating</span><span class="tag">Yoga</span></div></article>
       </div>
     </section>
-
-    <section id="projects">
-      <div class="section-head">
-        <div>
-          <h2>Featured Projects</h2>
-          <p>Each project is organized in the `projects/` folder with its own README.</p>
-        </div>
-      </div>
-      <div class="projects">
-        <article class="project">
-          <h3>PlayMatch Sports Network</h3>
-          <p>Sports matchmaking app with location filters, fair ratings, match simulation, request flow, DevTools telemetry, and light/dark mode.</p>
-          <div class="tags"><span class="tag">JavaScript</span><span class="tag">Product Demo</span><span class="tag">Matchmaking</span></div>
-        </article>
-        <article class="project">
-          <h3>Plant Disease Detector</h3>
-          <p>AI app for detecting plant leaf diseases with TensorFlow transfer learning, Streamlit UI, recommendations, and Grad-CAM explainability.</p>
-          <div class="tags"><span class="tag">TensorFlow</span><span class="tag">Streamlit</span><span class="tag">Computer Vision</span></div>
-        </article>
-        <article class="project">
-          <h3>Titanic Kaggle ML</h3>
-          <p>Notebook-based machine learning workflow for a classic Kaggle prediction task with submission output.</p>
-          <div class="tags"><span class="tag">Python</span><span class="tag">Notebook</span><span class="tag">Data Science</span></div>
-        </article>
-        <article class="project">
-          <h3>PlayMate Finder</h3>
-          <p>Responsive frontend prototype for sports partner discovery and player search interfaces.</p>
-          <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">UI Design</span></div>
-        </article>
-        <article class="project">
-          <h3>Business Sales Management Project</h3>
-          <p>A business-focused project around sales workflows, customer/product handling, and management thinking.</p>
-          <div class="tags"><span class="tag">Business</span><span class="tag">Sales</span><span class="tag">Workflow</span></div>
-        </article>
-        <article class="project">
-          <h3>OEMLinker Website Contribution</h3>
-          <p>Helped build oemlinker.com using Emergent, gaining practical experience with AI-assisted website creation and business positioning.</p>
-          <div class="tags"><span class="tag">Emergent</span><span class="tag">Website</span><span class="tag">Business</span></div>
-        </article>
-      </div>
-    </section>
-
-    <section id="skills">
-      <div class="section-head">
-        <div>
-          <h2>Skills</h2>
-          <p>A focused snapshot of what the projects demonstrate.</p>
-        </div>
-      </div>
-      <div class="skills">
-        <div class="skill-card"><b>Frontend</b><span>HTML, CSS, JavaScript, responsive UI, stateful interactions.</span></div>
-        <div class="skill-card"><b>Machine Learning</b><span>TensorFlow, transfer learning, model evaluation, image classification.</span></div>
-        <div class="skill-card"><b>Data</b><span>CSV workflows, notebooks, Kaggle-style submissions, analysis structure.</span></div>
-        <div class="skill-card"><b>Product</b><span>Competition demos, rating logic, telemetry, user-focused features.</span></div>
-        <div class="skill-card"><b>Prompting</b><span>Prompt engineering, structured instructions, AI-assisted building, iterative improvement.</span></div>
-        <div class="skill-card"><b>Business</b><span>Sales management thinking, product positioning, customer workflows.</span></div>
-        <div class="skill-card"><b>Leadership</b><span>Robotics club leadership, council work, sports secretary role, captaincy.</span></div>
-        <div class="skill-card"><b>Community</b><span>Daan Utsav service drive, Hope Foundation Kolkata, rehabilitation tech team work.</span></div>
-        <div class="skill-card"><b>Sports</b><span>Basketball, football, skating, athletics, karate, and yoga.</span></div>
-        <div class="skill-card"><b>Interests</b><span>AI, science, physics, maths, art, design, and building projects.</span></div>
-      </div>
-    </section>
-
-    <section id="roadmap">
-      <div class="section-head">
-        <div>
-          <h2>Next Strong Builds</h2>
-          <p>Projects that would make this portfolio stronger.</p>
-        </div>
-      </div>
-      <div class="roadmap">
-        <ol>
-          <li>AI Resume + Job Matcher</li>
-          <li>Personal Finance Dashboard</li>
-          <li>Full-Stack Task Manager with authentication</li>
-          <li>Student Performance Predictor</li>
-          <li>Local Business Analytics Dashboard</li>
-        </ol>
-      </div>
-    </section>
+    <section id="projects"><div class="section-head"><div><h2>Featured Projects</h2><p>Each project is organized in the <code>projects/</code> folder with its own README.</p></div></div><div class="projects">
+      <article class="project"><h3>PlayMatch Sports Network</h3><p>Sports matchmaking app with location filters, fair ratings, match simulation, request flow, DevTools telemetry, and light/dark mode.</p><div class="tags"><span class="tag">JavaScript</span><span class="tag">Product Demo</span><span class="tag">Matchmaking</span></div></article>
+      <article class="project"><h3>Plant Disease Detector</h3><p>AI app for detecting plant leaf diseases with TensorFlow transfer learning, Streamlit UI, recommendations, and Grad-CAM explainability.</p><div class="tags"><span class="tag">TensorFlow</span><span class="tag">Streamlit</span><span class="tag">Computer Vision</span></div></article>
+      <article class="project"><h3>Titanic Kaggle ML</h3><p>Notebook-based machine learning workflow for a classic Kaggle prediction task with submission output.</p><div class="tags"><span class="tag">Python</span><span class="tag">Notebook</span><span class="tag">Data Science</span></div></article>
+      <article class="project"><h3>PlayMate Finder</h3><p>Responsive frontend prototype for sports partner discovery and player search interfaces.</p><div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">UI Design</span></div></article>
+      <article class="project"><h3>Business Sales Management Project</h3><p>A business-focused project around sales workflows, customer/product handling, and management thinking.</p><div class="tags"><span class="tag">Business</span><span class="tag">Sales</span><span class="tag">Workflow</span></div></article>
+      <article class="project"><h3>OEMLinker Website Contribution</h3><p>Helped build oemlinker.com using Emergent, gaining practical experience with AI-assisted website creation and business positioning.</p><div class="tags"><span class="tag">Emergent</span><span class="tag">Website</span><span class="tag">Business</span></div></article>
+    </div></section>
+    <section id="skills"><div class="section-head"><div><h2>Skills</h2><p>A focused snapshot of what the projects demonstrate.</p></div></div><div class="skills"><div class="skill-card"><b>Frontend</b><span>HTML, CSS, JavaScript, responsive UI, stateful interactions.</span></div><div class="skill-card"><b>Machine Learning</b><span>TensorFlow, transfer learning, model evaluation, image classification.</span></div><div class="skill-card"><b>Data</b><span>CSV workflows, notebooks, Kaggle-style submissions, analysis structure.</span></div><div class="skill-card"><b>Product</b><span>Competition demos, rating logic, telemetry, user-focused features.</span></div><div class="skill-card"><b>Prompting</b><span>Prompt engineering, structured instructions, AI-assisted building, iterative improvement.</span></div><div class="skill-card"><b>Business</b><span>Sales management thinking, product positioning, customer workflows.</span></div><div class="skill-card"><b>Leadership</b><span>Robotics club leadership, council work, sports secretary role, captaincy.</span></div><div class="skill-card"><b>Community</b><span>Daan Utsav service drive, Hope Foundation Kolkata, rehabilitation tech team work.</span></div><div class="skill-card"><b>Sports</b><span>Basketball, football, skating, athletics, karate, and yoga.</span></div><div class="skill-card"><b>Interests</b><span>AI, science, physics, maths, art, design, and building projects.</span></div></div></section>
+    <section id="roadmap"><div class="section-head"><div><h2>Next Strong Builds</h2><p>Projects that would make this portfolio stronger.</p></div></div><div class="roadmap"><ol><li>AI Resume + Job Matcher</li><li>Personal Finance Dashboard</li><li>Full-Stack Task Manager with authentication</li><li>Student Performance Predictor</li><li>Local Business Analytics Dashboard</li></ol></div></section>
   </main>
-
   <footer class="wrap">Built as a GitHub-ready portfolio repository.</footer>
 </body>
 </html>
-
