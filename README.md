@@ -14,7 +14,9 @@ This repository collects my strongest projects in web development, machine learn
 - Senior School Basketball Team; qualified for Junior and Senior Football teams
 - Two-time District Skating Champion and 15+ medals in athletics/school sports
 - 2nd place in Kaliyogachari Yoga Competition 2025
-- Representing school in the Japan exchange programme
+- Two-time participant in the Indo-Japanese exchange program through BHS
+- Active community service participant through the Daan Utsav drive led by BHS to Hope Foundation Kolkata
+- Tech team member with Indian Society of Rehabilitation, Kolkata
 
 ## Featured Projects
 
@@ -36,6 +38,7 @@ This repository collects my strongest projects in web development, machine learn
 - Prompting: prompt engineering, AI-assisted building, structured instructions, iterative improvement
 - Business: sales management, product positioning, workflow and operations thinking
 - Leadership and sports: robotics leadership, council work, sports secretary role, basketball, football, skating, athletics, karate, yoga
+- Community and international exposure: Daan Utsav service work, Hope Foundation Kolkata drive, Indian Society of Rehabilitation tech team, Indo-Japanese exchange program
 - Interests: AI, science, physics, maths, art, design, and building projects
 - Deployment readiness: GitHub repository structure, clean documentation, `.gitignore`
 

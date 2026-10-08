@@ -11,6 +11,9 @@ I build practical projects across web development, machine learning, data analys
 - Built competition-ready demos with clear judging evidence and product logic
 - Helped build [oemlinker.com](https://oemlinker.com) using Emergent
 - Interested in AI tools, prompt design, business sales management, and real-world product workflows
+- Active community service participant through the Daan Utsav drive led by BHS to Hope Foundation Kolkata
+- Tech team member with Indian Society of Rehabilitation, Kolkata
+- Two-time participant in the Indo-Japanese exchange program through BHS
 
 ## Academics, Leadership, Sports & Activities
 
@@ -30,7 +33,12 @@ I build practical projects across web development, machine learning, data analys
 - School Council Member
 - Sports Secretary
 - Hackathon participant and competition builder
-- Representing my school in the Japan exchange programme
+- Two-time participant in the Indo-Japanese exchange program through BHS
+
+### Community Service & Tech Volunteering
+
+- Active participation in community service through the Daan Utsav drive led by BHS to Hope Foundation Kolkata
+- Tech team member with Indian Society of Rehabilitation, Kolkata
 
 ### Sports
 
@@ -85,6 +93,7 @@ Helped my father make the OEMLinker website using Emergent, gaining practical ex
 - Prompting: prompt engineering, AI-assisted building, structured instructions, iterative refinement
 - Business: sales management thinking, product positioning, workflow design
 - Leadership: robotics leadership, council work, sports captaincy, event participation
+- Community: Daan Utsav service work, Hope Foundation Kolkata drive, rehabilitation tech team volunteering
 - Sports: basketball, football, skating, athletics, karate, yoga
 
 ## Current Focus
