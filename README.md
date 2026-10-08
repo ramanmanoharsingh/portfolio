@@ -1,6 +1,13 @@
 # Raman Manohar Singh - Project Portfolio
 
-This repository collects my strongest projects in web development, machine learning, data analysis, and automation. It is designed to work as both a GitHub portfolio repository and a source for my GitHub profile README.
+This repository collects my strongest projects in web development, machine learning, data analysis, prompting, business workflows, and automation. It is designed to work as both a GitHub portfolio repository and a source for my GitHub profile README.
+
+## Achievements
+
+- 1st place - MP Birla Hackathon event
+- 1st place - Prompt Engineering event
+- Helped build [oemlinker.com](https://oemlinker.com) using Emergent
+- Built demo-ready products with judging evidence, event logs, and product workflows
 
 ## Featured Projects
 
@@ -11,12 +18,16 @@ This repository collects my strongest projects in web development, machine learn
 | [Titanic Kaggle ML](projects/titanic-kaggle-ml) | Data science notebook | Data preprocessing, modeling workflow, Kaggle-style prediction output |
 | [PlayMate Finder](projects/playmate-finder) | Frontend prototype | Player discovery UI, responsive layout, interactive controls |
 | [Python Assignments](projects/python-assignments) | Programming fundamentals | Python practice, documented outputs, core coding concepts |
+| Business Sales Management Project | Business/product workflow | Sales management thinking, business operations, workflow design |
+| OEMLinker Website Contribution | AI-assisted website build | Helped build a business website using Emergent |
 
 ## Skills Demonstrated
 
 - Frontend: HTML, CSS, JavaScript, responsive UI, stateful interactions
 - Data/ML: Python, pandas/notebooks, TensorFlow, scikit-learn, model evaluation
 - Product thinking: matchmaking logic, rating design, event logging, demo-ready flows
+- Prompting: prompt engineering, AI-assisted building, structured instructions, iterative improvement
+- Business: sales management, product positioning, workflow and operations thinking
 - Deployment readiness: GitHub repository structure, clean documentation, `.gitignore`
 
 ## Repository Structure

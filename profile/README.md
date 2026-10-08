@@ -1,6 +1,14 @@
 # Hi, I'm Raman Manohar Singh
 
-I build practical projects across web development, machine learning, data analysis, and product-focused prototypes.
+I build practical projects across web development, machine learning, data analysis, prompting, business workflows, and product-focused prototypes.
+
+## Highlights
+
+- 1st place - MP Birla Hackathon event
+- 1st place - Prompt Engineering event
+- Built competition-ready demos with clear judging evidence and product logic
+- Helped build [oemlinker.com](https://oemlinker.com) using Emergent
+- Interested in AI tools, prompt design, business sales management, and real-world product workflows
 
 ## Featured Work
 
@@ -21,12 +29,24 @@ A machine learning notebook for the Titanic survival prediction problem with dat
 
 **Tech:** Python, Jupyter Notebook, pandas/scikit-learn workflow
 
+### Business Sales Management Project
+A business-focused project around sales workflows, customer/product handling, and management thinking. This represents my interest in connecting software with real business operations.
+
+**Focus:** Sales management, business process thinking, dashboards/workflows
+
+### OEMLinker Website Contribution
+Helped my father make the OEMLinker website using Emergent, gaining practical experience with AI-assisted website building, business positioning, and web product delivery.
+
+**Website:** [oemlinker.com](https://oemlinker.com)
+
 ## Skills
 
 - Frontend: HTML, CSS, JavaScript, responsive interfaces
 - AI/ML: TensorFlow, image classification, model evaluation
 - Data: notebooks, CSV workflows, Kaggle-style submissions
 - Product: feature design, demo flows, event logging, user-focused UI
+- Prompting: prompt engineering, AI-assisted building, structured instructions, iterative refinement
+- Business: sales management thinking, product positioning, workflow design
 
 ## Current Focus
 
@@ -34,6 +54,8 @@ A machine learning notebook for the Titanic survival prediction problem with dat
 - Improving portfolio-quality documentation
 - Practicing data science and AI deployment
 - Creating polished demos for competitions and GitHub
+- Improving prompting and AI workflow skills
+- Building projects that combine business, data, and software
 
 ## Portfolio Roadmap
 
