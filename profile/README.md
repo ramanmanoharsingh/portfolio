@@ -4,11 +4,48 @@ I build practical projects across web development, machine learning, data analys
 
 ## Highlights
 
+- 98.2% in CBSE Class 10, with 3rd overall rank
+- Maths 99, AI full marks, English 98, SST 98, Science 96
 - 1st place - MP Birla Hackathon event
 - 1st place - Prompt Engineering event
 - Built competition-ready demos with clear judging evidence and product logic
 - Helped build [oemlinker.com](https://oemlinker.com) using Emergent
 - Interested in AI tools, prompt design, business sales management, and real-world product workflows
+
+## Academics, Leadership, Sports & Activities
+
+### Academics
+
+- CBSE Class 10: 98.2%
+- 3rd overall rank
+- Maths: 99
+- Artificial Intelligence: full marks
+- English: 98
+- Social Science: 98
+- Science: 96
+
+### Leadership
+
+- Robotics Club leader
+- School Council Member
+- Sports Secretary
+- Hackathon participant and competition builder
+- Representing my school in the Japan exchange programme
+
+### Sports
+
+- Senior School Basketball Team
+- Qualified for Junior and Senior Football teams
+- Inter-house basketball champion under my captaincy
+- Two-time inter-house football winner
+- Two-time District Skating Champion
+- 15+ medals in athletics and school sports
+- Karate
+- 2nd place in Kaliyogachari Yoga Competition 2025
+
+### Interests
+
+- AI, prompting, science, physics, maths, art, design, and building projects
 
 ## Featured Work
 
@@ -47,6 +84,8 @@ Helped my father make the OEMLinker website using Emergent, gaining practical ex
 - Product: feature design, demo flows, event logging, user-focused UI
 - Prompting: prompt engineering, AI-assisted building, structured instructions, iterative refinement
 - Business: sales management thinking, product positioning, workflow design
+- Leadership: robotics leadership, council work, sports captaincy, event participation
+- Sports: basketball, football, skating, athletics, karate, yoga
 
 ## Current Focus
 

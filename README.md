@@ -4,10 +4,17 @@ This repository collects my strongest projects in web development, machine learn
 
 ## Achievements
 
+- 98.2% in CBSE Class 10, with 3rd overall rank
+- Subject scores: Maths 99, AI full marks, English 98, SST 98, Science 96
 - 1st place - MP Birla Hackathon event
 - 1st place - Prompt Engineering event
 - Helped build [oemlinker.com](https://oemlinker.com) using Emergent
 - Built demo-ready products with judging evidence, event logs, and product workflows
+- Robotics Club leader, School Council Member, and Sports Secretary
+- Senior School Basketball Team; qualified for Junior and Senior Football teams
+- Two-time District Skating Champion and 15+ medals in athletics/school sports
+- 2nd place in Kaliyogachari Yoga Competition 2025
+- Representing school in the Japan exchange programme
 
 ## Featured Projects
 
@@ -28,6 +35,8 @@ This repository collects my strongest projects in web development, machine learn
 - Product thinking: matchmaking logic, rating design, event logging, demo-ready flows
 - Prompting: prompt engineering, AI-assisted building, structured instructions, iterative improvement
 - Business: sales management, product positioning, workflow and operations thinking
+- Leadership and sports: robotics leadership, council work, sports secretary role, basketball, football, skating, athletics, karate, yoga
+- Interests: AI, science, physics, maths, art, design, and building projects
 - Deployment readiness: GitHub repository structure, clean documentation, `.gitignore`
 
 ## Repository Structure
