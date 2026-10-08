@@ -16,13 +16,14 @@ This repository collects my strongest projects in web development, machine learn
 - 2nd place in Kaliyogachari Yoga Competition 2025
 - Two-time participant in the Indo-Japanese exchange program through BHS
 - Active community service participant through the Daan Utsav drive led by BHS to Hope Foundation Kolkata
-- Tech team member with Indian Society of Rehabilitation, Kolkata
+- Tech team member with Indian Society of Rehabilitation, Kolkata, including digital media sector work in reel making and video editing
 
 ## Featured Projects
 
 | Project | Type | What it shows |
 |---|---|---|
 | [PlayMatch Sports Network](projects/playmatch-sports-network) | Frontend web app | Sports matchmaking, fair rating system, match simulation, telemetry events, light/dark mode |
+| [Raman Builds Freelance Services](freelance) | Service website | Minimal freelance page for AI-assisted websites, prompt workflows, dashboards, and demo polish |
 | [Plant Disease Detector](projects/plant-disease-detector) | AI/ML app | TensorFlow transfer learning, Streamlit deployment, Grad-CAM explainability |
 | [Titanic Kaggle ML](projects/titanic-kaggle-ml) | Data science notebook | Data preprocessing, modeling workflow, Kaggle-style prediction output |
 | [PlayMate Finder](projects/playmate-finder) | Frontend prototype | Player discovery UI, responsive layout, interactive controls |
@@ -37,8 +38,9 @@ This repository collects my strongest projects in web development, machine learn
 - Product thinking: matchmaking logic, rating design, event logging, demo-ready flows
 - Prompting: prompt engineering, AI-assisted building, structured instructions, iterative improvement
 - Business: sales management, product positioning, workflow and operations thinking
+- Freelancing: service positioning, client workflow, scoped deliverables, handoff notes, lightweight launch strategy
 - Leadership and sports: robotics leadership, council work, sports secretary role, basketball, football, skating, athletics, karate, yoga
-- Community and international exposure: Daan Utsav service work, Hope Foundation Kolkata drive, Indian Society of Rehabilitation tech team, Indo-Japanese exchange program
+- Community and international exposure: Daan Utsav service work, Hope Foundation Kolkata drive, Indian Society of Rehabilitation tech team, digital media/reel making/video editing, Indo-Japanese exchange program
 - Interests: AI, science, physics, maths, art, design, and building projects
 - Deployment readiness: GitHub repository structure, clean documentation, `.gitignore`
 
@@ -47,6 +49,7 @@ This repository collects my strongest projects in web development, machine learn
 ```text
 portfolio-repository/
   index.html                     # Portfolio landing page
+  freelance/                     # Freelance services website
   README.md                      # Main repository overview
   profile/README.md              # GitHub profile README draft
   projects/                      # Project folders

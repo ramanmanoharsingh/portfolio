@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raman Builds | AI-assisted Websites & Student Freelance Services</title>
+  <meta name="description" content="Minimal freelance services by Raman Manohar Singh: AI-assisted websites, landing pages, dashboards, prompt workflows, and business web support.">
+  <style>
+    :root {
+      --bg: #fbfbf8;
+      --ink: #171717;
+      --muted: #66665f;
+      --line: #deded7;
+      --panel: #ffffff;
+      --panel-2: #f2f2ec;
+      --accent: #1d4ed8;
+      --accent-soft: #e8efff;
+      --green: #0f766e;
+      --shadow: 0 24px 80px rgba(23, 23, 23, 0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(29, 78, 216, 0.08), transparent 34%),
+        radial-gradient(circle at 88% 12%, rgba(15, 118, 110, 0.1), transparent 28%),
+        var(--bg);
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(222, 222, 215, 0.72);
+      background: rgba(251, 251, 248, 0.84);
+      backdrop-filter: blur(18px);
+    }
+    nav {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { font-weight: 900; letter-spacing: 0; }
+    .nav-links { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 0.92rem; font-weight: 750; }
+    .hero {
+      min-height: calc(100vh - 68px);
+      padding: 58px 0 42px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.06fr) minmax(320px, 0.94fr);
+      gap: 34px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      width: max-content;
+      padding: 7px 11px;
+      border: 1px solid rgba(29, 78, 216, 0.18);
+      border-radius: 999px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 760px;
+      margin: 16px 0 14px;
+      font-size: clamp(2.45rem, 7vw, 5.1rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    .lead {
+      max-width: 680px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.75;
+      font-weight: 600;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .btn {
+      min-height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 850;
+      background: var(--panel);
+    }
+    .btn.primary { color: #fff; border-color: var(--accent); background: var(--accent); }
+    .hero-visual {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .browser-bar {
+      height: 42px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 14px;
+      background: var(--panel-2);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #d8d8cf; }
+    .mock-page { padding: 20px; display: grid; gap: 14px; }
+    .mock-hero { border-radius: 14px; padding: 18px; background: #111827; color: #f8fafc; }
+    .mock-hero b { display: block; margin-bottom: 8px; font-size: 1.25rem; }
+    .mock-hero span { color: #cbd5e1; line-height: 1.5; }
+    .mock-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .mock-card { min-height: 92px; border: 1px solid var(--line); border-radius: 12px; padding: 13px; background: var(--panel-2); }
+    .mock-card b { display: block; color: var(--accent); margin-bottom: 7px; }
+    .mock-card span { color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
+    section { padding: 44px 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    h2 { margin: 0; font-size: 1.85rem; }
+    .section-head p { margin: 6px 0 0; color: var(--muted); font-weight: 600; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .card, .process, .proof, .contact {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 16px 48px rgba(23, 23, 23, 0.06);
+    }
+    .card { padding: 18px; display: grid; gap: 10px; }
+    .card h3 { margin: 0; font-size: 1.08rem; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.62; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { padding: 5px 9px; border-radius: 999px; color: var(--accent); background: var(--accent-soft); font-size: 0.78rem; font-weight: 850; }
+    .process { padding: 20px; }
+    .steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .step { padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); }
+    .step b { display: block; margin-bottom: 7px; color: var(--green); }
+    .step span { color: var(--muted); line-height: 1.45; font-size: 0.9rem; }
+    .proof { padding: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .proof-item { padding: 14px; border-radius: 12px; background: var(--panel-2); }
+    .proof-item b { display: block; font-size: 1.35rem; margin-bottom: 4px; }
+    .proof-item span { color: var(--muted); font-size: 0.86rem; font-weight: 700; }
+    .contact { padding: 22px; display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; }
+    .contact p { margin: 6px 0 0; color: var(--muted); line-height: 1.6; }
+    footer { padding: 32px 0 46px; color: var(--muted); text-align: center; }
+    @media (max-width: 900px) {
+      .hero, .cards, .steps, .proof, .contact { grid-template-columns: 1fr; }
+      nav, .section-head { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="wrap">
+      <div class="brand">Raman Builds</div>
+      <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="#proof">Proof</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Student freelancer | AI-assisted web + business tools</span>
+        <h1>Minimal websites and AI workflows for small teams.</h1>
+        <p class="lead">I help students, local businesses, and early-stage ideas turn scattered requirements into clean landing pages, simple dashboards, prompt systems, and launch-ready web prototypes.</p>
+        <div class="actions">
+          <a class="btn primary" href="#contact">Start a project</a>
+          <a class="btn" href="../">View portfolio</a>
+        </div>
+      </div>
+
+      <aside class="hero-visual" aria-label="Website delivery preview">
+        <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <div class="mock-page">
+          <div class="mock-hero"><b>From idea to launch</b><span>Clear service page, fast prototype, responsive design, handoff notes, and practical AI usage.</span></div>
+          <div class="mock-grid">
+            <div class="mock-card"><b>Websites</b><span>Landing pages, portfolios, business pages.</span></div>
+            <div class="mock-card"><b>AI workflows</b><span>Prompt templates, automations, research support.</span></div>
+            <div class="mock-card"><b>Dashboards</b><span>CSV-based reports and simple insights.</span></div>
+            <div class="mock-card"><b>Handoff</b><span>Docs, source code, and launch guidance.</span></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="services">
+      <div class="section-head">
+        <div>
+          <h2>Services</h2>
+          <p>Focused offers that are realistic, useful, and easy for a client to understand.</p>
+        </div>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <h3>Landing page or portfolio site</h3>
+          <p>A clean one-page website for a student, freelancer, local business, club, or event.</p>
+          <div class="tag-row"><span class="tag">HTML/CSS/JS</span><span class="tag">Responsive</span></div>
+        </article>
+        <article class="card">
+          <h3>AI prompt workflow setup</h3>
+          <p>Prompt templates and repeatable workflows for research, content, business documents, or website planning.</p>
+          <div class="tag-row"><span class="tag">Prompting</span><span class="tag">AI workflow</span></div>
+        </article>
+        <article class="card">
+          <h3>Business website refresh</h3>
+          <p>Improve wording, layout, sections, and clarity so a business page explains what it offers and how to contact.</p>
+          <div class="tag-row"><span class="tag">Copy</span><span class="tag">UX</span></div>
+        </article>
+        <article class="card">
+          <h3>Small data dashboard</h3>
+          <p>Turn a CSV or spreadsheet into a simple report page with charts, metrics, and key takeaways.</p>
+          <div class="tag-row"><span class="tag">Data</span><span class="tag">Dashboard</span></div>
+        </article>
+        <article class="card">
+          <h3>Competition demo polish</h3>
+          <p>Make a hackathon/demo project clearer for judges with proof sections, logs, and a strong walkthrough.</p>
+          <div class="tag-row"><span class="tag">Demo</span><span class="tag">Judging</span></div>
+        </article>
+        <article class="card">
+          <h3>AI-assisted prototype</h3>
+          <p>Use AI tools carefully to build a fast prototype, then clean up the design, copy, and workflow.</p>
+          <div class="tag-row"><span class="tag">Emergent</span><span class="tag">Prototype</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="process">
+      <div class="section-head">
+        <div>
+          <h2>Workflow</h2>
+          <p>Built from patterns used by strong freelance portfolios: clear scope, proof, communication, and handoff.</p>
+        </div>
+      </div>
+      <div class="process">
+        <div class="steps">
+          <div class="step"><b>1. Diagnose</b><span>Understand the goal, audience, deadline, and examples.</span></div>
+          <div class="step"><b>2. Scope</b><span>Agree on pages, sections, deliverables, and timeline.</span></div>
+          <div class="step"><b>3. Prototype</b><span>Share a fast preview so direction is clear early.</span></div>
+          <div class="step"><b>4. Build</b><span>Make it responsive, clean, and easy to explain.</span></div>
+          <div class="step"><b>5. Handoff</b><span>Deliver source files, notes, and launch guidance.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="proof">
+      <div class="section-head">
+        <div>
+          <h2>Proof</h2>
+          <p>Why I can help even as a student freelancer.</p>
+        </div>
+      </div>
+      <div class="proof">
+        <div class="proof-item"><b>1st</b><span>MP Birla Hackathon event</span></div>
+        <div class="proof-item"><b>1st</b><span>Prompt Engineering event</span></div>
+        <div class="proof-item"><b>98.2%</b><span>CBSE Class 10</span></div>
+        <div class="proof-item"><b>OEM</b><span>Helped build oemlinker.com</span></div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <div>
+          <h2>Want a simple build?</h2>
+          <p>Send me the goal, deadline, and any examples you like. I will reply with a simple scope and next steps.</p>
+        </div>
+        <a class="btn primary" href="https://github.com/ramanmanoharsingh/portfolio">Contact via GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">Raman Builds - minimalist freelance services by Raman Manohar Singh.</footer>
+</body>
+</html>
+
