@@ -1,13 +1,40 @@
 rules_version = '2';
 service cloud.firestore {
- match /databases/{database}/documents {
-  function signedIn() { return request.auth != null; }
-  function isOwner() { return signedIn() && request.auth.token.email == "ramanmanoharsingh@gmail.com"; }
-  match /leads/{leadId} {
-   allow create: if (signedIn() && request.resource.data.userId == request.auth.uid && request.resource.data.clientEmail == request.auth.token.email) || (!signedIn() && request.resource.data.userId == null);
-   allow read: if isOwner() || (signedIn() && resource.data.userId == request.auth.uid);
-   allow update: if isOwner() || (signedIn() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name","email","whatsapp","projectType","budgetRange","deadline","preferredPayment","description","updatedAt"]));
-   allow delete: if isOwner();
+  match /databases/{database}/documents {
+    function isOwner() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() == 'ramanmanoharsingh@gmail.com';
+    }
+
+    match /leads/{leadId} {
+      // Only Raman can view the entire pipeline or change/delete records.
+      allow read, update, delete: if isOwner();
+
+      // Clients can read only enquiries associated with their own account.
+      // (The owner is also allowed by the rule above.)
+      allow get, list: if isOwner()
+        || (request.auth != null
+          && resource.data.userId == request.auth.uid);
+
+      // Public enquiry form may create a lead, but never read existing leads.
+      allow create: if
+        request.resource.data.keys().hasOnly([
+          'name', 'email', 'whatsapp', 'projectType', 'budgetRange',
+          'deadline', 'preferredPayment', 'description', 'status',
+          'createdAt', 'updatedAt', 'userId', 'clientEmail'
+        ])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 254
+        && request.resource.data.description is string
+        && request.resource.data.description.size() >= 15
+        && request.resource.data.description.size() <= 5000
+        && request.resource.data.status == 'New'
+        && request.resource.data.userId == (request.auth == null ? null : request.auth.uid)
+        && (!request.auth != null || request.resource.data.clientEmail == request.auth.token.email);
+    }
   }
- }
 }
