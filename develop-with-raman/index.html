@@ -255,6 +255,28 @@ header.top nav{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:clamp(
  .nr .si a:nth-child(n+3){display:none}
  .nl a:nth-child(4){display:none}
 }
+
+/* Premium responsive polish */
+:root{--ease-premium:cubic-bezier(.16,1,.3,1)}
+header.top{backdrop-filter:saturate(150%) blur(18px);-webkit-backdrop-filter:saturate(150%) blur(18px);transition:background .45s var(--ease-premium),box-shadow .45s var(--ease-premium)}
+header.top nav{gap:clamp(12px,2vw,32px);padding-inline:clamp(16px,3.5vw,52px)}
+.wm{white-space:nowrap;font-size:clamp(15px,1.3vw,21px);letter-spacing:-.055em;line-height:1.05;max-width:36vw}
+.nl{gap:clamp(10px,1.8vw,26px)}
+.nr{gap:clamp(8px,1.1vw,18px)}
+.nr .si{gap:clamp(7px,1vw,14px)}
+header.top .bk{padding-inline:clamp(12px,1.7vw,24px);white-space:nowrap}
+.hero h1,.hero h2,.hero .hero-title,.hero .ht{font-family:Archivo,"Space Grotesk",sans-serif;letter-spacing:-.065em}
+.hero h1,.hero .hero-title,.hero .ht{animation:heroDrift 18s var(--ease-premium) infinite alternate;will-change:transform,opacity}
+@keyframes heroDrift{0%{transform:translate3d(0,10px,0);opacity:.68}55%{transform:translate3d(0,-5px,0);opacity:.88}100%{transform:translate3d(0,0,0);opacity:.98}}
+.dk,.card,.project,.pc,.work-card{transition:transform .65s var(--ease-premium),border-color .45s ease,box-shadow .65s var(--ease-premium)}
+.dk:hover,.card:hover,.project:hover,.pc:hover,.work-card:hover{transform:translateY(-5px)}
+.rv{transition:opacity 1.1s var(--ease-premium),transform 1.1s var(--ease-premium)}
+a,button{transition:color .25s ease,background-color .3s ease,border-color .3s ease,transform .3s var(--ease-premium)}
+button:active,.btn:active,.bk:active{transform:scale(.98)}
+@media(max-width:900px){header.top nav{gap:10px;padding-inline:18px}.wm{font-size:15px;max-width:none}.nl{gap:12px}.nr{gap:8px}.nr .si{display:none}header.top .bk{padding-inline:12px}}
+@media(max-width:640px){header.top nav{display:flex;flex-wrap:wrap;justify-content:space-between;row-gap:8px;padding:12px 16px}.wm{order:-1;flex:1 1 auto;font-size:16px;max-width:calc(100% - 80px)}.nl{order:2;flex:1 1 100%;justify-content:space-between;gap:8px}.nl a{font-size:13px!important}.nr{gap:6px}.nr .bk{height:38px!important;padding-inline:10px!important;font-size:12px!important}.tg{height:38px!important;padding-inline:12px!important}}
+@media(prefers-reduced-motion:reduce){.hero h1,.hero .hero-title,.hero .ht{animation:none!important}}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ck" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol><symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol><symbol id="i-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/></symbol><symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l11.7 16H20L8.3 4H4zM4 20l6.8-7.2M20 4l-6.8 7.2"/></symbol><symbol id="i-ct" viewBox="0 0 24 24"><path d="M1 2h3l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 6H5.2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></symbol></svg>
 <header class="top" id="hd"><nav aria-label="Main"><div class="nl"><a href="#work" data-t="Work">Work</a><a href="#services" data-t="Services">Services</a><a href="#about" data-t="About">About</a><a href="#contact" data-t="Contact">Contact</a></div><a class="wm" href="#top">Develop with Raman</a><div class="nr"><div class="si"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico"><use href="#i-x"/></svg></a></div><a class="bk" href="#contact">Start a project</a><a class="bk" href="#account">Sign in</a><button class="tg" id="mb" aria-label="Open menu" aria-expanded="false">Menu</button></div></nav><i class="sp" aria-hidden="true"></i></header>
