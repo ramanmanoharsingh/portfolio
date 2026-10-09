@@ -60,6 +60,9 @@ with check (lower((select auth.jwt()->>'email')) = 'ramanmanoharsingh@gmail.com'
 
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 create index if not exists leads_user_id_idx on public.leads (user_id);
+-- Composite indexes support the signed-in client history and owner status/date views.
+create index if not exists leads_user_created_at_idx on public.leads (user_id, created_at desc);
+create index if not exists leads_status_created_at_idx on public.leads (status, created_at desc);
 
 
 -- Keep updated_at current when the owner changes a lead's status or details.
