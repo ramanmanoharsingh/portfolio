@@ -37,6 +37,10 @@ with check (
   and char_length(trim(email)) >= 5
   and char_length(trim(description)) >= 15
   and status = 'New'
+  and (
+    (auth.uid() is null and user_id is null)
+    or (auth.uid() is not null and user_id = (select auth.uid()))
+  )
 );
 
 -- Clients can read only records tied to their authenticated account.
