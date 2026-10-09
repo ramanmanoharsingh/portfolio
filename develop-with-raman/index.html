@@ -896,7 +896,7 @@ async function loadUser(user,{scrollToLogin=false,landing="welcome"}={}){
   else if(allowedLanding==="profile")openProfile();
   else showWelcome();
 }
-if(configReady){supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);supabase.auth.onAuthStateChange((event,session)=>{
+if(configReady){const sessionOnly=document.cookie.split(';').some(c=>c.trim()==='portal_session=1');supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{storage:sessionOnly?sessionStorage:localStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});supabase.auth.onAuthStateChange((event,session)=>{
   const user=session?.user||null;
   if(event==="TOKEN_REFRESHED"&&user&&currentUser?.id===user.id){currentUser=user;syncAuthActions(user);return;}
   if(user&&currentUser?.id===user.id&&(currentProfile||profileResolvingUserId===user.id)){currentUser=user;syncAuthActions(user);return;}
