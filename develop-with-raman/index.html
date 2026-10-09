@@ -277,6 +277,39 @@ button:active,.btn:active,.bk:active{transform:scale(.98)}
 @media(max-width:640px){header.top nav{display:flex;flex-wrap:wrap;justify-content:space-between;row-gap:8px;padding:12px 16px}.wm{order:-1;flex:1 1 auto;font-size:16px;max-width:calc(100% - 80px)}.nl{order:2;flex:1 1 100%;justify-content:space-between;gap:8px}.nl a{font-size:13px!important}.nr{gap:6px}.nr .bk{height:38px!important;padding-inline:10px!important;font-size:12px!important}.tg{height:38px!important;padding-inline:12px!important}}
 @media(prefers-reduced-motion:reduce){.hero h1,.hero .hero-title,.hero .ht{animation:none!important}}
 
+
+/* Premium interaction layer */
+:root{scroll-behavior:smooth;--ease-premium:cubic-bezier(.16,1,.3,1)}
+::selection{background:#c9ff4f;color:#111}
+html{scroll-padding-top:90px}
+body{overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E")}
+a,button,input,select,textarea{transition:color .25s ease,background .25s ease,border-color .25s ease,transform .35s var(--ease-premium),box-shadow .35s ease}
+.btn:hover,button:hover{transform:translateY(-2px)}
+.hero{isolation:isolate}
+.hero h1,.hero h2{text-wrap:balance}
+.hero img{transform:scale(1.015);animation:heroDrift 18s ease-in-out infinite alternate;will-change:transform}
+@keyframes heroDrift{from{transform:scale(1.015) translate3d(0,0,0)}to{transform:scale(1.07) translate3d(-.5%,.8%,0)}}
+#hero-word{display:inline-block;min-width:4ch;color:#c9ff4f;transition:opacity .24s ease,transform .45s var(--ease-premium)}
+#hero-word.is-out{opacity:0;transform:translateY(.35em)}
+.reveal-up{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s var(--ease-premium)}
+.reveal-up.is-visible{opacity:1;transform:translateY(0)}
+.pjg>.pj,.pjg>.project,.pjg article,.dk,.rv,.pc,.service,.sc{transition:transform .5s var(--ease-premium),box-shadow .5s ease,border-color .3s ease}
+.pjg>.pj:hover,.pjg>.project:hover,.pjg article:hover,.dk:hover,.service:hover{transform:translateY(-5px);box-shadow:0 22px 60px #00012}
+#achievements .rail{scroll-behavior:smooth;scroll-snap-type:x mandatory}
+#achievements .rail>*{scroll-snap-align:start}
+#achievements .dk{position:relative;overflow:hidden}
+#achievements .dk:after{content:"";position:absolute;inset:0 auto 0 -120%;width:55%;background:linear-gradient(100deg,transparent,#fff2,transparent);transform:skewX(-16deg);transition:left .8s var(--ease-premium);pointer-events:none}
+#achievements .dk:hover:after{left:160%}
+#work .bar{position:sticky;top:76px;z-index:8;padding:12px 0;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#q{border-radius:999px}
+#seg button[aria-pressed="true"],#seg [aria-pressed="true"]{background:#c9ff4f!important;color:#101010!important;border-color:#c9ff4f!important}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #c9ff4f;outline-offset:4px}
+#scroll-progress{position:fixed;left:0;top:0;height:3px;width:0;background:#c9ff4f;z-index:10001;transform-origin:left;pointer-events:none}
+#back-top{position:fixed;right:20px;bottom:22px;z-index:1000;width:44px;height:44px;border-radius:50%;border:1px solid #8886;background:#151515;color:#fff;display:grid;place-items:center;opacity:0;pointer-events:none;transform:translateY(10px);box-shadow:0 8px 28px #0002}
+#back-top.on{opacity:1;pointer-events:auto;transform:translateY(0)}
+#toast{backdrop-filter:blur(12px)}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.reveal-up{opacity:1;transform:none}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ck" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol><symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol><symbol id="i-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/></symbol><symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l11.7 16H20L8.3 4H4zM4 20l6.8-7.2M20 4l-6.8 7.2"/></symbol><symbol id="i-ct" viewBox="0 0 24 24"><path d="M1 2h3l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 6H5.2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></symbol></svg>
 <header class="top" id="hd"><nav aria-label="Main"><div class="nl"><a href="#work" data-t="Work">Work</a><a href="#services" data-t="Services">Services</a><a href="#about" data-t="About">About</a><a href="#contact" data-t="Contact">Contact</a></div><a class="wm" href="#top">Develop with Raman</a><div class="nr"><div class="si"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico"><use href="#i-x"/></svg></a></div><a class="bk" href="#contact">Start a project</a><a class="bk" href="#account">Sign in</a><button class="tg" id="mb" aria-label="Open menu" aria-expanded="false">Menu</button></div></nav><i class="sp" aria-hidden="true"></i></header>
@@ -485,4 +518,35 @@ async function submitLead(ev){ev.preventDefault();ev.stopImmediatePropagation();
 async function loadUser(user){clearDash();currentUser=user;authCard.hidden=!user;if(!user){showSignedOut();return;}if(user.email&&user.email.toLowerCase()===OWNER_EMAIL.toLowerCase()){ownerDash.hidden=false;$id("owner-identity").textContent=user.email;await refreshOwner();ownerChannel=supabase.channel("owner-leads").on("postgres_changes",{event:"*",schema:"public",table:"leads"},refreshOwner).subscribe();}else{clientDash.hidden=false;$id("client-identity").textContent=user.email||"Client account";await refreshClient();clientChannel=supabase.channel("client-leads").on("postgres_changes",{event:"*",schema:"public",table:"leads",filter:"user_id=eq."+user.id},refreshClient).subscribe();}if(user.email&&!$id("e").value)$id("e").value=user.email;setStatus("Signed in as "+(user.email||"client")+".","ok");}
 if(configReady){supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);$id("auth-form").addEventListener("submit",async ev=>{ev.preventDefault();const email=$id("auth-email").value.trim(),password=$id("auth-password").value;try{const result=signup?await supabase.auth.signUp({email,password}):await supabase.auth.signInWithPassword({email,password});if(result.error)throw result.error;if(signup)setStatus("Account created. Check your email to verify your account.","ok");else setStatus("Signing in…","ok");}catch(err){setStatus(err.message||"Sign-in failed.","error");}});$id("auth-toggle").onclick=()=>{signup=!signup;$id("auth-title").textContent=signup?"Create your client account":"Sign in to your workspace";$id("auth-submit").textContent=signup?"Create account":"Sign in with email";$id("auth-toggle").textContent=signup?"I already have an account":"Create a client account";$id("auth-password").autocomplete=signup?"new-password":"current-password";};$id("auth-reset").onclick=async()=>{const email=$id("auth-email").value.trim();if(!email){setStatus("Enter your email address first.","error");return;}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.href.split("#")[0]});setStatus(error?error.message:"Password reset email sent.","ok");};$id("google-login").onclick=async()=>{const {error}=await supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.href.split("#")[0]}});if(error)setStatus(error.message,"error");};$id("apple-login").onclick=async()=>{const {error}=await supabase.auth.signInWithOAuth({provider:"apple",options:{redirectTo:location.href.split("#")[0]}});if(error)setStatus(error.message,"error");};$id("f").addEventListener("submit",submitLead,true);const doSignOut=async()=>{const {error}=await supabase.auth.signOut();if(error)setStatus(error.message,"error");else{showSignedOut();setStatus("You are signed out.");}};$id("signout-client").onclick=doSignOut;$id("signout-owner").onclick=doSignOut;$id("owner-filters").onclick=ev=>{const b=ev.target.closest("[data-filter]");if(!b)return;ownerFilter=b.dataset.filter;renderOwner();};$id("owner-search").addEventListener("input",renderOwner);$id("export-leads").onclick=()=>{if(!ownerLeads.length){setStatus("There are no enquiries to export yet.");return;}const cols=["created_at","status","name","email","whatsapp","project_type","budget_range","deadline","preferred_payment","description"],cell=v=>'"'+String(v??"").replace(/"/g,'""')+'"',csv=[cols.join(","),...ownerLeads.map(x=>cols.map(k=>cell(x[k])).join(","))].join("\r\n"),url=URL.createObjectURL(new Blob(["\\ufeff",csv],{type:"text/csv;charset=utf-8;"})),a=document.createElement("a");a.href=url;a.download="raman-enquiries-"+new Date().toISOString().slice(0,10)+".csv";a.click();URL.revokeObjectURL(url);setStatus("Enquiry export downloaded.");};$id("owner-projects").onclick=async ev=>{const b=ev.target.closest(".owner-save");if(!b)return;const card=b.closest("[data-lead]"),status=card.querySelector(".owner-status").value;const {error}=await supabase.from("leads").update({status,updated_at:new Date().toISOString()}).eq("id",b.dataset.id);setStatus(error?"Could not update status: "+error.message:"Enquiry status updated.",error?"error":"ok");};supabase.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setTimeout(()=>loadUser(currentUser),0);});supabase.auth.getSession().then(({data})=>loadUser(data.session?.user||null));}
 else{setStatus("Free setup needed: create a Supabase project, then add its Project URL and anon key in this file. No paid Firebase plan is required.","error");$id("auth-form").addEventListener("submit",ev=>{ev.preventDefault();setStatus("Add your free Supabase URL and anon key first.","error");});["google-login","apple-login","auth-reset"].forEach(id=>$id(id).onclick=()=>setStatus("Add Supabase credentials and enable this provider in Supabase Auth first.","error"));$id("auth-toggle").onclick=()=>setStatus("Client registration becomes available after Supabase is configured.","error");$id("f").addEventListener("submit",ev=>{ev.preventDefault();ev.stopImmediatePropagation();setStatus("Enquiry storage is not connected yet. Configure Supabase before accepting client data.","error");},true);}
-</script></body></html>
+</script>
+<script>
+(()=> {
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const progress=document.createElement('div');progress.id='scroll-progress';progress.setAttribute('aria-hidden','true');document.body.append(progress);
+  const top=document.createElement('button');top.id='back-top';top.type='button';top.setAttribute('aria-label','Back to top');top.textContent='↑';document.body.append(top);
+  top.addEventListener('click',()=>window.scrollTo({top:0,behavior:reduce?'auto':'smooth'}));
+  const update=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?scrollY/max*100:0)+'%';top.classList.toggle('on',scrollY>600)};
+  addEventListener('scroll',update,{passive:true});addEventListener('resize',update);update();
+  // Subtle staggered reveal without overriding existing reveal logic.
+  const candidates=[...document.querySelectorAll('#work .pjg > *,#services .grid > *,#achievements .rail > *,#faq details')];
+  candidates.forEach((el,i)=>{if(!el.classList.contains('reveal-up'))el.classList.add('reveal-up');el.style.transitionDelay=(i%5)*55+'ms'});
+  if('IntersectionObserver'in window&&!reduce){
+    const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-visible');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -35px 0px'});
+    candidates.forEach(el=>io.observe(el));
+  }else candidates.forEach(el=>el.classList.add('is-visible'));
+  // Add an accessible, gently rotating word to the hero's main heading.
+  const hero=document.querySelector('.hero');const heading=hero?.querySelector('h1,h2');
+  if(heading&&!heading.querySelector('#hero-word')){
+    const original=heading.textContent.trim();
+    const words=['ideas','experiences','products','possibilities'];
+    const span=document.createElement('span');span.id='hero-word';span.setAttribute('aria-label','ideas');span.textContent='ideas';
+    const marker=document.createElement('span');marker.className='sr-only';marker.textContent=' ';
+    heading.append(document.createTextNode(' '),span);
+    if(!reduce){let i=0;setInterval(()=>{span.classList.add('is-out');setTimeout(()=>{i=(i+1)%words.length;span.textContent=words[i];span.setAttribute('aria-label',words[i]);span.classList.remove('is-out')},260)},2600)}
+  }
+  // Small polish for the achievements rail: keyboard arrow navigation.
+  const rail=document.querySelector('#achievements .rail');
+  if(rail){rail.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();rail.scrollBy({left:(e.key==='ArrowRight'?1:-1)*Math.min(rail.clientWidth*.72,520),behavior:reduce?'auto':'smooth'})}})}
+})();
+</script>
+</body></html>
