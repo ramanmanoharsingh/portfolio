@@ -657,8 +657,9 @@ let d=null;r.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.bu
 addEventListener('pointermove',e=>{if(d)r.scrollLeft=d.s-(e.clientX-d.x)});
 addEventListener('pointerup',()=>{if(d){d=null;r.classList.remove('dr')}});
 r.addEventListener('dragstart',e=>e.preventDefault())})();
-</script><script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+const createClient = window.supabase?.createClient;
 const SUPABASE_URL = "https://nmqntqxvficakxkticxc.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG";
 
@@ -666,7 +667,7 @@ const $id = id => document.getElementById(id);
 const setStatus = (message, kind="") => { const el=$id("auth-status"); el.textContent=message; el.className="fine "+kind; };
 window.AuthState={snapshot:{isLoggedIn:false,userRole:null,token:null,profileData:null},listeners:new Map(),on(type,fn){if(!this.listeners.has(type))this.listeners.set(type,new Set());this.listeners.get(type).add(fn);return()=>this.listeners.get(type)?.delete(fn);},emit(type,payload){for(const fn of this.listeners.get(type)||[])try{fn(payload)}catch(err){console.error(err)}}};
 const publishAuthState=snapshot=>{window.AuthState.snapshot=snapshot;window.AuthState.emit("change",snapshot);};
-const configReady = SUPABASE_URL.includes(".supabase.co") && !SUPABASE_URL.includes("YOUR_PROJECT_ID") && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+const configReady = typeof createClient === "function" && SUPABASE_URL.includes(".supabase.co") && !SUPABASE_URL.includes("YOUR_PROJECT_ID") && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
 let supabase=null, signup=false, currentUser=null, ownerLeads=[], ownerFilter="All", clientChannel=null, ownerChannel=null;
 const authCard=$id("auth-card"), clientDash=$id("client-dashboard"), ownerDash=$id("owner-dashboard");
 const navAuthAction=$id("nav-auth-action"), menuAuthAction=$id("menu-auth-action");
