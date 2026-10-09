@@ -53,8 +53,8 @@
     const pendingMilestones=milestones.filter(m=>m.status==='submitted_for_approval').length;
     const pendingInvoices=inv.filter(i=>['pending','overdue'].includes(i.status));
     $('[data-metric-completed]').textContent=pendingMilestones;
-    $('[data-metric-requests]').textContent=props.filter(p=>['submitted','reviewing','quoted'].includes(p.status)).length;
-    $('[data-metric-tasks]').textContent=pendingInvoices.length;
+    const requestsMetric=$('[data-metric-requests]');if(requestsMetric)requestsMetric.textContent=props.filter(p=>['submitted','reviewing','quoted'].includes(p.status)).length;
+    const tasksMetric=$('[data-metric-tasks]');if(tasksMetric)tasksMetric.textContent=pendingInvoices.length;
     const total=inv.filter(i=>i.status==='paid').reduce((n,i)=>n+Number(i.amount||0),0);
     $('[data-investment-total]')?.replaceChildren(document.createTextNode(money(total)));
     const nextDate=milestones.filter(m=>m.due_date&&!['completed','approved'].includes(m.status)).map(m=>m.due_date).sort()[0];
