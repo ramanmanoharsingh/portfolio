@@ -61,6 +61,39 @@ with check (lower((select auth.jwt()->>'email')) = 'ramanmanoharsingh@gmail.com'
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 create index if not exists leads_user_id_idx on public.leads (user_id);
 
+
+-- Keep updated_at current when the owner changes a lead's status or details.
+create or replace function public.set_leads_updated_at()
+returns trigger
+language plpgsql
+as $
+begin
+  new.updated_at = now();
+  return new;
+end;
+$;
+
+drop trigger if exists leads_set_updated_at on public.leads;
+create trigger leads_set_updated_at
+before update on public.leads
+for each row execute function public.set_leads_updated_at();
+
+-- Enable live dashboard updates where Supabase Realtime is available.
+-- Safe to rerun: it only adds the table if it is not already published.
+do $
+begin
+  if exists (select 1 from pg_publication where pubname = 'supabase_realtime')
+     and not exists (
+       select 1 from pg_publication_tables
+       where pubname = 'supabase_realtime'
+         and schemaname = 'public'
+         and tablename = 'leads'
+     ) then
+    execute 'alter publication supabase_realtime add table public.leads';
+  end if;
+end;
+$;
+
 -- Important:
 -- 1. Never put a service_role key in browser code.
 -- 2. For clients to track enquiries, they must be signed in when submitting,
