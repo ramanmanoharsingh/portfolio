@@ -663,6 +663,8 @@ const SUPABASE_ANON_KEY = "sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG";
 
 const $id = id => document.getElementById(id);
 const setStatus = (message, kind="") => { const el=$id("auth-status"); el.textContent=message; el.className="fine "+kind; };
+window.AuthState={snapshot:{isLoggedIn:false,userRole:null,token:null,profileData:null},listeners:new Map(),on(type,fn){if(!this.listeners.has(type))this.listeners.set(type,new Set());this.listeners.get(type).add(fn);return()=>this.listeners.get(type)?.delete(fn);},emit(type,payload){for(const fn of this.listeners.get(type)||[])try{fn(payload)}catch(err){console.error(err)}}};
+const publishAuthState=snapshot=>{window.AuthState.snapshot=snapshot;window.AuthState.emit("change",snapshot);};
 const configReady = SUPABASE_URL.includes(".supabase.co") && !SUPABASE_URL.includes("YOUR_PROJECT_ID") && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
 let supabase=null, signup=false, currentUser=null, ownerLeads=[], ownerFilter="All", clientChannel=null, ownerChannel=null;
 const authCard=$id("auth-card"), clientDash=$id("client-dashboard"), ownerDash=$id("owner-dashboard");
@@ -748,16 +750,17 @@ async function submitLead(ev){ev.preventDefault();ev.stopImmediatePropagation();
 async function loadUser(user,{scrollToLogin=false}={}){
   const seq=++authLoadSequence;
   clearDash();currentUser=user;syncAuthActions(user);
-  if(!user){showSignedOut(scrollToLogin);setStatus("You are signed out.","ok");return;}
+  if(!user){showSignedOut(scrollToLogin);publishAuthState({isLoggedIn:false,userRole:null,token:null,profileData:null});setStatus("You are signed out.","ok");return;}
   authCard.hidden=true;setStatus("Verifying your account…");
   const {data:profile,error:profileError}=await supabase.from("profiles").select("role,full_name").eq("id",user.id).maybeSingle();
   if(seq!==authLoadSequence||currentUser?.id!==user.id)return;
   if(profileError||!profile||!["admin","client"].includes(profile.role)){
-    clearDash();authCard.hidden=false;syncAuthActions(user);routeAccount("login",true);
+    clearDash();authCard.hidden=false;syncAuthActions(user);publishAuthState({isLoggedIn:false,userRole:null,token:null,profileData:null});routeAccount("login",true);
     setStatus(profileError?"Your account is signed in, but we could not verify its workspace role. Please retry or contact Raman.":"Your account is signed in, but its workspace profile is missing or invalid. No dashboard access was granted; please contact Raman.","error");
     showAuthToast("Account workspace could not be verified.");
     return;
   }
+  publishAuthState({isLoggedIn:true,userRole:profile.role,token:null,profileData:{...profile,email:user.email,created_at:user.created_at}});
   if(profile.role==="admin"){
     ownerDash.hidden=false;$id("owner-identity").textContent=profile.full_name||user.email||"Administrator";
     routeAccount("admin",true);await refreshOwner();
