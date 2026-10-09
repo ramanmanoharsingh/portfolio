@@ -30,7 +30,7 @@
     nameField.classList.toggle('auth-hidden',!signup);$('#auth-name').required=signup;
     confirmField.classList.toggle('auth-hidden',!signup);confirmPassword.required=signup;
     rememberRow.classList.toggle('auth-hidden',!login);$('#auth-social-section').classList.toggle('auth-hidden',reset);
-    $('#auth-legal').classList.toggle('auth-hidden',reset);forgotLink.classList.toggle('auth-hidden',!login);
+    $('#auth-legal').classList.toggle('auth-hidden',reset);$('#auth-terms-row').classList.toggle('auth-hidden',!signup);$('#auth-back-login').classList.toggle('auth-hidden',!reset);forgotLink.classList.toggle('auth-hidden',!login);
     $('#auth-tabs').classList.toggle('auth-hidden',reset);
     submitLabel.textContent=login?'Sign in to your account':signup?'Create your account':'Send reset link';
     password.autocomplete=login?'current-password':'new-password';
