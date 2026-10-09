@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const error=params.get('error_description')||params.get('error')||hash.get('error_description')||hash.get('error');
   if(error){
     const code=params.get('error_code')||hash.get('error_code')||'';
-    const detail=decodeURIComponent(String(error).replace(/\+/g,' '));
+    const detail=String(error);
     fail('Sign-in could not be completed',code==='provider_disabled'||/provider.*not enabled|unsupported provider/i.test(detail)
       ?'Social sign-in is not enabled in the authentication settings yet. The site owner must enable the provider and add its OAuth credentials in Supabase.'
       :detail);
