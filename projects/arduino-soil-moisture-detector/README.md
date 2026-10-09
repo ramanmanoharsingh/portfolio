@@ -49,3 +49,12 @@ The sketch is an original beginner-friendly implementation using the Arduino ana
 - [Arduino reference: analogRead()](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogRead/)
 - [ArduinoGetStarted: Soil Moisture Sensor](https://arduinogetstarted.com/tutorials/arduino-soil-moisture-sensor)
 - [Adafruit Learning System: Simple Soil Moisture Sensor](https://learn.adafruit.com/adafruit-simple-soil-moisture-sensor/arduino-2)
+
+## Variant: percentage calibration
+`variants/soil_moisture_detection/soil_moisture_detection.ino` extends the idea. It averages 10 readings to reduce noise, converts them to an estimated 0 to 100% moisture value from two calibration points (`DRY_VALUE` and `WET_VALUE`), and lights the LED when the estimate falls below a percentage threshold. **This variant drives the LED from D6, not D7.**
+
+The percentage is an estimate based on your calibration, not a laboratory measurement. Record readings from dry and well-watered soil and update both calibration values before relying on it. A capacitive sensor is recommended for longer-term use.
+
+Further reading for this variant:
+- [SunFounder: Capacitive Soil Moisture Module](https://docs.sunfounder.com/projects/umsk/en/latest/02_arduino/uno_lesson02_soil_moisture.html)
+- [Arduino Project Hub: Soil Moisture Sensor with Arduino](https://projecthub.arduino.cc/Aswinth/soil-moisture-sensor-with-arduino-91c818)

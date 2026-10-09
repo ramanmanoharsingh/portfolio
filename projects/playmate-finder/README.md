@@ -1,15 +1,17 @@
 # PlayMate Finder
 
-A responsive frontend prototype for discovering sports partners and nearby players.
+A responsive frontend prototype for discovering sports partners and nearby players. It is the early prototype that [PlayMatch Sports Network](../playmatch-sports-network) grew from.
 
-## What It Shows
+## Features
 
-- Clean responsive layout
-- Sports/player discovery UI
+- Responsive layout
+- Sports and player discovery interface
 - Interactive controls
-- Frontend design and usability practice
 
-## How To Run
+## Tech
+
+HTML, CSS, JavaScript with no build step.
+
+## Run it
 
 Open `index.html` in a browser.
-

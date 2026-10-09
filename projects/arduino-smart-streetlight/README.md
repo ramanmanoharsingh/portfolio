@@ -50,3 +50,10 @@ The Arduino reads the LDR voltage through `analogRead(A0)`, which on a standard 
 The sketch is an original beginner-friendly implementation based on the documented Arduino `analogRead()` behavior and common LDR divider practice:
 - [Arduino reference: analogRead()](https://docs.arduino.cc/language-reference/en/functions/analog-io/analogRead/)
 - [Arduino Project Hub: Working with an LDR](https://projecthub.arduino.cc/SBR/working-with-light-dependent-resistor-ldr-265175)
+
+## Variant: single threshold
+`variants/smart_street_light/smart_street_light.ino` is a simpler version of the sketch. It uses one `LIGHT_THRESHOLD` instead of a dark/bright pair, so it has no hysteresis and can flicker near dusk. The wiring is identical (LED on D9), which makes it a good first test before moving to the main sketch. Calibrate the threshold for your own room and sensor.
+
+Further reading for this variant:
+- [Arduino Project Hub: Automatic Street Light Controller](https://projecthub.arduino.cc/SURYATEJA/automatic-street-light-controller-5e5cbf)
+- [Example GitHub project: Smart Street Light](https://github.com/anchitctrl/Smart-Street-Light)

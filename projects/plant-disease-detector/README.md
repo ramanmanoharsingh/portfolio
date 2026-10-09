@@ -1,106 +1,75 @@
-# Plant Disease Detection From Images
+# Plant Disease Detector
 
-This project trains a deep learning model to classify plant leaf disease images, then serves the model in a Streamlit web app with confidence scores, treatment suggestions, and optional Grad-CAM explainability.
+A deep learning app that classifies plant leaf diseases from a photo. It reports a confidence score, suggests next steps and shows a Grad-CAM heatmap of the image regions that drove the prediction.
 
-## 1. Project Setup
+## Features
 
-Create and activate a virtual environment:
+- MobileNetV2 transfer learning for image classification
+- Confidence score and treatment recommendation for each prediction
+- Grad-CAM explainability overlay
+- Streamlit web app and a command-line predictor
 
-```powershell
+## Tech
+
+Python, TensorFlow / Keras, Streamlit, OpenCV, scikit-learn, matplotlib, seaborn
+
+## Project structure
+
+```text
+src/
+  split_dataset.py   split raw images into train / val / test
+  train.py           train and evaluate the model
+  predict.py         predict one image from the command line
+  gradcam.py         Grad-CAM heatmap helpers
+app/streamlit_app.py web interface
+requirements.txt
+```
+
+## Setup
+
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+source .venv/bin/activate        # Windows: .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-If TensorFlow installation is slow or fails, install it separately:
+If TensorFlow fails to install with the rest, install it on its own with `pip install tensorflow`.
 
-```powershell
-pip install tensorflow
-```
+## Prepare the dataset
 
-## 2. Dataset Structure
-
-Put your raw dataset into this format:
+Arrange your raw images in one folder per class:
 
 ```text
 dataset_raw/
   Healthy/
-    image1.jpg
-    image2.jpg
   Early_Blight/
-    image1.jpg
-    image2.jpg
   Late_Blight/
-    image1.jpg
-    image2.jpg
 ```
 
-Then split it:
+Then split them:
 
-```powershell
+```bash
 python src/split_dataset.py --input dataset_raw --output dataset --train 0.7 --val 0.15 --test 0.15
 ```
 
-After splitting, the dataset will look like:
+Three classes (Healthy, Early Blight, Late Blight) make a good first version. Expand to more crops and diseases once that works. Datasets and trained models are not stored in this repository.
 
-```text
-dataset/
-  train/
-    Healthy/
-    Early_Blight/
-    Late_Blight/
-  val/
-    Healthy/
-    Early_Blight/
-    Late_Blight/
-  test/
-    Healthy/
-    Early_Blight/
-    Late_Blight/
-```
+## Train
 
-## 3. Train The Model
-
-Train MobileNetV2 using transfer learning:
-
-```powershell
+```bash
 python src/train.py --dataset dataset --epochs 10 --model-output models/plant_disease_model.keras
 ```
 
-The script saves:
+Training saves the model, `class_names.txt`, a training-history plot and a confusion matrix in `models/`.
 
-```text
-models/plant_disease_model.keras
-models/class_names.txt
-models/training_history.png
-models/confusion_matrix.png
-```
+## Predict one image
 
-## 4. Test One Image
-
-```powershell
+```bash
 python src/predict.py --model models/plant_disease_model.keras --classes models/class_names.txt --image path/to/leaf.jpg
 ```
 
-## 5. Run The Web App
+## Run the web app
 
-```powershell
+```bash
 streamlit run app/streamlit_app.py
 ```
-
-## 6. Recommended Dataset
-
-For the first version, use 3 classes only:
-
-```text
-Healthy
-Early_Blight
-Late_Blight
-```
-
-After this works, expand to more crops and disease categories.
-
-## 7. CV Bullet
-
-Developed an AI-powered plant disease detection web application using MobileNetV2 transfer learning, TensorFlow, Grad-CAM explainability, and Streamlit deployment to classify leaf diseases from uploaded images with confidence scores and treatment recommendations.
-

@@ -1,23 +1,31 @@
 # Titanic Kaggle ML
 
-A Kaggle-style machine learning project using the Titanic dataset.
+A Kaggle-style machine learning project that predicts passenger survival on the Titanic, from raw data to a submission file.
 
 ## Contents
 
-- `titanic_kaggle_solution.ipynb` - notebook workflow
-- `submission.csv` - generated prediction output
-- `data-sample/` - Titanic CSV files used for local experimentation
+```text
+titanic_kaggle_solution.ipynb   notebook with the full workflow
+submission.csv                  generated predictions
+data-sample/                    Titanic CSV files for local runs
+```
 
-## What It Shows
+## What it shows
 
 - Data loading and preprocessing
-- Exploratory machine learning workflow
+- A modelling workflow built in a notebook
 - Competition-style submission generation
 
-## Next Improvements
+## Tech
 
-- Add a cleaner markdown explanation inside the notebook
-- Compare multiple models
+Python, Jupyter, pandas, NumPy, scikit-learn, matplotlib, seaborn
+
+## Run it
+
+Open the notebook in Jupyter or upload it to Kaggle. It looks for the competition files under `/kaggle/input` first, then in the working directory.
+
+## Roadmap
+
+- Compare several models
 - Add cross-validation
-- Include feature importance
-
+- Report feature importance
