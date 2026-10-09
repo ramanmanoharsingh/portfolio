@@ -29,6 +29,8 @@ strong,b,h3.ch,.wm,.bk{font-family:Archivo,Helvetica,Arial,sans-serif;font-stret
 h3.ch{font:700 20px/1.2 "Space Grotesk",Helvetica,Arial,sans-serif;letter-spacing:-.01em}
 .cap{font-size:13px;color:var(--ink-mid)}.fine{font-size:12px;color:var(--ink-mid)}
 .lead{color:var(--ink-deep);max-width:640px;line-height:1.6}
+/* account identity */
+.account-link-content{display:inline-flex;align-items:center;gap:8px}.account-avatar{width:25px;height:25px;border-radius:50%;background:#292929;color:#fff;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;flex:none;font-size:11px;font-weight:700}.account-avatar img{width:100%;height:100%;object-fit:cover}
 /* nav */
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:#000;color:#fff}
 header.top nav{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:clamp(12px,1.5vw,24px);min-height:82px;padding:12px clamp(16px,3vw,48px);transition:min-height .3s var(--ease)}
@@ -717,10 +719,11 @@ function syncAuthActions(user,profile=currentProfile){
   const signedIn=Boolean(user);
   const name=profile?.full_name||user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split("@")[0]||"Account";
   const firstName=String(name).trim().split(/\s+/)[0].slice(0,18)||"Account";
-  const role=profile?.role||"client";
+  const avatar=profile?.avatar_url||user?.user_metadata?.avatar_url||user?.user_metadata?.picture||"";
+  const avatarHtml=avatar?'<span class="account-link-content"><span class="account-avatar"><img src="'+safe(avatar)+'" alt="" referrerpolicy="no-referrer"></span><span>Welcome, '+safe(firstName)+'</span></span>':'<span class="account-link-content"><span class="account-avatar">'+safe(firstName.charAt(0).toUpperCase())+'</span><span>Welcome, '+safe(firstName)+'</span></span>';
   for(const link of [navAuthAction,menuAuthAction]){
     if(!link)continue;
-    link.textContent=signedIn?"Welcome, "+firstName:"Sign in";
+    link.innerHTML=signedIn?avatarHtml:"Sign in";
     link.href="/dashboard.html";
     link.setAttribute("aria-label",signedIn?"Open account for "+name:"Sign in to your account");
     link.dataset.signedIn=signedIn?"true":"false";
