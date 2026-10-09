@@ -696,7 +696,7 @@ function clearDash(){
 function showSignedOut(shouldScroll=false){
   clearDash();currentUser=null;authCard.hidden=false;syncAuthActions(null);
   const onProtectedRoute=location.hash==="#/admin"||location.hash==="#/client";
-  if(shouldScroll||onProtectedRoute)routeAccount("login",shouldScroll);
+  if(shouldScroll||onProtectedRoute)routeAccount("login",shouldScroll||onProtectedRoute);
 }
 function showAuthToast(message){
   const el=$id("toast");if(!el)return;
