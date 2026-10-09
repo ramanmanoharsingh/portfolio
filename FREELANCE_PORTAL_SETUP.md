@@ -1,34 +1,50 @@
-# Develop with Raman — client portal setup
+# Develop with Raman — Phase 2 portal setup
 
-The portal frontend is already committed in `develop-with-raman/index.html`. It includes email/password sign-up and sign-in, password reset, Google and Apple OAuth buttons, a client dashboard, a private owner dashboard, enquiry status management, CSV export, and live-refresh hooks. The site uses **Supabase**, not Firebase, so it can run on Supabase's free tier.
+## Current implementation
 
-## What is already in the website
+This branch adds a Supabase-backed client portal to the existing Vanilla HTML/CSS/ES modules website. The original homepage auth form now redirects successfully authenticated users to `/welcome.html`; role-based logic routes administrators to `/admin-portal.html` and clients to `/client-dashboard.html`.
 
-- Supabase client configuration is present in the page using a browser-safe publishable key.
-- The owner dashboard is keyed to the verified account email `ramanmanoharsingh@gmail.com`.
-- The page has no fixed Starter/Standard/Pro package tiers; projects are scoped and quoted individually.
-- No payment collection is implemented.
-- The service-role key and OAuth client secrets must never be added to the HTML or committed to GitHub.
+- `/auth.html` — email/password login, registration, reset request, password meter, remember-me and Google/GitHub/LinkedIn OAuth entry points.
+- `/welcome.html` — client onboarding.
+- `/client-dashboard.html` — projects, milestones, approvals, private deliverables, invoices and new project briefs.
+- `/profile.html` — profile/preferences and password reset.
+- `/admin-portal.html` — client list, project progress, milestone creation, private file uploads, invoice/payment-link creation and proposal status management.
+- `/reset-password.html` — completes the password recovery flow.
+- `_redirects` — short routes such as `/auth`, `/welcome`, `/dashboard/client`, `/dashboard/admin` and `/profile`.
+- `_headers` — baseline security headers and no-index headers for portal pages.
 
-## One-time setup still required in Supabase
+The frontend uses the public Supabase publishable key. **Never place a service-role key, database password or OAuth client secret in the browser or repository.** Database RLS and Storage policies are the actual security boundary; client-side route guards are only UX.
 
-1. Sign in to the Supabase project whose URL is configured in the page. If you do not own that project, create a new project on the **Free** plan at https://supabase.com/ and replace `SUPABASE_URL` and `SUPABASE_ANON_KEY` in the page with that project's URL and publishable/anon key.
-2. In **SQL Editor**, run the entire `develop-with-raman/supabase-setup.sql` file.
-3. In **Authentication → URL Configuration**, set the Site URL to `https://ramanmanoharsingh.github.io/portfolio/develop-with-raman/` and add the same URL to the redirect URL allowlist.
-4. In **Authentication → Sign In / Providers**, enable Email. For account confirmation and password reset, configure the email settings and test the confirmation/reset links.
-5. For Google sign-in, create an OAuth client in Google Cloud Console. Add the Supabase callback URL shown in Supabase's Google provider setup as an authorized redirect URI, then enter the Google client ID and secret in Supabase. Do not put the secret in this repository.
-6. Sign up and verify `ramanmanoharsingh@gmail.com` as the owner account. Sign in with it to test the owner dashboard.
-7. Test client registration, email login, password reset, a signed-in enquiry, client enquiry history, owner lead filters/status updates, and CSV export.
+## Database changes already applied
 
-## Apple sign-in
+The connected Supabase project has migrations for profile fields and role escalation protection, proposals, invoices, milestone approval compatibility, profile self-service, and a private `client-deliverables` Storage bucket. SQL snapshots are documented under `develop-with-raman/migrations/`.
 
-Apple sign-in requires Apple Developer / OAuth configuration in addition to Supabase provider setup and may involve paid Apple Developer membership. It cannot be made functional purely by changing this repository. If you do not want any paid setup, use email/password and Google sign-in and leave Apple disabled in Supabase.
+The private Storage bucket accepts PDF, PNG, JPEG, WebP, ZIP and plain-text files up to 50 MB. Clients receive short-lived signed URLs only for files attached to their own projects. Project and invoice management remains admin-only through RLS.
 
-## Security and limitations
+## Required deployment and provider configuration
 
-- The publishable/anon key is intended for browser use; Row Level Security (RLS) is mandatory.
-- Never publish a Supabase service-role key, database password, or OAuth client secret.
-- Clients should only read enquiries attached to their authenticated user ID. Anonymous enquiries are intended for owner review only.
-- GitHub Pages is static hosting and cannot run private server code; Supabase provides hosted authentication and database services.
-- Google OAuth cannot be activated solely by a code commit: its client credentials must be configured in the Google and Supabase dashboards.
-- If the Supabase project URL/key in the HTML belongs to an unavailable or unowned project, replace them with credentials from a project you control.
+1. Confirm the Cloudflare Pages project publishes the `develop-with-raman` directory as its output/root directory so `_redirects`, `_headers`, and the HTML files are served at the domain root.
+2. In Supabase → Authentication → URL Configuration, set Site URL to `https://ramans.pages.dev` and add `https://ramans.pages.dev/**` to the redirect URL allowlist. Add your local development URL if needed.
+3. In Supabase → Authentication → Sign In / Providers, enable Email. Test email confirmation and password recovery delivery.
+4. Enable Google, GitHub and/or LinkedIn OIDC in Supabase and configure each provider's OAuth credentials and callback URL. Buttons cannot activate providers without that external setup.
+5. Confirm the intended owner profile has `profiles.role = 'admin'`. New registrations are always created as `client`; users cannot promote themselves. Role changes should be performed only through a trusted administrator/database console.
+6. In Supabase Auth security settings, enable leaked-password protection. The latest security advisor reported that this protection is currently disabled.
+7. Run the acceptance checklist below against the deployed domain before merging the pull request.
+
+## Acceptance checklist
+
+- [ ] A new registration receives a client profile; user-controlled metadata cannot assign the admin role.
+- [ ] Sign-in from the homepage redirects to the onboarding page, then the correct role-specific portal.
+- [ ] Invalid sessions are sent to the auth page; sign-out invalidates the local session.
+- [ ] A client can read only their own projects, invoices, proposals, milestones and deliverables.
+- [ ] A client can approve only a milestone submitted for approval, not edit its other fields.
+- [ ] An admin can update project status/progress, create milestones, upload private deliverables, create invoices and update proposal status.
+- [ ] Password reset completes on `/reset-password.html`.
+- [ ] OAuth providers work only after provider setup; unconfigured providers show an understandable error.
+- [ ] Mobile layouts, print invoice summary, file upload restrictions and signed URL expiry are tested.
+
+## Known boundaries
+
+- The portal does not charge cards itself. An admin can attach a payment URL from a payment provider; webhook-backed payment reconciliation has not been implemented.
+- The website is static. Server-only actions must live in Supabase/Postgres or a trusted server/edge function, never in browser JavaScript.
+- Automated browser end-to-end testing and live OAuth/payment-provider testing have not yet been run.
