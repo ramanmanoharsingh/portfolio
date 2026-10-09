@@ -1,83 +1,74 @@
-/* Develop with Raman — authenticated client portal.
-   Reuses the existing Supabase client when exposed as window.supabaseClient.
-   Otherwise configure window.SUPABASE_URL and window.SUPABASE_ANON_KEY before this script. */
+/* Develop with Raman — Supabase-backed portal. Authorization is enforced by database RLS. */
 (() => {
-  const $ = (s, root=document) => root.querySelector(s);
-  const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const toast = (message, error=false) => {
-    let el = $('#portal-toast');
-    if (!el) { el=document.createElement('div'); el.id='portal-toast'; el.className='portal-toast'; document.body.append(el); }
-    el.textContent=message; el.dataset.error=String(error); el.classList.add('show');
-    setTimeout(()=>el.classList.remove('show'),3500);
-  };
-  async function getClient() {
-    if (window.supabaseClient?.auth) return window.supabaseClient;
-    if (window.supabase?.auth && window.supabase?.from) return window.supabase;
-    if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY && window.supabase?.createClient) {
-      return window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-    }
-    throw new Error('Supabase client not found. Expose your existing client as window.supabaseClient before loading client-portal.js.');
-  }
-  const nice = value => String(value||'').replace(/[_-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-  const date = value => value ? new Date(value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) : '—';
-  async function init() {
-    const root=$('[data-portal]');
-    if (!root) return;
-    try {
-      const sb=await getClient();
+  const $=(s,r=document)=>r.querySelector(s);
+  const esc=(s='')=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const nice=s=>String(s||'').replace(/[_-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const date=s=>s?new Date(s).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):'—';
+  const money=(amount,currency='INR')=>new Intl.NumberFormat(undefined,{style:'currency',currency,maximumFractionDigits:2}).format(Number(amount)||0);
+  function toast(msg,error=false){let el=$('#portal-toast');if(!el){el=document.createElement('div');el.id='portal-toast';el.className='portal-toast';document.body.append(el);}el.textContent=msg;el.dataset.error=String(error);el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3500);}
+  function sameSiteNext(){const candidate=new URLSearchParams(location.search).get('next')||'/welcome.html';return candidate.startsWith('/')&&!candidate.startsWith('//')&&!candidate.includes('\\')?candidate:'/welcome.html';}
+  async function init(){
+    const root=$('[data-portal]');if(!root)return;
+    try{
+      const sb=window.supabaseClient;
+      if(!sb?.auth)throw new Error('Supabase client not configured. Check portal-supabase.js and the Supabase SDK.');
       const {data:{user},error:authError}=await sb.auth.getUser();
-      if(authError||!user){ location.replace('/login.html?next='+encodeURIComponent(location.pathname)); return; }
-      const {data:profile,error:profileError}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();
-      if(profileError) throw profileError;
-      if(!profile){ const {error}=await sb.from('profiles').upsert({id:user.id,full_name:user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'',role:'client'},{onConflict:'id'}); if(error) throw error; }
-      const currentProfile=profile || {id:user.id,full_name:user.user_metadata?.full_name||user.user_metadata?.name||'',role:'client'};
-      const isAdmin=currentProfile.role==='admin';
-      if(root.dataset.role==='client' && currentProfile.role!=='client' && !isAdmin){ location.replace('/unauthorized.html'); return; }
-      if(root.dataset.role==='admin' && !isAdmin){ location.replace('/welcome.html'); return; }
-      const name=currentProfile.full_name||user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'there';
-      document.querySelectorAll('[data-user-name]').forEach(el=>el.textContent=name);
-      document.querySelectorAll('[data-user-email]').forEach(el=>el.textContent=user.email||'');
-      document.querySelectorAll('[data-user-avatar]').forEach(el=>{
-        const src=currentProfile.avatar_url;
-        if(src){el.innerHTML='<img alt="" src="'+esc(src)+'">';}
-        else el.textContent=(name.trim()[0]||'U').toUpperCase();
-      });
-      const signOut=$('[data-sign-out]');
-      signOut?.addEventListener('click',async()=>{await sb.auth.signOut();location.replace('/login.html');});
-      if(root.dataset.page==='welcome') return;
-      if(root.dataset.page==='dashboard') {
-        const [projectsResult,leadsResult]=await Promise.all([
-          sb.from('projects').select('id,title,status,progress,due_date,service_type,updated_at').eq('client_id',user.id).order('updated_at',{ascending:false}).limit(8),
-          sb.from('leads').select('id,name,project_type,status,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(8)
-        ]);
-        if(projectsResult.error) throw projectsResult.error;
-        if(leadsResult.error) throw leadsResult.error;
-        const projects=projectsResult.data||[], leads=leadsResult.data||[];
-        $('[data-metric-projects]').textContent=projects.filter(p=>!['completed','cancelled'].includes(p.status)).length;
-        $('[data-metric-completed]').textContent=projects.filter(p=>p.status==='completed').length;
-        $('[data-metric-requests]').textContent=leads.length;
-        $('[data-metric-tasks]').textContent=projects.filter(p=>['planning','review','on_hold'].includes(p.status)).length;
-        const list=$('[data-project-list]');
-        list.innerHTML=projects.length?projects.map(p=>'<article class="project-row"><div class="project-symbol">↗</div><div class="project-main"><strong>'+esc(p.title)+'</strong><span>'+esc(nice(p.service_type))+' · Due '+esc(date(p.due_date))+'</span><div class="progress"><i style="width:'+Math.max(0,Math.min(100,Number(p.progress)||0))+'%"></i></div></div><span class="status status-'+esc(p.status)+'">'+esc(nice(p.status))+'</span></article>').join(''):'<div class="empty-state"><span>✳</span><strong>No projects yet</strong><p>Your projects will appear here when one is assigned to your account.</p><a class="button button-dark" href="/#contact">Explore services</a></div>';
-        const req=$('[data-request-list]');
-        req.innerHTML=leads.length?leads.map(l=>'<article class="request-row"><div><strong>'+esc(l.project_type||l.name||'Project enquiry')+'</strong><span>'+esc(date(l.created_at))+'</span></div><span class="status">'+esc(nice(l.status))+'</span></article>').join(''):'<p class="muted">No linked enquiries yet.</p>';
-      }
-      if(root.dataset.page==='profile') {
-        const form=$('#profile-form');
-        const fields={full_name:currentProfile.full_name||'',phone:currentProfile.phone||'',company_name:currentProfile.company_name||'',avatar_url:currentProfile.avatar_url||'',notify_email:currentProfile.notify_email??true,notify_project_updates:currentProfile.notify_project_updates??true};
-        Object.entries(fields).forEach(([key,val])=>{const el=form.elements.namedItem(key);if(el) {if(el.type==='checkbox')el.checked=Boolean(val);else el.value=val;}});
-        $('[data-account-id]').textContent=user.id;
-        $('[data-account-created]').textContent=date(user.created_at);
-        $('[data-account-status]').textContent=user.email_confirmed_at?'Verified':'Email verification pending';
-        form.addEventListener('submit',async e=>{
-          e.preventDefault();const btn=form.querySelector('[type=submit]');btn.disabled=true;btn.textContent='Saving…';
-          const payload={id:user.id,full_name:form.elements.full_name.value.trim(),phone:form.elements.phone.value.trim()||null,company_name:form.elements.company_name.value.trim()||null,avatar_url:form.elements.avatar_url.value.trim()||null,notify_email:form.elements.notify_email.checked,notify_project_updates:form.elements.notify_project_updates.checked,updated_at:new Date().toISOString()};
-          try {const {error}=await sb.from('profiles').upsert(payload,{onConflict:'id'});if(error)throw error;toast('Profile saved successfully.');document.querySelectorAll('[data-user-name]').forEach(el=>el.textContent=payload.full_name||name);document.querySelectorAll('[data-user-avatar]').forEach(el=>{el.textContent=(payload.full_name||name).trim()[0]?.toUpperCase()||'U';});}
-          catch(err){toast(err.message||'Could not save profile.',true);}
-          finally{btn.disabled=false;btn.textContent='Save changes';}
-        });
-      }
-    } catch(error) { console.error('[client portal]',error); const el=$('[data-error-message]');if(el){el.hidden=false;el.textContent='We could not load your account: '+(error.message||'Unknown error')+'. Check your Supabase client setup and database permissions.';} else toast(error.message||'Unable to load account.',true); }
+      if(authError||!user){location.replace('/auth.html?next='+encodeURIComponent(location.pathname+location.search));return;}
+      let {data:profile,error:profileError}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();
+      if(profileError)throw profileError;
+      if(!profile){const {error}=await sb.from('profiles').insert({id:user.id,full_name:user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'',role:'client'});if(error)throw error;({data:profile,error:profileError}=await sb.from('profiles').select('*').eq('id',user.id).single());if(profileError)throw profileError;}
+      const role=profile.role||'client';
+      if(root.dataset.role==='admin'&&role!=='admin'){location.replace('/client-dashboard.html');return;}
+      if(root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'){location.replace('/admin-portal.html');return;}
+      const name=profile.full_name||user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'there';
+      document.querySelectorAll('[data-user-name]').forEach(e=>e.textContent=name);
+      document.querySelectorAll('[data-user-email]').forEach(e=>e.textContent=user.email||'');
+      document.querySelectorAll('[data-user-avatar]').forEach(e=>{if(profile.avatar_url){const img=document.createElement('img');img.alt='';img.src=profile.avatar_url;e.replaceChildren(img);}else e.textContent=(name.trim()[0]||'U').toUpperCase();});
+      $('[data-sign-out]')?.addEventListener('click',async()=>{const {error}=await sb.auth.signOut();if(error){toast(error.message,true);return;}location.replace('/auth.html');});
+      if(root.dataset.page==='welcome'){const next=role==='admin'?'/admin-portal.html':'/client-dashboard.html';document.querySelectorAll('[data-dashboard-link]').forEach(a=>a.href=next);return;}
+      if(root.dataset.page==='profile'){await setupProfile(sb,user,profile,name);return;}
+      if(root.dataset.page==='dashboard'){await setupDashboard(sb,user,profile);return;}
+    }catch(error){console.error('[client portal]',error);const el=$('[data-error-message]');if(el){el.hidden=false;el.textContent='We could not load your account: '+(error.message||'Unknown error')+'.';}else toast(error.message||'Unable to load account.',true);}
+  }
+  async function setupProfile(sb,user,profile,name){
+    const form=$('#profile-form');if(!form)return;
+    const fields={full_name:profile.full_name||'',phone:profile.phone||'',company_name:profile.company_name||'',avatar_url:profile.avatar_url||'',notify_email:profile.notify_email??true,notify_project_updates:profile.notify_project_updates??true};
+    Object.entries(fields).forEach(([k,v])=>{const el=form.elements.namedItem(k);if(el){if(el.type==='checkbox')el.checked=Boolean(v);else el.value=v;}});
+    $('[data-account-id]').textContent=user.id;$('[data-account-created]').textContent=date(user.created_at);$('[data-account-status]').textContent=user.email_confirmed_at?'Verified':'Email verification pending';
+    form.addEventListener('submit',async e=>{e.preventDefault();const btn=form.querySelector('[type=submit]');btn.disabled=true;try{const payload={id:user.id,full_name:form.elements.full_name.value.trim(),phone:form.elements.phone.value.trim()||null,company_name:form.elements.company_name.value.trim()||null,avatar_url:form.elements.avatar_url.value.trim()||null,notify_email:form.elements.notify_email.checked,notify_project_updates:form.elements.notify_project_updates.checked,updated_at:new Date().toISOString()};const {error}=await sb.from('profiles').update(payload).eq('id',user.id);if(error)throw error;toast('Profile saved successfully.');document.querySelectorAll('[data-user-name]').forEach(el=>el.textContent=payload.full_name||name);document.querySelectorAll('[data-user-avatar]').forEach(el=>el.textContent=(payload.full_name||name).trim()[0]?.toUpperCase()||'U');}catch(err){toast(err.message||'Could not save profile.',true);}finally{btn.disabled=false;btn.textContent='Save changes';}});
+    $('#password-change-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const password=form.elements.new_password.value;if(password.length<8){toast('Password must contain at least 8 characters.',true);return;}const {error}=await sb.auth.updateUser({password});if(error)toast(error.message,true);else{form.reset();toast('Password updated.');}});
+  }
+  async function setupDashboard(sb,user,profile){
+    const root=$('[data-page="dashboard"]');
+    const load=async(table,select,order='created_at')=>{const r=await sb.from(table).select(select).order(order,{ascending:false}).limit(100);if(r.error)throw r.error;return r.data||[];};
+    const {data:projects,error:projectError}=await sb.from('projects').select('id,title,description,service_type,status,progress,due_date,live_url,updated_at').eq('client_id',user.id).order('updated_at',{ascending:false}).limit(100);if(projectError)throw projectError;
+    const ids=(projects||[]).map(p=>p.id);
+    let milestones=[],deliverables=[];
+    if(ids.length){const [m,d]=await Promise.all([sb.from('milestones').select('id,project_id,title,description,status,due_date,sort_order,progress,approved_at,deliverable_url').in('project_id',ids).order('sort_order'),sb.from('deliverables').select('id,project_id,title,description,file_url,status,created_at').in('project_id',ids).order('created_at',{ascending:false})]);if(m.error)throw m.error;if(d.error)throw d.error;milestones=m.data||[];deliverables=d.data||[];}
+    const [invoices,proposals]=await Promise.all([sb.from('invoices').select('id,project_id,invoice_number,description,amount,currency,status,issued_at,due_at,paid_at,payment_url').eq('client_id',user.id).order('issued_at',{ascending:false}),sb.from('proposals').select('id,title,description,status,budget,timeline,created_at').eq('client_id',user.id).order('created_at',{ascending:false})]);
+    if(invoices.error)throw invoices.error;if(proposals.error)throw proposals.error;
+    const inv=invoices.data||[],props=proposals.data||[],active=(projects||[]).filter(p=>!['completed','cancelled'].includes(p.status));
+    $('[data-metric-projects]').textContent=active.length;
+    const pendingMilestones=milestones.filter(m=>m.status==='submitted_for_approval').length;
+    const pendingInvoices=inv.filter(i=>['pending','overdue'].includes(i.status));
+    $('[data-metric-completed]').textContent=pendingMilestones;
+    $('[data-metric-requests]').textContent=props.filter(p=>['submitted','reviewing','quoted'].includes(p.status)).length;
+    $('[data-metric-tasks]').textContent=pendingInvoices.length;
+    const total=inv.filter(i=>i.status==='paid').reduce((n,i)=>n+Number(i.amount||0),0);
+    $('[data-investment-total]')?.replaceChildren(document.createTextNode(money(total)));
+    const nextDate=milestones.filter(m=>m.due_date&&!['completed','approved'].includes(m.status)).map(m=>m.due_date).sort()[0];
+    const dateEl=$('[data-next-milestone]');if(dateEl)dateEl.textContent=date(nextDate);
+    const projectBox=$('[data-project-list]');
+    if(projectBox)projectBox.innerHTML=(projects||[]).length?(projects||[]).map(p=>'<article class="project-row"><div class="project-symbol">↗</div><div class="project-main"><strong>'+esc(p.title||'Project')+'</strong><span>'+esc(nice(p.service_type))+' · Due '+esc(date(p.due_date))+'</span><div class="progress"><i style="width:'+Math.max(0,Math.min(100,Number(p.progress)||0))+'%"></i></div><small class="muted">'+Math.max(0,Math.min(100,Number(p.progress)||0))+'% complete</small></div><span class="status status-'+esc(p.status)+'">'+esc(nice(p.status))+'</span></article>').join(''):'<div class="empty-state"><span>✳</span><strong>No projects yet</strong><p>Submit a brief to start your next project.</p></div>';
+    const msBox=$('[data-milestone-list]');if(msBox)msBox.innerHTML=milestones.length?milestones.map(m=>'<article class="request-row"><div><strong>'+esc(m.title)+'</strong><span>'+esc(date(m.due_date))+' · '+esc(nice(m.status))+'</span>'+(m.deliverable_url?'<p><a target="_blank" rel="noopener noreferrer" href="'+esc(m.deliverable_url)+'">View milestone deliverable ↗</a></p>':'')+'</div>'+(m.status==='submitted_for_approval'?'<button class="button button-dark" data-approve-milestone="'+esc(m.id)+'">Approve</button>':'<span class="status">'+esc(nice(m.status))+'</span>')+'</article>').join(''):'<p class="muted">Milestones appear when a project is assigned.</p>';
+    msBox?.querySelectorAll('[data-approve-milestone]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;const {error}=await sb.from('milestones').update({status:'approved',approved_at:new Date().toISOString()}).eq('id',b.dataset.approveMilestone);if(error){toast(error.message,true);b.disabled=false;}else{toast('Milestone approved.');await setupDashboard(sb,user,profile);}}));
+    const invBox=$('[data-invoice-list]');if(invBox)invBox.innerHTML=inv.length?'<div class="table-scroll"><table class="portal-table"><thead><tr><th>Invoice</th><th>Issued</th><th>Due</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>'+inv.map(i=>'<tr><td>'+esc(i.invoice_number)+'<small>'+esc(i.description)+'</small></td><td>'+esc(date(i.issued_at))+'</td><td>'+esc(date(i.due_at))+'</td><td>'+esc(money(i.amount,i.currency||'INR'))+'</td><td><span class="status status-'+esc(i.status)+'">'+esc(nice(i.status))+'</span></td><td>'+(i.payment_url?'<a target="_blank" rel="noopener noreferrer" href="'+esc(i.payment_url)+'">Pay ↗</a>':'')+'</td></tr>').join('')+'</tbody></table></div><button class="button" data-print-invoices style="margin-top:14px">Print invoice summary ↗</button>':'<p class="muted">No invoices have been issued yet.</p>';
+    $('[data-print-invoices]')?.addEventListener('click',()=>{const w=window.open('','_blank','noopener,noreferrer');if(!w){toast('Allow pop-ups to print the invoice summary.',true);return;}w.document.write('<!doctype html><html><head><title>Invoice summary</title><style>body{font:14px system-ui;padding:30px}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:10px;border-bottom:1px solid #ddd}</style></head><body><h1>Invoice summary</h1><p>Prepared '+esc(date(new Date().toISOString()))+'</p>'+invBox.querySelector('.table-scroll').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
+    const dBox=$('[data-deliverable-list]');if(dBox)dBox.innerHTML=deliverables.length?deliverables.map(d=>'<article class="request-row"><div><strong>'+esc(d.title)+'</strong><span>'+esc(d.description||nice(d.status))+' · '+esc(date(d.created_at))+'</span></div>'+(d.file_url?'<a class="button" href="'+esc(d.file_url)+'" target="_blank" rel="noopener noreferrer">Open file ↗</a>':'<span class="status">'+esc(nice(d.status))+'</span>')+'</article>').join(''):'<p class="muted">Your shared files will appear here.</p>';
+    const pBox=$('[data-proposal-list]');if(pBox)pBox.innerHTML=props.length?props.map(p=>'<article class="request-row"><div><strong>'+esc(p.title)+'</strong><span>'+esc(date(p.created_at))+' · '+esc(nice(p.status))+'</span></div><span class="status">'+esc(nice(p.status))+'</span></article>').join(''):'<p class="muted">No proposals submitted yet.</p>';
+    document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-dashboard-tab]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('[data-dashboard-panel]').forEach(p=>p.hidden=p.dataset.dashboardPanel!==b.dataset.dashboardTab);}));
+    const modal=$('#proposal-modal');$('[data-open-proposal]')?.addEventListener('click',()=>{modal.hidden=false;modal.querySelector('input')?.focus();});modal?.querySelectorAll('[data-close-modal]').forEach(b=>b.addEventListener('click',()=>modal.hidden=true));modal?.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true;});
+    $('#proposal-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,btn=form.querySelector('[type=submit]');btn.disabled=true;try{const data={client_id:user.id,title:form.elements.title.value.trim(),description:form.elements.description.value.trim(),budget:form.elements.budget.value?Number(form.elements.budget.value):null,timeline:form.elements.timeline.value.trim()||null,status:'submitted'};if(data.title.length<3||data.description.length<20)throw new Error('Add a title and at least 20 characters describing your project.');const {error}=await sb.from('proposals').insert(data);if(error)throw error;form.reset();modal.hidden=true;toast('Project brief submitted.');await setupDashboard(sb,user,profile);}catch(err){toast(err.message||'Could not submit the brief.',true);}finally{btn.disabled=false;}});
   }
   document.addEventListener('DOMContentLoaded',init);
 })();
