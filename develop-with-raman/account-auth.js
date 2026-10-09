@@ -36,7 +36,7 @@
     password.autocomplete=login?'current-password':'new-password';
     password.required=!reset;password.disabled=reset;password.classList.toggle('auth-hidden',reset);
     $('#password-field-label').classList.toggle('auth-hidden',reset);
-    strength.dataset.visible=String(signup);
+    strength.dataset.visible=String(signup);$('#auth-password-strength-label').classList.toggle('auth-hidden',!signup);
     if(reset){$('#auth-password-label').textContent='Email address';$('#auth-email').focus();}
     else {$('#auth-password-label').textContent='Password';$('#auth-email').focus();}
   };
