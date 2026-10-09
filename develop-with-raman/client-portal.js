@@ -31,7 +31,7 @@
       if(profileError) throw profileError;
       if(!profile){ const {error}=await sb.from('profiles').upsert({id:user.id,full_name:user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'',role:'client'},{onConflict:'id'}); if(error) throw error; }
       const currentProfile=profile || {id:user.id,full_name:user.user_metadata?.full_name||user.user_metadata?.name||'',role:'client'};
-      const isAdmin=currentProfile.role==='admin' || user.email?.toLowerCase()==='ramanmanoharsingh@gmail.com';
+      const isAdmin=currentProfile.role==='admin';
       if(root.dataset.role==='client' && currentProfile.role!=='client' && !isAdmin){ location.replace('/unauthorized.html'); return; }
       if(root.dataset.role==='admin' && !isAdmin){ location.replace('/welcome.html'); return; }
       const name=currentProfile.full_name||user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'there';
