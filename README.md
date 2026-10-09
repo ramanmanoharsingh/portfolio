@@ -1,82 +1,72 @@
-# Develop with Raman — Supabase client workspace
+# Develop with Raman — Portfolio & Client Services
 
-The site is a plain HTML/CSS/JavaScript website hosted on GitHub Pages. The client workspace is already wired to Supabase Auth and the `public.leads` table; it is waiting for your own Supabase project credentials. No React build step is required.
+**Live website:** https://ramans.pages.dev  
+**Repository:** https://github.com/ramanmanoharsingh/portfolio
 
-## What is implemented
+This repository contains Raman's personal portfolio, web-development projects, machine-learning experiments, Arduino prototypes, and the source for the **Develop with Raman** website.
 
-- Custom-quote enquiry form (no fixed plan/package pricing).
-- Email/password sign-up, sign-in and password reset.
-- Google and Apple OAuth buttons (each provider must be configured in Supabase first).
-- Client dashboard showing enquiries linked to the signed-in account.
-- Owner dashboard for `ramanmanoharsingh@gmail.com`, with status filters, status updates, live refresh and CSV export.
-- Row Level Security (RLS) policies in `develop-with-raman/supabase-setup.sql`.
+## Current status
 
-## 1. Create a Supabase project
+- The repository's default branch is `main`.
+- The website is a mostly static HTML/CSS/JavaScript project; there is no root-level package manager or mandatory build step.
+- The main branch contains the existing portfolio and enquiry flow.
+- [PR #1 — Portfolio quote shortlist](https://github.com/ramanmanoharsingh/portfolio/pull/1) is open and has not been merged.
+- [PR #2 — Client portal and onboarding](https://github.com/ramanmanoharsingh/portfolio/pull/2) is a draft and has not been merged. Its additional portal pages must not be assumed to be live yet.
+- Google/GitHub/other OAuth providers require configuration in the identity provider and Supabase dashboard. A code change alone cannot activate OAuth.
 
-1. Open [Supabase](https://supabase.com/) and sign in.
-2. Create a new project, choose a project name and a strong database password, and select the Free plan.
-3. Wait for the project to finish provisioning.
-4. In the project dashboard, open **Project Settings → API** (the exact menu label may be **API Keys** in the newer dashboard).
-5. Copy the **Project URL** and the browser-safe **publishable key** (or legacy `anon` key). Never copy a `service_role` or secret key into this website.
+The public website is hosted at Cloudflare Pages. Confirm the Cloudflare project's connected branch and root/build directory in its dashboard before changing deployment settings; do not assume GitHub Pages instructions apply.
 
-## 2. Connect the repository
+## Repository map
 
-1. Open [the website HTML](https://github.com/ramanmanoharsingh/portfolio/blob/main/develop-with-raman/index.html).
-2. Find these two constants near the bottom of the file:
-   ```js
-   const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
-   const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-   ```
-3. Replace the placeholder URL and key with the values from your Supabase project. The publishable/anon key is designed to be used in browser code; database permissions must be enforced by RLS.
-4. Commit the edit to `main`. GitHub Pages will publish the updated static page.
+```text
+.
+├── develop-with-raman/       Website source, assets, SQL setup and portal work
+├── projects/                 Individual coding and hardware projects
+├── ideas/                    Project ideas and planning notes
+├── profile/                  GitHub profile assets/content (where present)
+├── README.md                 Repository overview and working instructions
+├── FREELANCE_PORTAL_SETUP.md Supabase/enquiry and portal setup notes
+└── .gitignore                Local files, secrets and generated artifacts
+```
 
-## 3. Create the database and security policies
+### Featured projects
 
-1. In Supabase, open **SQL Editor → New query**.
-2. Open [`develop-with-raman/supabase-setup.sql`](https://github.com/ramanmanoharsingh/portfolio/blob/main/develop-with-raman/supabase-setup.sql) in the repository, copy its full contents, paste into the SQL Editor, and run it.
-3. Confirm that the `public.leads` table exists under **Table Editor**.
-4. Keep RLS enabled. Do not make the table publicly readable and never add the service-role key to HTML.
+| Project | Area | Main technologies |
+|---|---|---|
+| [PlayMatch Sports Network](projects/playmatch-sports-network) | Web application | HTML, CSS, JavaScript |
+| [Plant Disease Detector](projects/plant-disease-detector) | AI / ML | Python, TensorFlow, Streamlit, OpenCV |
+| [Titanic Kaggle ML](projects/titanic-kaggle-ml) | Data science | Python, pandas, scikit-learn, Jupyter |
+| [PlayMate Finder](projects/playmate-finder) | Web prototype | HTML, CSS, JavaScript |
+| [Arduino Smart Streetlight](projects/arduino-smart-streetlight) | Embedded systems | Arduino, C++ |
+| [Arduino Soil Moisture Detector](projects/arduino-soil-moisture-detector) | Embedded systems | Arduino, C++ |
+| [Python Assignments](projects/python-assignments) | Programming fundamentals | Python |
 
-The SQL policy grants owner access based on the configured owner email `ramanmanoharsingh@gmail.com`. The dashboard uses that same email to choose the owner UI. If you want to use another admin email, update both the HTML constant `OWNER_EMAIL` and the owner email checks in the SQL, then rerun the SQL.
+Each project should keep its own README with purpose, setup/run steps, dependencies, and known limitations. Preserve source data and educational files unless a deliberate review confirms they are redundant or safe to remove.
 
-## 4. Configure authentication URLs
+## Local development
 
-In Supabase, open **Authentication → URL Configuration**:
+1. Clone the repository and create a working branch from the latest `main`.
+2. Open `develop-with-raman/index.html` directly for a static-page review, or use a local static server if you need route rewrites and realistic navigation.
+3. Check browser developer tools for console errors, failed network requests, and responsive-layout issues.
+4. Test changes on a preview deployment before merging them into the live site.
+5. Keep commits focused and use pull requests for reviewable changes.
 
-- **Site URL:** `https://ramanmanoharsingh.github.io/portfolio/develop-with-raman/`
-- Add that exact URL to **Redirect URLs**.
-- Also add your eventual custom-domain URL if you use one.
+There is no single root-level automated test command at present. Add repeatable syntax, link, accessibility, and browser smoke tests before making broad refactors.
 
-Email confirmation is recommended. When enabled, test sign-up and follow the verification email before signing in.
+## Authentication and security
 
-## 5. Enable Google sign-in
+- Never commit passwords, OAuth client secrets, Supabase service-role keys, private API tokens, or real customer data.
+- A Supabase publishable/legacy anon key may appear in browser code by design, but **Row Level Security (RLS)** must protect every exposed table and storage bucket.
+- Set OAuth callback URLs and allowed redirects in the Supabase/provider dashboards. Keep production and preview URLs intentional.
+- The portal in PR #2 adds more functionality, but it requires provider setup and end-to-end checks before release.
+- Payment links are not the same as a complete payment integration; webhook-backed payment verification must be implemented before claiming automated payment reconciliation.
 
-1. In Supabase, open **Authentication → Sign In / Providers → Google** and copy the callback URL shown there (it looks like `https://<project-ref>.supabase.co/auth/v1/callback`).
-2. Open [Google Cloud Console](https://console.cloud.google.com/), create/select a project, and configure the OAuth consent screen.
-3. Create an OAuth Client ID of type **Web application**.
-4. Add this as an **Authorized JavaScript origin**: `https://ramanmanoharsingh.github.io`
-5. Add the Supabase callback URL from step 1 as an **Authorized redirect URI**.
-6. Copy the Google Client ID and Client Secret into the Google provider settings in Supabase and enable the provider.
+## Repository hygiene priorities
 
-Google OAuth credentials are configured in Supabase, not in the public HTML. Google sign-in will not work until this setup is complete.
+1. Keep `main` as the source of truth; rebase/recreate stale work on current `main` instead of merging old branches blindly.
+2. Keep large media assets optimized and outside inline HTML where practical.
+3. Split the large homepage into maintainable CSS/JavaScript modules only after preserving behavior with regression tests.
+4. Document the actual Cloudflare Pages root directory, redirect behavior, environment/configuration needs, and release process.
+5. Keep generated model weights, datasets, caches, build output, and local secrets out of Git.
 
-## 6. Apple sign-in (optional)
-
-Apple sign-in also needs an Apple Developer configuration, including a Services ID, Sign in with Apple setup, key and domain/callback configuration. It may require a paid Apple Developer membership. If you do not have those credentials, leave Apple disabled for now; email and Google can work without it.
-
-## 7. Test both roles
-
-1. Open the live site and create a test client account using an email you control.
-2. Verify the email if prompted, then sign in and submit a test enquiry while signed in.
-3. Sign out and sign in as `ramanmanoharsingh@gmail.com`. The enquiry should appear in the owner dashboard.
-4. Sign back in as the client. The client dashboard should show only enquiries tied to that account.
-5. Test Google sign-in after provider configuration.
-6. Test status changes and CSV export from the owner dashboard.
-
-## Important limits
-
-- GitHub Pages only serves static files. Supabase provides authentication, database and row-level security.
-- The client dashboard currently tracks **enquiries and their statuses**. It is not yet a full project-management system with milestones, file uploads, invoices or payments.
-- Guest enquiries can be submitted, but because they have no signed-in user ID, they are visible to the owner and do not automatically attach to a client account later.
-- Supabase Free has usage and inactivity limits. Check the current Supabase pricing/limits before relying on it for a production business.
-- Never place a database password, OAuth client secret, service-role key, or other private server credential in the HTML or GitHub repository.
+See [the repository audit](docs/REPOSITORY_AUDIT.md) for the current findings and the cleanup plan.
