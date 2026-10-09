@@ -2,6 +2,9 @@
 -- Trigger functions do not need to be directly executable by browser roles.
 revoke all on function public.prevent_profile_role_escalation() from public, anon, authenticated;
 
+-- Keep a single profile-role guard trigger; both old and new trigger names used the same function.
+drop trigger if exists protect_profile_role on public.profiles;
+
 -- Remove a duplicate SELECT policy; the remaining policy has the same ownership predicate.
 drop policy if exists "Read project milestones" on public.milestones;
 
