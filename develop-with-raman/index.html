@@ -717,9 +717,9 @@ function syncAuthActions(user){
   const signedIn=Boolean(user);
   for(const link of [navAuthAction,menuAuthAction]){
     if(!link)continue;
-    link.textContent=signedIn?"Sign out":"Sign in";
-    link.href=signedIn?"#signout":"#account";
-    link.setAttribute("aria-label",signedIn?"Sign out of your account":"Sign in to your account");
+    link.textContent=signedIn?"Sign out":"Client portal";
+    link.href=signedIn?"#signout":"/auth.html";
+    link.setAttribute("aria-label",signedIn?"Sign out of your account":"Open your client portal");
     link.dataset.signedIn=signedIn?"true":"false";
   }
 }

@@ -1,0 +1,10 @@
+/auth/callback /auth-callback.html 200
+/auth /auth.html 200
+/login /auth.html 200
+/welcome /welcome.html 200
+/dashboard/client /client-dashboard.html 200
+/client-dashboard /client-dashboard.html 200
+/profile /profile.html 200
+/dashboard/admin /admin-portal.html 200
+/admin /admin-portal.html 200
+/reset-password /reset-password.html 200
