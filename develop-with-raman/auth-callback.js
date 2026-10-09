@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const code=params.get('error_code')||hash.get('error_code')||'';
     const detail=decodeURIComponent(String(error).replace(/\+/g,' '));
     fail('Sign-in could not be completed',code==='provider_disabled'||/provider.*not enabled|unsupported provider/i.test(detail)
-      ?'Google sign-in is not enabled in the authentication settings yet. The site owner must enable the provider and add its OAuth credentials in Supabase.'
+      ?'Social sign-in is not enabled in the authentication settings yet. The site owner must enable the provider and add its OAuth credentials in Supabase.'
       :detail);
     return;
   }
