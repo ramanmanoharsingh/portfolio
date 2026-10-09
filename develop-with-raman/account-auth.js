@@ -43,6 +43,7 @@
   const getClient = () => {
     const remember=$('#auth-remember')?.checked!==false;
     document.cookie='portal_session='+(remember?'0':'1')+'; Path=/; SameSite=Lax; Secure'+(remember?'; Max-Age=31536000':'');
+    document.cookie=remember?'portal_session=; Max-Age=0; Path=/; SameSite=Lax':'portal_session=1; Max-Age=86400; Path=/; SameSite=Lax';
     if(typeof window.createPortalSupabaseClient==='function'){state.client=window.createPortalSupabaseClient(remember);return state.client;}
     if(window.supabaseClient)return window.supabaseClient;
     throw new Error('The authentication service did not load. Please refresh and try again.');
@@ -83,7 +84,7 @@
       if(state.mode==='login'){
         const {data,error}=await client.auth.signInWithPassword({email,password:pass});if(error)throw error;
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
-        showMessage('Signed in successfully. Opening your workspace…','success');location.assign('/welcome');
+        showMessage('Signed in successfully. Opening your workspace…','success');location.assign('/#/welcome');
       }else if(state.mode==='signup'){
         const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/auth/callback'}});if(error)throw error;
         if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign('/welcome');}
