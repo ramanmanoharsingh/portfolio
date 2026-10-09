@@ -1,26 +1,28 @@
-# Client portal and freelance dashboard setup
+# Develop with Raman — client portal setup
 
-The frontend is prepared for Firebase Authentication + Cloud Firestore. GitHub Pages is static hosting, so it cannot securely create accounts or store private enquiries on its own.
+The site is a static GitHub Pages frontend with a Supabase Auth + Postgres backend integration. The Supabase free tier is enough to start; Google sign-in and email/password can be used without Firebase billing. Apple sign-in requires Apple Developer configuration and may involve a paid Apple Developer membership.
 
-## One-time setup
-1. Open https://console.firebase.google.com/ and create a Firebase project.
-2. In Project settings → General → Your apps, register a Web app and copy its Firebase config.
-3. Authentication → Sign-in method: enable Email/Password and Google. Apple sign-in also requires an Apple Developer account, Services ID, key, and callback configuration; enable it only after those are ready.
-4. Authentication → Settings → Authorized domains: add `ramanmanoharsingh.github.io`.
-5. Create a Cloud Firestore database.
-6. Replace the placeholder `firebaseConfig` in `develop-with-raman/index.html` with the web app config. The website intentionally does not claim authentication or storage works until real config values are added.
-7. Publish `firestore.rules` to Firestore (Firebase Console → Firestore → Rules).
-8. Create/sign in to the owner account using `ramanmanoharsingh@gmail.com` and verify the email. The owner dashboard is selected by that email plus Firebase's verified-email claim; never put a private service-account key in frontend code.
-9. Test client sign-up, email verification, Google login, Apple login (after Apple setup), password reset, client-only visibility, owner lead pipeline and status updates.
+## Connect the free backend
 
-## What still needs your Firebase project
-I can prepare and commit the website code, rules, and setup instructions from this repository. I cannot create/own your Firebase project or generate its real web-app configuration on your behalf. After you create the Firebase project, paste the **Web app config** (apiKey, authDomain, projectId, appId) here and I can wire it into the site. Do not share passwords, service-account private keys, or Apple private keys.
+1. Create a project at https://supabase.com/ and choose the Free plan.
+2. In the Supabase dashboard, open **Project Settings → API** (or **Connect**) and copy the Project URL and publishable/anon key.
+3. Open `develop-with-raman/index.html` and find the Supabase configuration block near the client-portal script. Replace the placeholder URL/key with those two public client values.
+4. In Supabase **SQL Editor**, run the complete `develop-with-raman/supabase-setup.sql` file from this repository. It creates the `leads` table and row-level security policies.
+5. In **Authentication → URL Configuration**, set the site URL to `https://ramanmanoharsingh.github.io/portfolio/develop-with-raman/` and add that URL to the redirect URL allowlist.
+6. In **Authentication → Providers**, enable Email and Google. Configure Google OAuth credentials in the Google Cloud console and enter the client ID/secret in Supabase. Keep all OAuth client secrets in the provider dashboard, never in this repository.
+7. For owner access, sign up with `ramanmanoharsingh@gmail.com` and verify the email. The site uses that email to display the owner dashboard; database access is additionally protected by row-level security policies.
+8. Test client sign-up, email/password login, Google login, password reset, client-only enquiry visibility, owner lead pipeline, and status updates.
 
-## Logic decisions
-- Removed fixed Starter/Standard/Pro packages; clients request custom scope and a written quote.
-- Enquiries are designed to go to Firestore, not WhatsApp.
-- Signed-in clients see only records tied to their Firebase UID; owner sees all leads.
-- Owner status options: New, Contacted, Scoped, In Progress, Waiting on Client, Completed, Declined.
-- Anonymous enquiries are permitted and visible only to the owner. For account-only enquiries, remove the anonymous create clause and require login before submission.
-- The frontend refuses to claim data was sent while Firebase config is missing.
-- Never store service-account private keys in this repository.
+## Apple sign-in
+
+The button is present in the UI, but Apple login is not operational until Apple OAuth is configured in Supabase and Apple Developer settings. If you do not have that setup, leave the provider disabled; the site should report that the provider is not configured rather than pretending login succeeded.
+
+## Security and current limits
+
+- The public Supabase URL and anon/publishable key are intended for browser use; row-level security is essential.
+- Never put a Supabase service-role key, database password, or OAuth client secret in frontend code or commit it to GitHub.
+- Clients should only be able to read their own enquiries. The owner policy allows the designated owner email to manage the enquiry pipeline.
+- GitHub Pages cannot run private server code itself; Supabase provides the hosted auth/database services.
+- No fixed Starter/Standard/Pro package tiers are used. Clients request a custom scope and receive a written quote before work begins.
+- No payment is collected on the website.
+- The website cannot be fully live-connected until you create the Supabase project, configure providers, and add its project URL and public anon/publishable key.
