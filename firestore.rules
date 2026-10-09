@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn() { return request.auth != null; }
+  function isOwner() { return signedIn() && request.auth.token.email == "ramanmanoharsingh@gmail.com"; }
+  match /leads/{leadId} {
+   allow create: if (signedIn() && request.resource.data.userId == request.auth.uid && request.resource.data.clientEmail == request.auth.token.email) || (!signedIn() && request.resource.data.userId == null);
+   allow read: if isOwner() || (signedIn() && resource.data.userId == request.auth.uid);
+   allow update: if isOwner() || (signedIn() && resource.data.userId == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name","email","whatsapp","projectType","budgetRange","deadline","preferredPayment","description","updatedAt"]));
+   allow delete: if isOwner();
+  }
+ }
+}
