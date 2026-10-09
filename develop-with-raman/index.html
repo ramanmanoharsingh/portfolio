@@ -383,15 +383,15 @@ $('#b').innerHTML=['Under ₹5,000','₹5,000 – ₹10,000','₹10,000 – ₹2
 const est=()=>{const b=S[$('#qs').value][2],n=+$('#qp').value;$('#qv').textContent=n;let l=b+(n-1)*b*.25;if($('#qr').checked)l*=1.25;$('#qo').textContent='₹'+Math.round(l/100)*100+' – ₹'+Math.round(l*1.4/100)*100};
 ['#qs','#qp','#qr'].forEach(s=>$(s).oninput=est);est();
 const CART_KEY='raman-project-shortlist-v1';let cart=[];
-try{const saved=JSON.parse(localStorage.getItem(CART_KEY)||'[]');if(Array.isArray(saved))cart=saved.filter(x=>x&&typeof x.id==='string'&&typeof x.service==='string'&&Number.isFinite(+x.low)&&Number.isFinite(+x.high))}catch(e){}
+try{const saved=JSON.parse(localStorage.getItem(CART_KEY)||'[]');if(Array.isArray(saved))cart=saved.filter(x=>x&&typeof x.id==='string'&&/^[a-z0-9]+$/i.test(x.id)&&typeof x.service==='string'&&S.some(service=>service[0]===x.service)&&Number.isInteger(+x.pages)&&+x.pages>=1&&+x.pages<=10&&Number.isFinite(+x.low)&&Number.isFinite(+x.high))}catch(e){}
 const cartDialog=$('#cart-dialog'),cartBadge=$('#cart-count'),cartItems=$('#cart-items'),cartEmpty=$('#cart-empty');
-const money=n=>'₹'+Math.round(Number(n)||0).toLocaleString('en-IN');
+const money=n=>'₹'+Math.round(Number(n)||0).toLocaleString('en-IN');const safeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const saveCart=()=>{try{localStorage.setItem(CART_KEY,JSON.stringify(cart))}catch(e){}};
 function renderCart(){
   const count=cart.length;cartBadge.hidden=count===0;cartBadge.textContent=String(count);
   $('#cart-open').setAttribute('aria-label',count?('Open project shortlist, '+count+' '+(count===1?'item':'items')):'Open project shortlist');
   cartEmpty.hidden=count>0;$('#cart-clear').hidden=count===0;$('#cart-continue').disabled=count===0;
-  cartItems.innerHTML=cart.map(item=>'<article class="cart-line" data-cart-id="'+item.id+'"><div><h3>'+item.service+'</h3><p>'+item.pages+' screen(s) · '+(item.rush?'Rush delivery':'Standard timeline')+'</p><p class="cap">'+money(item.low)+' – '+money(item.high)+'</p></div><button type="button" class="chip cart-remove" aria-label="Remove '+item.service+'">Remove</button></article>').join('');
+  cartItems.innerHTML=cart.map(item=>'<article class="cart-line" data-cart-id="'+item.id+'"><div><h3>'+safeText(item.service)+'</h3><p>'+item.pages+' screen(s) · '+(item.rush?'Rush delivery':'Standard timeline')+'</p><p class="cap">'+money(item.low)+' – '+money(item.high)+'</p></div><button type="button" class="chip cart-remove" aria-label="Remove '+safeText(item.service)+'">Remove</button></article>').join('');
   const low=cart.reduce((sum,item)=>sum+(+item.low||0),0),high=cart.reduce((sum,item)=>sum+(+item.high||0),0);
   $('#cart-total').textContent=count?money(low)+' – '+money(high):'—';
 }
@@ -402,7 +402,7 @@ $('#cart-close').onclick=()=>cartDialog.close();
 cartDialog.addEventListener('click',e=>{if(e.target===cartDialog)cartDialog.close()});
 cartItems.onclick=e=>{const button=e.target.closest('.cart-remove');if(!button)return;const line=button.closest('[data-cart-id]');cart=cart.filter(item=>item.id!==line.dataset.cartId);saveCart();renderCart()};
 $('#cart-clear').onclick=()=>{cart=[];saveCart();renderCart();toast('Shortlist cleared')};
-$('#cart-continue').onclick=()=>{if(!cart.length)return;const summary='Shortlisted estimates:\\n'+cart.map((item,i)=>(i+1)+'. '+item.service+' — '+item.pages+' screen(s), '+(item.rush?'rush':'standard')+', '+money(item.low)+'–'+money(item.high)).join('\\n');const field=$('#m');if(!field.value.trim())field.value=summary;else if(!field.value.includes('Shortlisted estimates:'))field.value+='\\n\\n'+summary;activeFormStep=1;updateFormStep();cartDialog.close();$('#contact').scrollIntoView({behavior:rm?'auto':'smooth'});setTimeout(()=>$('#n').focus({preventScroll:true}),rm?0:350)};
+$('#cart-continue').onclick=()=>{if(!cart.length)return;const summary='Shortlisted estimates:\\n'+cart.map((item,i)=>(i+1)+'. '+safeText(item.service)+' — '+item.pages+' screen(s), '+(item.rush?'rush':'standard')+', '+money(item.low)+'–'+money(item.high)).join('\\n');const field=$('#m');if(!field.value.trim())field.value=summary;else if(!field.value.includes('Shortlisted estimates:'))field.value+='\\n\\n'+summary;activeFormStep=1;updateFormStep();cartDialog.close();$('#contact').scrollIntoView({behavior:rm?'auto':'smooth'});setTimeout(()=>$('#n').focus({preventScroll:true}),rm?0:350)};
 renderCart();
 let brief='';
 $('#bgen').onclick=()=>{const g=$('#bg').value.trim();if(!g)return toast('Add your goal first');brief=`PROJECT BRIEF\nGoal: ${g}\nAudience: ${$('#ba').value.trim()||'TBD'}\nService: ${S[$('#qs').value][0]}\nScope: ${$('#qp').value} page(s)\nEstimate: ${$('#qo').textContent}\nNext: 15-minute discovery chat`;$('#bo').textContent=brief;toast('Brief generated')};
