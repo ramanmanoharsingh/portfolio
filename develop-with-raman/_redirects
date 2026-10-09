@@ -1,3 +1,4 @@
+/auth/callback /auth-callback.html 200
 /auth /auth.html 200
 /login /auth.html 200
 /welcome /welcome.html 200
