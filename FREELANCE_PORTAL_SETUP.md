@@ -5,6 +5,7 @@
 This branch adds a Supabase-backed client portal to the existing Vanilla HTML/CSS/ES modules website. The original homepage auth form now redirects successfully authenticated users to `/welcome.html`; role-based logic routes administrators to `/admin-portal.html` and clients to `/client-dashboard.html`.
 
 - `/auth.html` — email/password login, registration, reset request, password meter, remember-me and Google/GitHub/LinkedIn OAuth entry points.
+- `/auth-callback.html` — explicit social-login callback with visible failure states and session verification.
 - `/welcome.html` — client onboarding.
 - `/client-dashboard.html` — projects, milestones, approvals, private deliverables, invoices and new project briefs.
 - `/profile.html` — profile/preferences and password reset.
@@ -33,6 +34,8 @@ The private Storage bucket accepts PDF, PNG, JPEG, WebP, ZIP and plain-text file
 
 ## Acceptance checklist
 
+- [ ] Google OAuth opens the provider consent flow, returns to `/auth-callback.html`, creates/verifies a session, and routes to `/welcome.html`.
+- [ ] Disabled/misconfigured OAuth displays a useful error instead of silently returning to the homepage.
 - [ ] A new registration receives a client profile; user-controlled metadata cannot assign the admin role.
 - [ ] Sign-in from the homepage redirects to the onboarding page, then the correct role-specific portal.
 - [ ] Invalid sessions are sent to the auth page; sign-out invalidates the local session.
