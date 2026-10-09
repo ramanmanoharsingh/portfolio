@@ -280,7 +280,7 @@ button:active,.btn:active,.bk:active{transform:scale(.98)}
 
 /* Premium interaction layer */
 :root{scroll-behavior:smooth;--ease-premium:cubic-bezier(.16,1,.3,1)}
-::selection{background:#c9ff4f;color:#111}
+::selection{background:#d4d4d4;color:#111}
 html{scroll-padding-top:90px}
 body{overflow-x:hidden}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E")}
@@ -290,7 +290,7 @@ a,button,input,select,textarea{transition:color .25s ease,background .25s ease,b
 .hero h1,.hero h2{text-wrap:balance}
 .hero img{transform:scale(1.015);animation:heroDrift 18s ease-in-out infinite alternate;will-change:transform}
 @keyframes heroDrift{from{transform:scale(1.015) translate3d(0,0,0)}to{transform:scale(1.07) translate3d(-.5%,.8%,0)}}
-#hero-word{display:inline-block;min-width:4ch;color:#c9ff4f;transition:opacity .24s ease,transform .45s var(--ease-premium)}
+#hero-word{display:inline-block;min-width:4ch;color:#d4d4d4;transition:opacity .24s ease,transform .45s var(--ease-premium)}
 #hero-word.is-out{opacity:0;transform:translateY(.35em)}
 .reveal-up{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s var(--ease-premium)}
 .reveal-up.is-visible{opacity:1;transform:translateY(0)}
@@ -303,9 +303,9 @@ a,button,input,select,textarea{transition:color .25s ease,background .25s ease,b
 #achievements .dk:hover:after{left:160%}
 #work .bar{position:sticky;top:76px;z-index:8;padding:12px 0;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 #q{border-radius:999px}
-#seg button[aria-pressed="true"],#seg [aria-pressed="true"]{background:#c9ff4f!important;color:#101010!important;border-color:#c9ff4f!important}
-input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #c9ff4f;outline-offset:4px}
-#scroll-progress{position:fixed;left:0;top:0;height:3px;width:0;background:#c9ff4f;z-index:10001;transform-origin:left;pointer-events:none}
+#seg button[aria-pressed="true"],#seg [aria-pressed="true"]{background:#d4d4d4!important;color:#101010!important;border-color:#d4d4d4!important}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #d4d4d4;outline-offset:4px}
+#scroll-progress{position:fixed;left:0;top:0;height:3px;width:0;background:#d4d4d4;z-index:10001;transform-origin:left;pointer-events:none}
 #back-top{position:fixed;right:20px;bottom:22px;z-index:1000;width:44px;height:44px;border-radius:50%;border:1px solid #8886;background:#151515;color:#fff;display:grid;place-items:center;opacity:0;pointer-events:none;transform:translateY(10px);box-shadow:0 8px 28px #0002}
 #back-top.on{opacity:1;pointer-events:auto;transform:translateY(0)}
 #toast{backdrop-filter:blur(12px)}
