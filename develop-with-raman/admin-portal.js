@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
    sb.from('profiles').select('id,full_name,company_name,created_at').eq('role','client').order('created_at',{ascending:false}).limit(100),
    sb.from('projects').select('id,client_id,title,status,progress,due_date').order('updated_at',{ascending:false}).limit(200),
    sb.from('proposals').select('id,client_id,title,description,budget,timeline,status,created_at').order('created_at',{ascending:false}).limit(200),
-   sb.from('invoices').select('id,status').in('status',['pending','overdue'])
+   sb.from('invoices').select('id,client_id,status').in('status',['pending','overdue']),
+   sb.from('milestones').select('id,project_id,title,status,progress,due_date,sort_order').order('sort_order',{ascending:true}).limit(500)
   ]);
   for(const r of [c,p,q,i,m])if(r.error)throw r.error;
   clients=c.data||[];projects=p.data||[];const milestoneRows=m.data||[];
