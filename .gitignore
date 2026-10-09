@@ -1,3 +1,13 @@
+# Environment files and local secrets
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+service-account*.json
+credentials*.json
+
 # Python
 __pycache__/
 *.py[cod]
@@ -5,6 +15,11 @@ __pycache__/
 venv/
 env/
 .ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
 # Data/model artifacts that should not bloat GitHub
 dataset/
@@ -15,15 +30,26 @@ models/
 *.pt
 *.pth
 
+# JavaScript tooling and test output
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+coverage/
+playwright-report/
+test-results/
+
 # OS/editor
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # Logs/build outputs
 *.log
 dist/
 build/
-node_modules/
-
+.tmp/
+.temp/
