@@ -4,7 +4,8 @@ service cloud.firestore {
     function isOwner() {
       return request.auth != null
         && request.auth.token.email != null
-        && request.auth.token.email.lower() == 'ramanmanoharsingh@gmail.com';
+        && request.auth.token.email.lower() == 'ramanmanoharsingh@gmail.com'
+        && request.auth.token.email_verified == true;
     }
 
     match /leads/{leadId} {
