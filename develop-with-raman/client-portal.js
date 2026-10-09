@@ -25,7 +25,7 @@
       document.querySelectorAll('[data-user-email]').forEach(e=>e.textContent=user.email||'');
       document.querySelectorAll('[data-user-avatar]').forEach(e=>{if(profile.avatar_url){const img=document.createElement('img');img.alt='';img.src=profile.avatar_url;e.replaceChildren(img);}else e.textContent=(name.trim()[0]||'U').toUpperCase();});
       $('[data-sign-out]')?.addEventListener('click',async()=>{const {error}=await sb.auth.signOut();if(error){toast(error.message,true);return;}location.replace('/auth.html');});
-      if(root.dataset.page==='welcome'){const next=role==='admin'?'/admin-portal.html':'/client-dashboard.html';document.querySelectorAll('[data-dashboard-link]').forEach(a=>a.href=next);return;}
+      if(root.dataset.page==='welcome'){if(role==='admin'){location.replace('/admin-portal.html');return;}document.querySelectorAll('[data-dashboard-link]').forEach(a=>a.href='/client-dashboard.html');return;}
       if(root.dataset.page==='profile'){await setupProfile(sb,user,profile,name);return;}
       if(root.dataset.page==='dashboard'){await setupDashboard(sb,user,profile);return;}
     }catch(error){console.error('[client portal]',error);const el=$('[data-error-message]');if(el){el.hidden=false;el.textContent='We could not load your account: '+(error.message||'Unknown error')+'.';}else toast(error.message||'Unable to load account.',true);}
