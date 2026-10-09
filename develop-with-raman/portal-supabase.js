@@ -8,6 +8,6 @@
   const url = 'https://nmqntqxvficakxkticxc.supabase.co';
   const key = 'sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG';
   window.supabaseClient = window.supabase.createClient(url, key, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    auth: { persistSession: true, storage: document.querySelector('[name=remember]')?.checked === false ? window.sessionStorage : window.localStorage, autoRefreshToken: true, detectSessionInUrl: true }
   });
 })();
