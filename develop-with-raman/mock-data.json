@@ -1,0 +1,79 @@
+{
+  "notice": "UI/demo fixtures only. Never use these records as authorization or billing truth.",
+  "profiles": [
+    {
+      "id": "demo-client-001",
+      "role": "client",
+      "full_name": "Alex Morgan",
+      "email": "alex@example.test",
+      "company_name": "Northstar Studio",
+      "phone": "+1 555 0100",
+      "notify_email": true,
+      "notify_project_updates": true
+    }
+  ],
+  "projects": [
+    {
+      "id": "demo-project-001",
+      "client_id": "demo-client-001",
+      "title": "Brand & Website Refresh",
+      "status": "in_progress",
+      "progress": 65,
+      "current_milestone": "Development",
+      "milestones": [
+        {
+          "name": "Discovery",
+          "status": "completed"
+        },
+        {
+          "name": "Design",
+          "status": "completed"
+        },
+        {
+          "name": "Development",
+          "status": "in_progress"
+        },
+        {
+          "name": "Testing",
+          "status": "pending"
+        },
+        {
+          "name": "Deployment",
+          "status": "pending"
+        }
+      ],
+      "next_milestone_date": "2026-11-05"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "INV-DEMO-001",
+      "client_id": "demo-client-001",
+      "description": "Website design — milestone 1",
+      "amount": 45000,
+      "currency": "INR",
+      "status": "paid",
+      "issued_at": "2026-09-01",
+      "due_at": "2026-09-15"
+    },
+    {
+      "id": "INV-DEMO-002",
+      "client_id": "demo-client-001",
+      "description": "Development milestone",
+      "amount": 30000,
+      "currency": "INR",
+      "status": "pending",
+      "issued_at": "2026-10-01",
+      "due_at": "2026-10-20"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "demo-proposal-001",
+      "client_id": "demo-client-001",
+      "title": "Mobile app landing page",
+      "status": "submitted",
+      "created_at": "2026-10-08"
+    }
+  ]
+}
