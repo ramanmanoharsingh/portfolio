@@ -36,12 +36,13 @@
     password.autocomplete=login?'current-password':'new-password';
     password.required=!reset;password.disabled=reset;password.classList.toggle('auth-hidden',reset);
     $('#password-field-label').classList.toggle('auth-hidden',reset);
-    strength.dataset.visible=String(signup);$('#auth-password-strength-label').classList.toggle('auth-hidden',!signup);
+    strength.dataset.visible=String(signup);strengthLabel.classList.toggle('auth-hidden',!signup);$('#auth-password-strength-label').classList.toggle('auth-hidden',!signup);
     if(reset){$('#auth-password-label').textContent='Email address';$('#auth-email').focus();}
     else {$('#auth-password-label').textContent='Password';$('#auth-email').focus();}
   };
   const getClient = () => {
     const remember=$('#auth-remember')?.checked!==false;
+    document.cookie='portal_session='+(remember?'0':'1')+'; Path=/; SameSite=Lax; Secure'+(remember?'; Max-Age=31536000':'');
     if(typeof window.createPortalSupabaseClient==='function'){state.client=window.createPortalSupabaseClient(remember);return state.client;}
     if(window.supabaseClient)return window.supabaseClient;
     throw new Error('The authentication service did not load. Please refresh and try again.');
@@ -95,5 +96,5 @@
     finally{setBusy(false,state.mode==='login'?'Sign in to your account':state.mode==='signup'?'Create your account':'Send reset link');}
   });
   $('#auth-email').addEventListener('input',()=>{if(message.dataset.kind==='error')clearMessage();});
-  setMode('login');
+  setMode(new URLSearchParams(location.search).get('mode') === 'signup' ? 'signup' : 'login');
 })();
