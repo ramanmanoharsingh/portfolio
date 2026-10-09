@@ -713,13 +713,16 @@ const statusList=["New","Contacted","Scoped","In Progress","Waiting on Client","
 const safe=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dateText=v=>{try{return v?new Date(v).toLocaleDateString():"Just received"}catch{return "Just received"}};
 let authLoadSequence=0;
-function syncAuthActions(user){
+function syncAuthActions(user,profile=currentProfile){
   const signedIn=Boolean(user);
+  const name=profile?.full_name||user?.user_metadata?.full_name||user?.user_metadata?.name||user?.email?.split("@")[0]||"Account";
+  const firstName=String(name).trim().split(/\s+/)[0].slice(0,18)||"Account";
+  const role=profile?.role||"client";
   for(const link of [navAuthAction,menuAuthAction]){
     if(!link)continue;
-    link.textContent=signedIn?"Sign out":"Client portal";
-    link.href=signedIn?"#signout":"/auth.html";
-    link.setAttribute("aria-label",signedIn?"Sign out of your account":"Open your client portal");
+    link.textContent=signedIn?"My account · "+firstName:"Sign in";
+    link.href=signedIn?(role==="admin"?"#/admin":"#/client"):"/auth.html";
+    link.setAttribute("aria-label",signedIn?"Open account for "+name:"Sign in to your account");
     link.dataset.signedIn=signedIn?"true":"false";
   }
 }
@@ -766,7 +769,8 @@ for(const link of [navAuthAction,menuAuthAction]){
   link?.addEventListener("click",event=>{
     if(!currentUser)return;
     event.preventDefault();
-    void doSignOut();
+    if(currentProfile?.role==="admin"||currentProfile?.role==="client")void openWorkspaceDashboard();
+    else routeAccount("welcome",true);
   });
 }
 syncAuthActions(null);
@@ -878,6 +882,7 @@ async function loadUser(user,{scrollToLogin=false,landing="welcome"}={}){
     showAuthToast("Account workspace could not be verified.");return;
   }
   currentProfile=profile;
+  syncAuthActions(user,profile);
   if(user.email&&!$id("e").value)$id("e").value=user.email;
   if(profile.role==="client")populateClientProfile(user,profile);
   const requested=(location.hash||"").replace(/^#\/?/,"").toLowerCase();
