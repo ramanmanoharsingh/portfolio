@@ -1,3 +1,7 @@
+/auth-callback.html
+  X-Robots-Tag: noindex, nofollow
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
 /auth.html
   X-Robots-Tag: noindex, nofollow
   X-Content-Type-Options: nosniff
