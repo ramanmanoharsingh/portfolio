@@ -140,7 +140,7 @@ details p{padding:0 0 32px;color:var(--ink-deep);max-width:620px}
 #cp li button{width:100%;text-align:left;background:none;border:0;color:var(--ink);font:inherit;padding:12px 16px;border-radius:var(--radius-md);cursor:pointer;display:flex;justify-content:space-between}
 #cp li button:hover,#cp li button.on{background:var(--hairline)}#cp li span{color:var(--ink-mid);font-size:13px}
 .rv{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease)}.rv.in{opacity:1;transform:none}
-.ft{position:relative;background:#000;color:#e8e8e8;padding:clamp(80px,12vw,170px) clamp(24px,4vw,77px) 40px;font:700 17px "Space Grotesk",sans-serif}.ft p{margin:0}.ft a{color:#e8e8e8}.ft a:hover{text-decoration:none;opacity:.7}.fl2{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap}.fbm{margin-top:80px;display:grid;gap:24px}.fr{text-align:right}.fr>a{font-size:16px}.fsi{display:flex;gap:24px;justify-content:flex-end;margin-top:36px}.ftg{justify-self:start;background:none;border:1px solid rgba(255,255,255,.4);color:#fff;font:500 13px "Space Grotesk",sans-serif;padding:8px 16px;border-radius:8px;cursor:pointer}.cart{position:absolute;right:clamp(24px,4vw,77px);bottom:72px;color:#fff}.cart sup{position:absolute;top:-8px;right:-8px;font:700 11px "Space Grotesk",sans-serif}.cp2{margin-top:72px!important;font-size:12px!important;font-weight:400!important;opacity:.6}
+.ft{position:relative;background:#000;color:#e8e8e8;padding:clamp(80px,12vw,170px) clamp(24px,4vw,77px) 40px;font:700 17px "Space Grotesk",sans-serif}.ft p{margin:0}.ft a{color:#e8e8e8}.ft a:hover{text-decoration:none;opacity:.7}.fl2{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap}.fbm{margin-top:80px;display:grid;gap:24px}.fr{text-align:right}.fr>a{font-size:16px}.fsi{display:flex;gap:24px;justify-content:flex-end;margin-top:36px}.ftg{justify-self:start;background:none;border:1px solid rgba(255,255,255,.4);color:#fff;font:500 13px "Space Grotesk",sans-serif;padding:8px 16px;border-radius:8px;cursor:pointer}.cart{position:fixed;right:clamp(18px,3vw,36px);bottom:24px;z-index:48;display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:#000;color:#fff;box-shadow:0 8px 28px rgba(0,0,0,.2);cursor:pointer;transition:transform .25s var(--ease),background .25s var(--ease)}.cart:hover{transform:translateY(-2px);background:#242424}.cart sup{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font:700 11px "Space Grotesk",sans-serif}.cart sup[hidden],[hidden]{display:none!important}.cart-dialog{max-width:680px;padding:clamp(24px,5vw,40px)}.cart-head,.cart-line,.cart-summary,.cart-actions{display:flex;align-items:center;justify-content:space-between;gap:16px}.cart-head{margin-bottom:24px}.cart-head .eb{margin-bottom:8px}.cart-line{padding:18px 0;border-bottom:1px solid var(--hairline);align-items:flex-start}.cart-line h3{font-size:17px;margin-bottom:6px}.cart-line p{font-size:13px;color:var(--ink-mid)}.cart-line .cap{margin-top:6px}.cart-summary{padding:24px 0;font-size:14px}.cart-summary strong{font-size:17px}.cart-actions{justify-content:flex-end;flex-wrap:wrap}.quote-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}.quote-note{margin-top:14px;line-height:1.6}.wizard-head{margin:32px 0}.wizard-head p{font-size:13px;color:var(--ink-mid);margin-bottom:10px}.wizard-track{height:3px;background:var(--hairline);border-radius:99px;overflow:hidden}.wizard-track span{display:block;width:33.333%;height:100%;background:var(--ink);transition:width .3s var(--ease)}.form-step[hidden],[hidden]{display:none!important}.form-step{animation:rise .35s var(--ease) both}.form-summary{padding:18px;border:1px solid var(--hairline);border-radius:var(--radius-md);margin-bottom:24px;color:var(--ink-mid);font-size:14px;white-space:pre-line}.wizard-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}.wizard-actions .btn{min-width:140px}.cart-dialog h2{font-size:clamp(26px,4vw,36px)}.cp2{margin-top:72px!important;font-size:12px!important;font-weight:400!important;opacity:.6}
 footer.f{padding:40px;font-size:12px;color:var(--ink-mid)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}.rv{opacity:1;transform:none}.hero img{transform:none!important}}
 .nl a{display:inline-flex;flex-direction:column;align-items:center;font:500 16px "Space Grotesk",sans-serif}.nl a::after{content:attr(data-t);font-weight:700;height:0;overflow:hidden;visibility:hidden}header.top .nl a:hover{opacity:1;font-weight:700}
@@ -272,6 +272,7 @@ header.top{overflow:visible}
 <div class="fl"><label for="qp">Pages / screens: <span id="qv">3</span></label><input id="qp" type="range" min="1" max="10" value="3" style="height:24px;padding:0"></div>
 <div class="fl"><label style="display:flex;gap:10px;align-items:center;font-weight:400"><input type="checkbox" id="qr" style="width:18px;height:18px"> Rush delivery (+25%)</label></div>
 <div class="res"><p class="cap">Estimated range</p><p class="n" id="qo"></p></div>
+<div class="quote-actions"><button class="btn" id="quote-add" type="button">Add estimate to shortlist</button><button class="btn s" id="quote-review" type="button">Review shortlist</button></div><p class="fine quote-note">This is an indicative estimate, not a final offer. We’ll confirm scope, timeline, and payment terms before work begins.</p>
 <div style="height:120px"></div><div class="eb">AI project brief</div><h2>Turn an idea into a brief.</h2>
 <div class="fl" style="margin-top:24px"><label for="bg">Your goal</label><textarea id="bg" rows="3"></textarea></div>
 <div class="fl"><label for="ba">Audience</label><input id="ba"></div>
@@ -282,15 +283,44 @@ header.top{overflow:visible}
 <details><summary>Can a student handle client work?</summary><p>Yes, at a scale that fits. I prototype first so you see progress before committing.</p></details>
 <details><summary>How long does a build take?</summary><p>A landing page takes 3–5 days; larger builds take 2–3 weeks.</p></details>
 <details><summary>Do I own the result?</summary><p>Yes. You receive the full source and a handoff walkthrough.</p></details>
-<details><summary>How does payment work?</summary><p>A deposit to start and the balance on delivery, agreed in the scope.</p></details></div></section>
+<details><summary>How does payment work?</summary><p>Payment terms are agreed in the written scope before work begins. Any deposit or final payment should use an agreed, secure payment method; this portfolio does not collect card details.</p></details></div></section>
 
 <section class="sec contact" id="contact"><div class="c two" style="align-items:start"><div><div class="eb">Contact</div><h2>Let’s build something real.</h2><p class="lead" style="margin:16px 0 32px">Tell me the goal and I’ll reply within 24 hours.</p>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="https://wa.me/917595974769?text=Hi%20Raman" target="_blank" rel="noopener">WhatsApp</a><a class="btn s" href="mailto:ramanmanoharsingh@gmail.com">Email</a></div>
 <div class="links"><a href="mailto:ramanmanoharsingh@gmail.com">ramanmanoharsingh@gmail.com</a><a href="tel:+917595974769">+91 75959 74769</a><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener">GitHub</a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/raman470" target="_blank" rel="noopener">X</a></div></div>
-<form id="f" novalidate><div class="fl"><label for="n">Name</label><input id="n" autocomplete="name"><span class="err" data-f="n"></span></div><div class="fl"><label for="e">Email</label><input id="e" type="email" autocomplete="email"><span class="err" data-f="e"></span></div><div class="fl"><label for="w">WhatsApp (optional)</label><input id="w" type="tel" autocomplete="tel" placeholder="+91"><span class="err" data-f="w"></span></div><div class="fl"><label for="t">Project type</label><select id="t"></select></div><div class="fl"><label for="b">Budget range</label><select id="b"></select></div><div class="fl"><label for="d">Deadline</label><input id="d" type="date"></div><div class="fl"><label for="m">Project details</label><textarea id="m" rows="4"></textarea><span class="err" data-f="m"></span></div>
-<div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn" id="sd" type="submit">Submit enquiry</button><button class="btn s" id="sw" type="button">Send on WhatsApp</button></div></form></div></section>
+<form id="f" novalidate>
+<div class="wizard-head"><p id="form-progress" aria-live="polite">Step 1 of 3 · Your details</p><div class="wizard-track" aria-hidden="true"><span id="form-progress-fill"></span></div></div>
+<div class="form-step" data-step="1">
+<div class="fl"><label for="n">Name</label><input id="n" autocomplete="name"><span class="err" data-f="n"></span></div>
+<div class="fl"><label for="e">Email</label><input id="e" type="email" autocomplete="email"><span class="err" data-f="e"></span></div>
+<div class="fl"><label for="w">WhatsApp (optional)</label><input id="w" type="tel" autocomplete="tel" placeholder="+91"><span class="err" data-f="w"></span></div>
+</div>
+<div class="form-step" data-step="2" hidden>
+<div class="fl"><label for="t">Project type</label><select id="t"></select></div>
+<div class="fl"><label for="b">Budget range</label><select id="b"></select></div>
+<div class="fl"><label for="d">Preferred deadline (optional)</label><input id="d" type="date"></div>
+</div>
+<div class="form-step" data-step="3" hidden>
+<div class="form-summary" id="form-summary">Project summary will appear here.</div>
+<div class="fl"><label for="m">Project details</label><textarea id="m" rows="5" placeholder="What are you trying to build, who is it for, and what would success look like?"></textarea><span class="err" data-f="m"></span></div>
+</div>
+<div class="wizard-actions">
+<button class="btn s" id="fw-back" type="button" hidden>Back</button>
+<button class="btn" id="fw-next" type="button">Continue</button>
+<button class="btn" id="sd" type="submit" hidden>Send project enquiry</button>
+<button class="btn s" id="sw" type="button" hidden>Send on WhatsApp</button>
+</div>
+<p class="fine" style="margin-top:16px">No payment is collected here. We’ll confirm the scope and agree on secure payment terms before any work begins.</p>
+</form></div></section>
 <section class="sec" id="admin" hidden style="padding-top:0"><div class="c"><div class="eb">Admin · private</div><h2>Leads</h2><p class="ser">Only you can see this section.</p><div class="bar"><span id="af" style="display:flex;gap:8px;flex-wrap:wrap"></span><button class="btn s" id="ax">Export CSV</button></div><div id="al" style="display:grid;gap:24px"></div></div></section>
-<footer class="ft"><div class="fl2"><div><p>Develop your future</p><div class="fbm"><p>working hours are adjustable</p><p>contact me for further information</p><button class="ftg" id="th">Light / Dark</button></div></div><div class="fr"><a href="mailto:ramanmanoharsingh@gmail.com">ramanmanoharsingh@gmail.com</a><div class="fsi"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico" style="width:28px;height:28px"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico" style="width:28px;height:28px"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico" style="width:28px;height:28px"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico" style="width:28px;height:28px"><use href="#i-x"/></svg></a></div></div></div><a class="cart" href="#quote" aria-label="Your quote: 1 service selected"><svg class="ico" style="width:28px;height:28px"><use href="#i-ct"/></svg><sup>1</sup></a><p class="cp2">© <span id="yr"></span> Raman Manohar Singh</p></footer>
+<footer class="ft"><div class="fl2"><div><p>Develop your future</p><div class="fbm"><p>working hours are adjustable</p><p>contact me for further information</p><button class="ftg" id="th">Light / Dark</button></div></div><div class="fr"><a href="mailto:ramanmanoharsingh@gmail.com">ramanmanoharsingh@gmail.com</a><div class="fsi"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico" style="width:28px;height:28px"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico" style="width:28px;height:28px"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico" style="width:28px;height:28px"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico" style="width:28px;height:28px"><use href="#i-x"/></svg></a></div></div></div><button class="cart" id="cart-open" type="button" aria-label="Open project shortlist" aria-haspopup="dialog" aria-controls="cart-dialog"><svg class="ico" style="width:28px;height:28px"><use href="#i-ct"/></svg><sup id="cart-count" hidden>0</sup></button><p class="cp2">© <span id="yr"></span> Raman Manohar Singh</p></footer>
+<dialog id="cart-dialog" class="cart-dialog" aria-labelledby="cart-title">
+<div class="cart-head"><div><div class="eb">Project shortlist</div><h2 id="cart-title">Your quote</h2></div><button class="tg" id="cart-close" type="button">Close</button></div>
+<p id="cart-empty" class="lead">Your shortlist is empty. Add a service estimate to compare options here.</p>
+<div id="cart-items"></div>
+<div class="cart-summary"><span>Combined estimated range</span><strong id="cart-total">—</strong></div>
+<div class="cart-actions"><button class="btn s" id="cart-clear" type="button">Clear shortlist</button><button class="btn" id="cart-continue" type="button">Continue to enquiry</button></div>
+</dialog>
 <dialog id="cp" aria-label="Command menu"><input id="ci" placeholder="Jump to…" aria-label="Command search"><ul id="cl"></ul></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script>
@@ -351,20 +381,59 @@ $('#qs').innerHTML=S.map((s,i)=>`<option value="${i}">${s[0]}</option>`).join(''
 $('#t').innerHTML=S.map(s=>`<option>${s[0]}</option>`).join('')+'<option>Something else</option>';
 $('#b').innerHTML=['Under ₹5,000','₹5,000 – ₹10,000','₹10,000 – ₹20,000','₹20,000+','Not sure yet'].map(x=>`<option>${x}</option>`).join('');
 const est=()=>{const b=S[$('#qs').value][2],n=+$('#qp').value;$('#qv').textContent=n;let l=b+(n-1)*b*.25;if($('#qr').checked)l*=1.25;$('#qo').textContent='₹'+Math.round(l/100)*100+' – ₹'+Math.round(l*1.4/100)*100};
-['#qs','#qp','#qr'].forEach(s=>$(s).oninput=est);est();let brief='';
+['#qs','#qp','#qr'].forEach(s=>$(s).oninput=est);est();
+const CART_KEY='raman-project-shortlist-v1';let cart=[];
+try{const saved=JSON.parse(localStorage.getItem(CART_KEY)||'[]');if(Array.isArray(saved))cart=saved.filter(x=>x&&typeof x.id==='string'&&/^[a-z0-9]+$/i.test(x.id)&&typeof x.service==='string'&&S.some(service=>service[0]===x.service)&&Number.isInteger(+x.pages)&&+x.pages>=1&&+x.pages<=10&&Number.isFinite(+x.low)&&Number.isFinite(+x.high))}catch(e){}
+const cartDialog=$('#cart-dialog'),cartBadge=$('#cart-count'),cartItems=$('#cart-items'),cartEmpty=$('#cart-empty');
+const money=n=>'₹'+Math.round(Number(n)||0).toLocaleString('en-IN');const safeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const saveCart=()=>{try{localStorage.setItem(CART_KEY,JSON.stringify(cart))}catch(e){}};
+function renderCart(){
+  const count=cart.length;cartBadge.hidden=count===0;cartBadge.textContent=String(count);
+  $('#cart-open').setAttribute('aria-label',count?('Open project shortlist, '+count+' '+(count===1?'item':'items')):'Open project shortlist');
+  cartEmpty.hidden=count>0;$('#cart-clear').hidden=count===0;$('#cart-continue').disabled=count===0;
+  cartItems.innerHTML=cart.map(item=>'<article class="cart-line" data-cart-id="'+item.id+'"><div><h3>'+safeText(item.service)+'</h3><p>'+item.pages+' screen(s) · '+(item.rush?'Rush delivery':'Standard timeline')+'</p><p class="cap">'+money(item.low)+' – '+money(item.high)+'</p></div><button type="button" class="chip cart-remove" aria-label="Remove '+safeText(item.service)+'">Remove</button></article>').join('');
+  const low=cart.reduce((sum,item)=>sum+(+item.low||0),0),high=cart.reduce((sum,item)=>sum+(+item.high||0),0);
+  $('#cart-total').textContent=count?money(low)+' – '+money(high):'—';
+}
+$('#quote-add').onclick=()=>{const service=S[Number($('#qs').value)]||S[0],pages=Math.max(1,Number($('#qp').value)||1);let low=service[2]+(pages-1)*service[2]*.25;if($('#qr').checked)low*=1.25;low=Math.round(low/100)*100;const high=Math.round(low*1.4/100)*100;cart.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),service:service[0],pages,rush:$('#qr').checked,low,high});saveCart();renderCart();toast('Estimate added to your shortlist')};
+$('#cart-open').onclick=()=>cartDialog.showModal();
+$('#quote-review').onclick=()=>cartDialog.showModal();
+$('#cart-close').onclick=()=>cartDialog.close();
+cartDialog.addEventListener('click',e=>{if(e.target===cartDialog)cartDialog.close()});
+cartItems.onclick=e=>{const button=e.target.closest('.cart-remove');if(!button)return;const line=button.closest('[data-cart-id]');cart=cart.filter(item=>item.id!==line.dataset.cartId);saveCart();renderCart()};
+$('#cart-clear').onclick=()=>{cart=[];saveCart();renderCart();toast('Shortlist cleared')};
+$('#cart-continue').onclick=()=>{if(!cart.length)return;const summary='Shortlisted estimates:\\n'+cart.map((item,i)=>(i+1)+'. '+safeText(item.service)+' — '+item.pages+' screen(s), '+(item.rush?'rush':'standard')+', '+money(item.low)+'–'+money(item.high)).join('\\n');const field=$('#m');if(!field.value.trim())field.value=summary;else if(!field.value.includes('Shortlisted estimates:'))field.value+='\\n\\n'+summary;activeFormStep=1;updateFormStep();cartDialog.close();$('#contact').scrollIntoView({behavior:rm?'auto':'smooth'});setTimeout(()=>$('#n').focus({preventScroll:true}),rm?0:350)};
+renderCart();
+let brief='';
 $('#bgen').onclick=()=>{const g=$('#bg').value.trim();if(!g)return toast('Add your goal first');brief=`PROJECT BRIEF\nGoal: ${g}\nAudience: ${$('#ba').value.trim()||'TBD'}\nService: ${S[$('#qs').value][0]}\nScope: ${$('#qp').value} page(s)\nEstimate: ${$('#qo').textContent}\nNext: 15-minute discovery chat`;$('#bo').textContent=brief;toast('Brief generated')};
 $('#bcopy').onclick=async()=>{if(!brief)return toast('Generate a brief first');try{await navigator.clipboard.writeText(brief);toast('Brief copied')}catch(e){toast('Select the text to copy')}};
 $('#bwa').onclick=()=>{if(!brief)return toast('Generate a brief first');window.open('https://wa.me/917595974769?text='+encodeURIComponent(brief),'_blank','noopener')};
 // form
+let activeFormStep=1;
+const stepNames=['Your details','Project scope','Project details'];
+function updateFormStep(){
+  $('#f .form-step').forEach(el=>{el.hidden=Number(el.dataset.step)!==activeFormStep});
+  $('#form-progress').textContent='Step '+activeFormStep+' of 3 · '+stepNames[activeFormStep-1];
+  $('#form-progress-fill').style.width=(activeFormStep/3*100)+'%';
+  $('#fw-back').hidden=activeFormStep===1;
+  $('#fw-next').hidden=activeFormStep===3;
+  $('#sd').hidden=activeFormStep!==3;
+  $('#sw').hidden=activeFormStep!==3;
+  updateFormSummary();
+}
+function updateFormSummary(){
+  const lines=['Project: '+($('#t').value||'Not selected'),'Budget: '+($('#b').value||'Not selected'),'Deadline: '+($('#d').value||'Flexible'),'Estimate: '+($('#qo')?.textContent||'Not calculated')];
+  $('#form-summary').textContent=lines.join('\\n');
+}
 const V={n:v=>v.trim().length>1||'Please enter your name',e:v=>/^\S+@\S+\.\S+$/.test(v)||'Please enter a valid email',m:v=>v.trim().length>14||'Please add a few more details',w:v=>!v.trim()||/^[+\d][\d\s-]{7,}$/.test(v.trim())||'Please enter a valid number'};
 const EM='ramanmanoharsingh@gmail.com',WA='917595974769';
-function chk(){let ok=true;for(const k in V){const r=V[k]($('#'+k).value);$(`[data-f=${k}]`).textContent=r===true?'':r;if(r!==true)ok=false}if(!ok)toast('Please fix the highlighted fields');return ok}
-const msg=()=>`Hi Raman, I'm ${$('#n').value.trim()} (${$('#e').value.trim()}${$('#w').value.trim()?', '+$('#w').value.trim():''}).\nProject: ${$('#t').value} · Budget: ${$('#b').value}${$('#d').value?' · Deadline: '+$('#d').value:''}\n\n${$('#m').value.trim()}`;
+function chk(stepOnly=false){let ok=true;for(const k in V){if(stepOnly&&$('#'+k).closest('.form-step')?.dataset.step!==String(activeFormStep))continue;const r=V[k]($('#'+k).value);$(`[data-f=${k}]`).textContent=r===true?'':r;if(r!==true)ok=false}if(!ok)toast('Please fix the highlighted fields');return ok};$('#fw-next').onclick=()=>{if(chk(true)){activeFormStep=Math.min(3,activeFormStep+1);updateFormStep()}};$('#fw-back').onclick=()=>{activeFormStep=Math.max(1,activeFormStep-1);updateFormStep()};['#t','#b','#d'].forEach(sel=>$(sel).addEventListener('change',updateFormSummary));updateFormStep();
+const msg=()=>`Hi Raman, I'm ${$('#n').value.trim()} (${$('#e').value.trim()}${$('#w').value.trim()?', '+$('#w').value.trim():''}).\nProject: ${$('#t').value} · Budget: ${$('#b').value}${$('#d').value?' · Deadline: '+$('#d').value:''}\nEstimate: ${$('#qo').textContent}\n\n${$('#m').value.trim()}`;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let DB=null;
-$('#f').onsubmit=async ev=>{ev.preventDefault();if(!chk())return;const b=$('#sd');b.disabled=true;b.textContent='Sending…';
+$('#f').onsubmit=async ev=>{ev.preventDefault();if(activeFormStep<3){if(chk(true)){activeFormStep++;updateFormStep()}return}if(!chk())return;const b=$('#sd');b.disabled=true;b.textContent='Sending…';
 const lead={name:$('#n').value.trim(),email:$('#e').value.trim(),whatsapp:$('#w').value.trim(),project_type:$('#t').value,budget_range:$('#b').value,deadline:$('#d').value,description:$('#m').value.trim(),status:'New',created_at:new Date().toISOString()};
-try{if(!DB)throw 0;await DB.collection('leads').doc('l'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)).set(lead);toast('Enquiry received. I will reply within 24 hours.');$('#f').reset()}
+try{if(!DB)throw 0;await DB.collection('leads').doc('l'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)).set(lead);toast('Enquiry received. I will reply within 24 hours.');$('#f').reset();activeFormStep=1;updateFormStep()}
 catch(e){location.href=`mailto:${EM}?subject=${encodeURIComponent('Project enquiry')}&body=${encodeURIComponent(msg())}`;toast('Opening your email app')}
 b.disabled=false;b.textContent='Submit enquiry'};
 // admin dashboard (owner only)
