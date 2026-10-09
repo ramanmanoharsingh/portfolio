@@ -34,7 +34,7 @@ service cloud.firestore {
         && request.resource.data.description.size() <= 5000
         && request.resource.data.status == 'New'
         && request.resource.data.userId == (request.auth == null ? null : request.auth.uid)
-        && (!request.auth != null || request.resource.data.clientEmail == request.auth.token.email);
+        && (request.auth == null || request.resource.data.clientEmail == request.auth.token.email);
     }
   }
 }
