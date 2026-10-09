@@ -1,0 +1,2 @@
+-- Admin authorization is based only on profiles.role = 'admin', never an email address.
+-- No data change required. The browser controller has been updated accordingly.
