@@ -10,10 +10,10 @@
   <script defer src="/portal-supabase.js"></script>
   <script defer src="/auth-callback.js"></script>
 </head>
-<body class="portal-body">
-  <main style="min-height:100vh;display:grid;place-items:center;padding:24px">
+<body class="portal-body"><header class="global-site-header"><details class="global-site-menu"><summary aria-label="Open site menu">Menu</summary><div class="global-site-menu-panel"><a href="/">Home</a><a href="/#services">Services</a><a href="/#start-project">Start a project</a><a href="/projects.html">Projects</a><a href="/#contact">Contact</a><a href="/dashboard.html">Workspace / Sign in</a></div></details><a class="global-site-brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a></header>
+  <main style="min-height:calc(100vh - 54px);display:grid;place-items:center;padding:24px">
     <section class="portal-card" style="width:min(100%,520px);padding:clamp(24px,5vw,42px)">
-      <a class="portal-brand" style="padding:0;display:block;margin-bottom:30px" href="/">Develop with Raman<span>Secure account access</span></a>
+      
       <div class="eyebrow">Authentication</div>
       <h1 class="portal-title" style="font-size:34px" id="callback-title">Finishing sign-in…</h1>
       <p class="portal-subtitle" id="callback-message" role="status" aria-live="polite">Please wait while we verify your session.</p>
