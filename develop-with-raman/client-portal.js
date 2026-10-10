@@ -25,7 +25,7 @@
       document.querySelectorAll('[data-user-email]').forEach(e=>{if('value' in e)e.value=user.email||'';else e.textContent=user.email||'';});
       document.querySelectorAll('[data-user-avatar]').forEach(e=>{if(safeUrl(profile.avatar_url)){const img=document.createElement('img');img.alt='';img.referrerPolicy='no-referrer';img.src=safeUrl(profile.avatar_url);e.replaceChildren(img);}else e.textContent=(name.trim()[0]||'U').toUpperCase();});
       $('[data-sign-out]')?.addEventListener('click',async()=>{const {error}=await sb.auth.signOut();if(error){toast(error.message,true);return;}location.replace('/auth.html');});
-      if(root.dataset.page==='welcome'){if(role==='admin'){location.replace('/admin-portal.html');return;}document.querySelectorAll('[data-dashboard-link]').forEach(a=>a.href='/client-dashboard.html');return;}
+      if(root.dataset.page==='welcome'){if(role==='admin'){location.replace('/admin-portal.html');return;}return;}
       if(root.dataset.page==='profile'){await setupProfile(sb,user,profile,name);return;}
       if(root.dataset.page==='dashboard'){await setupDashboard(sb,user);return;}
     }catch(error){console.error('[client portal]',error);const el=$('[data-error-message]');if(el){el.hidden=false;el.textContent='We could not load your account: '+(error.message||'Unknown error')+'.';}else toast(error.message||'Unable to load account.',true);}
@@ -35,7 +35,8 @@
     const fields={full_name:profile.full_name||'',phone:profile.phone||'',company_name:profile.company_name||'',avatar_url:profile.avatar_url||'',notify_email:profile.notify_email??true,notify_project_updates:profile.notify_project_updates??true};
     Object.entries(fields).forEach(([k,v])=>{const el=form.elements.namedItem(k);if(el){if(el.type==='checkbox')el.checked=Boolean(v);else el.value=v;}});
     $('[data-account-id]').textContent=user.id;$('[data-account-created]').textContent=date(user.created_at);$('[data-account-status]').textContent=user.email_confirmed_at?'Verified':'Email verification pending';
-    form.addEventListener('submit',async e=>{e.preventDefault();const btn=form.querySelector('[type=submit]');btn.disabled=true;try{const payload={id:user.id,full_name:form.elements.full_name.value.trim(),phone:form.elements.phone.value.trim()||null,company_name:form.elements.company_name.value.trim()||null,avatar_url:safeUrl(form.elements.avatar_url.value.trim())||null,notify_email:form.elements.notify_email.checked,notify_project_updates:form.elements.notify_project_updates.checked,updated_at:new Date().toISOString()};const {error}=await sb.from('profiles').update(payload).eq('id',user.id);if(error)throw error;toast('Profile saved successfully.');document.querySelectorAll('[data-user-name]').forEach(el=>el.textContent=payload.full_name||name);document.querySelectorAll('[data-user-avatar]').forEach(el=>{if(payload.avatar_url){const img=document.createElement('img');img.alt='';img.src=payload.avatar_url;el.replaceChildren(img);}else el.textContent=(payload.full_name||name).trim()[0]?.toUpperCase()||'U';});}catch(err){toast(err.message||'Could not save profile.',true);}finally{btn.disabled=false;btn.textContent='Save changes';}});  }
+    form.addEventListener('submit',async e=>{e.preventDefault();const btn=form.querySelector('[type=submit]');btn.disabled=true;try{const payload={id:user.id,full_name:form.elements.full_name.value.trim(),phone:form.elements.phone.value.trim()||null,company_name:form.elements.company_name.value.trim()||null,avatar_url:safeUrl(form.elements.avatar_url.value.trim())||null,notify_email:form.elements.notify_email.checked,notify_project_updates:form.elements.notify_project_updates.checked,updated_at:new Date().toISOString()};const {error}=await sb.from('profiles').update(payload).eq('id',user.id);if(error)throw error;toast('Profile saved successfully.');document.querySelectorAll('[data-user-name]').forEach(el=>el.textContent=payload.full_name||name);document.querySelectorAll('[data-user-avatar]').forEach(el=>{if(payload.avatar_url){const img=document.createElement('img');img.alt='';img.src=payload.avatar_url;el.replaceChildren(img);}else el.textContent=(payload.full_name||name).trim()[0]?.toUpperCase()||'U';});}catch(err){toast(err.message||'Could not save profile.',true);}finally{btn.disabled=false;btn.textContent='Save changes';}});
+  }
   async function setupDashboard(sb,user){
     const {data:projects,error:projectError}=await sb.from('projects').select('id,title,description,service_type,status,progress,due_date,live_url,updated_at').eq('client_id',user.id).order('updated_at',{ascending:false}).limit(100);if(projectError)throw projectError;
     const ids=(projects||[]).map(p=>p.id);
@@ -46,7 +47,6 @@
     const inv=invoices.data||[],props=proposals.data||[],enquiries=enquiryResult.data||[],active=(projects||[]).filter(p=>!['completed','cancelled'].includes(p.status));
     $('[data-metric-projects]').textContent=active.length;
     const pendingMilestones=milestones.filter(m=>m.status==='submitted_for_approval').length;
-    const pendingInvoices=inv.filter(i=>['pending','overdue'].includes(i.status));
     $('[data-metric-completed]').textContent=pendingMilestones;
     const total=inv.filter(i=>i.status==='paid').reduce((n,i)=>n+Number(i.amount||0),0);
     $('[data-investment-total]')?.replaceChildren(document.createTextNode(money(total)));
