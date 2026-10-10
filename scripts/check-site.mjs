@@ -7,6 +7,7 @@ const repoRoot = process.cwd();
 const errors = [];
 const htmlFiles = [];
 const jsFiles = [];
+const cssFiles = [];
 
 async function walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -19,6 +20,7 @@ async function walk(dir) {
     if (entry.isFile()) {
       if (extname(entry.name).toLowerCase() === '.html') htmlFiles.push(fullPath);
       if (extname(entry.name).toLowerCase() === '.js') jsFiles.push(fullPath);
+      if (extname(entry.name).toLowerCase() === '.css') cssFiles.push(fullPath);
     }
   }
 }
@@ -74,6 +76,26 @@ for (const file of htmlFiles) {
   }
 }
 
+for (const file of cssFiles) {
+  const css = await readFile(file, 'utf8');
+  const urls = [];
+  for (const match of css.matchAll(/url\(\s*(?:(["'])(.*?)\1|([^)]*?))\s*\)/gi)) {
+    urls.push((match[2] ?? match[3] ?? '').trim());
+  }
+  for (const match of css.matchAll(/@import\s+(?:url\()?\s*["']([^"']+)["']\s*\)?/gi)) {
+    urls.push(match[1].trim());
+  }
+  for (const raw of urls) {
+    const target = localPathFromUrl(raw, file);
+    if (!target) continue;
+    if (!target.startsWith(siteRoot + sep) && target !== join(siteRoot, 'index.html')) {
+      errors.push(`Local CSS reference escapes site root: ${raw} in ${relative(repoRoot, file)}`);
+    } else if (!(await exists(target))) {
+      errors.push(`Missing local CSS asset "${raw}" referenced by ${relative(repoRoot, file)}`);
+    }
+  }
+}
+
 const redirectsFile = join(siteRoot, '_redirects');
 if (await exists(redirectsFile)) {
   const redirects = await readFile(redirectsFile, 'utf8');
@@ -120,5 +142,5 @@ if (errors.length) {
   for (const error of errors) console.error(' - ' + error);
   process.exitCode = 1;
 } else {
-  console.log(`Static site audit passed: ${htmlFiles.length} HTML files, ${jsFiles.length} JavaScript files, duplicate-ID checks, local asset/route checks, and required account pages.`);
+  console.log(`Static site audit passed: ${htmlFiles.length} HTML files, ${jsFiles.length} JavaScript files, ${cssFiles.length} CSS files, duplicate-ID checks, local asset/route checks, and required account pages.`);
 }
