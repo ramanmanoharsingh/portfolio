@@ -8,3 +8,4 @@
 /dashboard/admin /admin-portal.html 200
 /admin /admin-portal.html 200
 /reset-password /reset-password.html 200
+/dashboard /welcome.html 302
