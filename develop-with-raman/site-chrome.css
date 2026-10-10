@@ -1,0 +1,98 @@
+/* Shared Develop with Raman site chrome. Used by the homepage, project index and portals. */
+.site-header{
+  position:sticky;top:0;z-index:120;isolation:isolate;
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;column-gap:12px;width:100%;min-height:68px;
+  padding:0 clamp(14px,4vw,56px);margin:0;
+  color:#f8f9f5;background:#090a08;border-bottom:1px solid rgba(255,255,255,.14);
+  box-sizing:border-box;
+}
+.site-header .site-brand{
+  grid-column:2;grid-row:1;justify-self:center;align-self:center;
+  display:inline-flex;align-items:center;justify-content:center;min-width:0;max-width:min(48vw,360px);
+  margin:0!important;padding:0!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:#f8f9f5!important;text-decoration:none!important;text-transform:none!important;
+  font:600 14px/1.1 "Space Grotesk",Helvetica,Arial,sans-serif!important;
+  letter-spacing:-.035em!important;font-stretch:normal!important;
+}
+.site-header .site-menu-toggle,
+.site-header .site-header-action,
+.site-header .top-link,
+.site-header .button,
+.site-header .portal-button{
+  box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:36px;height:36px;padding:0 13px;margin:0;
+  border:1px solid rgba(255,255,255,.42);border-radius:999px;
+  background:transparent;color:#fff!important;text-decoration:none!important;
+  font:500 12px/1 "Space Grotesk",Helvetica,Arial,sans-serif!important;
+  letter-spacing:0!important;text-transform:none!important;white-space:nowrap;
+  cursor:pointer;box-shadow:none;transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+.site-header .site-menu-toggle{grid-column:1;grid-row:1;justify-self:start}
+.site-header .site-menu-toggle svg{display:block;width:14px;height:14px;flex:none}
+.site-header .site-header-actions{
+  grid-column:3;grid-row:1;justify-self:end;display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0;
+}
+.site-header .site-menu-toggle:hover,
+.site-header .site-header-action:hover,
+.site-header .top-link:hover,
+.site-header .button:hover,
+.site-header .portal-button:hover{background:#f8f9f5;color:#111!important;border-color:#f8f9f5;transform:translateY(-1px);opacity:1}
+.site-header .site-menu-toggle:focus-visible,
+.site-header .site-header-action:focus-visible,
+.site-header .top-link:focus-visible,
+.site-header .button:focus-visible,
+.site-header .portal-button:focus-visible,
+.site-header .site-brand:focus-visible{outline:2px solid #c9fa55;outline-offset:3px}
+.site-header .sp{position:absolute;left:0;right:0;bottom:0;height:2px;background:#fff;transform:scaleX(0);transform-origin:left;pointer-events:none}
+.site-header.sm{min-height:62px}
+.site-menu-overlay[hidden]{display:none!important}
+.site-menu-overlay{
+  position:fixed;inset:0;z-index:1000;display:grid;place-items:stretch;
+  padding:clamp(16px,3vw,36px);background:rgba(0,0,0,.68);backdrop-filter:blur(12px);
+}
+.site-menu-panel{
+  position:relative;display:flex;flex-direction:column;gap:24px;overflow:auto;
+  min-height:0;padding:clamp(24px,5vw,64px);border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;background:#090a08;color:#f8f9f5;
+}
+.site-menu-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.16)}
+.site-menu-wordmark{font:600 14px/1.1 "Space Grotesk",Helvetica,Arial,sans-serif;letter-spacing:-.035em}
+.site-menu-close{
+  display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 13px;
+  border:1px solid rgba(255,255,255,.42);border-radius:999px;background:transparent;color:#fff;
+  font:500 12px/1 "Space Grotesk",Helvetica,Arial,sans-serif;cursor:pointer;
+}
+.site-menu-close:hover{background:#fff;color:#090a08}
+.site-menu-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,2vw,20px)}
+.site-menu-links a{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:clamp(16px,2.7vw,32px) 0;border-bottom:1px solid rgba(255,255,255,.16);
+  color:#f8f9f5;text-decoration:none;font:500 clamp(20px,3vw,36px)/1.15 "Space Grotesk",Helvetica,Arial,sans-serif;
+  letter-spacing:-.045em;transition:opacity .2s ease;
+}
+.site-menu-links a::after{content:"↗";font-size:.6em;opacity:.55}
+.site-menu-links a:hover{opacity:.68}
+.site-menu-note{margin-top:auto;color:#a9aca2;font-size:12px}
+@media(max-width:600px){
+  .site-header{min-height:62px;padding:0 12px;column-gap:6px}
+  .site-header .site-brand{max-width:46vw;font-size:12px!important;letter-spacing:-.04em!important}
+  .site-header .site-menu-toggle,.site-header .site-header-action,.site-header .top-link,.site-header .button,.site-header .portal-button{min-height:34px;height:34px;padding:0 10px;font-size:11px!important}
+  .site-header .site-menu-toggle{gap:6px}
+  .site-header .site-menu-toggle svg{width:13px;height:13px}
+  .site-header .site-header-actions{gap:5px}
+  .site-menu-overlay{padding:8px}
+  .site-menu-panel{padding:22px 20px;border-radius:14px;gap:18px}
+  .site-menu-links{grid-template-columns:1fr;gap:0}
+  .site-menu-links a{font-size:25px;padding:16px 0}
+}
+@media(prefers-reduced-motion:reduce){.site-header *, .site-menu-overlay *{transition:none!important;animation:none!important}}
+
+/* The shared header replaces page-local brand marks so the wordmark appears once. */
+.site-header + .auth-shell{min-height:calc(100vh - 68px)}
+.site-header + .auth-shell .auth-story>.auth-brand,
+.site-header + .auth-shell .auth-mobile-brand,
+.site-header + main .portal-brand{display:none!important}
+.site-header + .portal-shell{min-height:calc(100vh - 68px)}
+
+body.portal-body .portal-sidebar .portal-workspace-label{display:block;padding:3px 12px 18px;margin:0 0 18px;border-bottom:1px solid var(--portal-line);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--portal-muted)}

@@ -20,6 +20,8 @@
 
   const showMessage = (text, kind='error') => { message.textContent=text; message.dataset.kind=kind; message.setAttribute('role',kind==='error'?'alert':'status'); };
   const clearMessage = () => { message.textContent=''; delete message.dataset.kind; message.removeAttribute('role'); };
+  const safeNextPath = () => { const next=new URLSearchParams(location.search).get('next'); return next&&next.startsWith('/')&&!next.startsWith('//')&&!next.includes(String.fromCharCode(92))&&!/^\/(?:auth(?:\.html)?|login)(?:[/?#]|$)/i.test(next)?next:'/welcome.html'; };
+
   const setBusy = (busy, label) => { state.busy=busy; submit.disabled=busy; submitLabel.textContent=busy?'Please wait…':label; submit.setAttribute('aria-busy',String(busy)); };
   const setMode = mode => {
     state.mode=mode; clearMessage();
@@ -67,7 +69,7 @@
   forgotLink.addEventListener('click',event=>{event.preventDefault();setMode('reset');});
   $('#auth-back-login').addEventListener('click',event=>{event.preventDefault();setMode('login');});
   $('#auth-back-home').addEventListener('click',event=>{event.preventDefault();location.href='/';});
-  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
+  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:new URL('/dashboard.html',location.origin).href,...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(state.busy)return;clearMessage();
     const email=$('#auth-email').value.trim(),pass=password.value;
@@ -84,13 +86,13 @@
       if(state.mode==='login'){
         const {data,error}=await client.auth.signInWithPassword({email,password:pass});if(error)throw error;
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
-        showMessage('Signed in successfully. Opening your workspace…','success');location.assign('/#/welcome');
+        showMessage('Signed in successfully. Opening your workspace…','success');location.assign(safeNextPath());
       }else if(state.mode==='signup'){
-        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/'}});if(error)throw error;
-        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign('/welcome');}
+        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:new URL('/dashboard.html',location.origin).href}});if(error)throw error;
+        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign(safeNextPath());}
         else{setMode('login');showMessage('Account created. Check your inbox for the email confirmation link, then return here to sign in.','success');}
       }else{
-        const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/'});if(error)throw error;
+        const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:new URL('/dashboard.html?mode=recovery',location.origin).href});if(error)throw error;
         showMessage('If an account exists for that email, a password-reset link will arrive shortly.','success');
       }
     }catch(error){showMessage(humanError(error));}
