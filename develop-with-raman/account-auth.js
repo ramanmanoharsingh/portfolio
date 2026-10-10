@@ -21,7 +21,7 @@
   const showMessage = (text, kind='error') => { message.textContent=text; message.dataset.kind=kind; message.setAttribute('role',kind==='error'?'alert':'status'); };
   const clearMessage = () => { message.textContent=''; delete message.dataset.kind; message.removeAttribute('role'); };
   const setBusy = (busy, label) => { state.busy=busy; submit.disabled=busy; submitLabel.textContent=busy?'Please wait…':label; submit.setAttribute('aria-busy',String(busy)); };
-  const setMode = mode => {
+  const setMode = (mode, focus=true) => {
     state.mode=mode; clearMessage();
     const login=mode==='login', signup=mode==='signup', reset=mode==='reset';
     tabs.forEach(tab=>{const active=tab.dataset.mode===mode;tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;});
@@ -37,14 +37,14 @@
     password.required=!reset;password.disabled=reset;password.classList.toggle('auth-hidden',reset);
     $('#password-field-label').classList.toggle('auth-hidden',reset);
     strength.dataset.visible=String(signup);strengthLabel.classList.toggle('auth-hidden',!signup);$('#auth-password-strength-label').classList.toggle('auth-hidden',!signup);
-    if(reset){$('#auth-password-label').textContent='Email address';$('#auth-email').focus();}
-    else {$('#auth-password-label').textContent='Password';$('#auth-email').focus();}
+    $('#auth-password-label').textContent=reset?'Email address':'Password';
+    // Do not pop the keyboard open on phones (it hides the title and tabs), and never on first load.
+    if(focus&&!matchMedia('(pointer:coarse)').matches)$('#auth-email').focus();
   };
   const getClient = () => {
     const remember=$('#auth-remember')?.checked!==false;
-    document.cookie='portal_session='+(remember?'0':'1')+'; Path=/; SameSite=Lax; Secure'+(remember?'; Max-Age=31536000':'');
-    document.cookie=remember?'portal_session=; Max-Age=0; Path=/; SameSite=Lax':'portal_session=1; Max-Age=86400; Path=/; SameSite=Lax';
-    if(typeof window.createPortalSupabaseClient==='function'){state.client=window.createPortalSupabaseClient(remember);return state.client;}
+    document.cookie=remember?'portal_session=; Max-Age=0; Path=/; SameSite=Lax; Secure':'portal_session=1; Max-Age=86400; Path=/; SameSite=Lax; Secure';
+    if(typeof window.createPortalSupabaseClient==='function'){state.client=window.createPortalSupabaseClient(remember);window.supabaseClient=state.client;return state.client;}
     if(window.supabaseClient)return window.supabaseClient;
     throw new Error('The authentication service did not load. Please refresh and try again.');
   };
@@ -60,6 +60,13 @@
     if(/provider.*not enabled|unsupported provider/i.test(raw))return 'This social sign-in provider is not configured yet. Please use email and password for now.';
     return raw;
   };
+  // Only same-site paths are accepted for ?next=, and never the sign-in pages themselves (prevents open redirects and loops).
+  const safeNextPath = () => {
+    const candidate = new URLSearchParams(location.search).get('next');
+    return candidate && candidate.startsWith('/') && !candidate.startsWith('//') && !candidate.includes('\\') &&
+      !/^\/(?:auth(?:\.html)?|login|reset-password(?:\.html)?|auth-callback(?:\.html)?)(?:[/?#]|$)/i.test(candidate)
+      ? candidate : '/welcome.html';
+  };
   tabs.forEach(tab=>tab.addEventListener('click',()=>setMode(tab.dataset.mode)));
   $('#auth-show-password').addEventListener('click',()=>{const reveal=password.type==='password';password.type=reveal?'text':'password';$('#auth-show-password').textContent=reveal?'Hide':'Show';$('#auth-show-password').setAttribute('aria-pressed',String(reveal));});
   $('#auth-show-confirm').addEventListener('click',()=>{const reveal=confirmPassword.type==='password';confirmPassword.type=reveal?'text':'password';$('#auth-show-confirm').textContent=reveal?'Hide':'Show';});
@@ -67,7 +74,7 @@
   forgotLink.addEventListener('click',event=>{event.preventDefault();setMode('reset');});
   $('#auth-back-login').addEventListener('click',event=>{event.preventDefault();setMode('login');});
   $('#auth-back-home').addEventListener('click',event=>{event.preventDefault();location.href='/';});
-  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
+  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/auth-callback.html',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(state.busy)return;clearMessage();
     const email=$('#auth-email').value.trim(),pass=password.value;
@@ -84,18 +91,37 @@
       if(state.mode==='login'){
         const {data,error}=await client.auth.signInWithPassword({email,password:pass});if(error)throw error;
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
-        showMessage('Signed in successfully. Opening your workspace…','success');location.assign('/#/welcome');
+        showMessage('Signed in successfully. Opening your workspace…','success');location.assign(safeNextPath());
       }else if(state.mode==='signup'){
-        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/'}});if(error)throw error;
-        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign('/welcome');}
-        else{setMode('login');showMessage('Account created. Check your inbox for the email confirmation link, then return here to sign in.','success');}
+        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/auth-callback.html'}});if(error)throw error;
+        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign(safeNextPath());}
+        else if(Array.isArray(data.user?.identities)&&data.user.identities.length===0){
+          // Supabase hides "already registered" when email confirmation is on, so say it ourselves instead of promising an email that will not come.
+          setMode('login',false);showMessage('An account with this email already exists. Sign in below, or use “Forgot password?” if you do not remember it.');
+        }
+        else{setMode('login',false);showMessage('Account created. Check your inbox for the email confirmation link, then return here to sign in.','success');}
       }else{
-        const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/'});if(error)throw error;
+        const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/reset-password.html'});if(error)throw error;
         showMessage('If an account exists for that email, a password-reset link will arrive shortly.','success');
       }
     }catch(error){showMessage(humanError(error));}
     finally{setBusy(false,state.mode==='login'?'Sign in to your account':state.mode==='signup'?'Create your account':'Send reset link');}
   });
   $('#auth-email').addEventListener('input',()=>{if(message.dataset.kind==='error')clearMessage();});
-  setMode(new URLSearchParams(location.search).get('mode') === 'signup' ? 'signup' : 'login');
+  // Already signed in? Go straight to the workspace. The saved session is verified with the server first;
+  // trusting the browser copy alone would bounce people between this page and the workspace when it is stale.
+  const resumeIfSignedIn = async () => {
+    const client = window.supabaseClient;
+    if(!client?.auth) return;
+    try{
+      const {data:{session}} = await client.auth.getSession();
+      if(!session) return;
+      const {data:{user}, error} = await client.auth.getUser();
+      if(user && !error){ location.replace(safeNextPath()); return; }
+      const rejected = error && (error.status===401 || error.status===403 || /jwt|session|sub claim|not found/i.test(String(error.message||'')));
+      if(rejected) await client.auth.signOut({scope:'local'});
+    }catch(e){ /* offline or service down: stay on the form */ }
+  };
+  setMode(new URLSearchParams(location.search).get('mode') === 'signup' ? 'signup' : 'login', false);
+  resumeIfSignedIn();
 })();
