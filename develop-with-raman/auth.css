@@ -32,3 +32,6 @@ input[type="submit"],
 @media(max-width:650px){
  .auth-primary,.auth-social{min-height:40px;padding:9px 14px;font-size:12px}
 }
+
+/* Keep the desktop sign-in form anchored to the far right of its panel. Mobile stays centered. */
+@media (min-width:861px){.auth-main{justify-items:end}.auth-card{margin-left:auto}}
