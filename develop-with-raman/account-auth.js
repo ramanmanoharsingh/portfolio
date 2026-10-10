@@ -94,12 +94,15 @@
   // Avoid showing a second sign-in screen to users who already have a valid session.
   // Workspace routing remains centralized in portal.html so admins and clients land correctly.
   if (window.supabaseClient?.auth) {
-    window.supabaseClient.auth.getSession().then(({ data, error }) => {
+    window.supabaseClient.auth.getUser().then(({ data, error }) => {
+      // Validate the user with Auth instead of trusting a possibly stale local session.
+      // Using getSession() here can send an expired session back to portal.html, which
+      // then sends the browser back here and creates a redirect loop.
       if (error) {
-        console.warn('[auth page] Existing session check failed:', error.message);
+        console.warn('[auth page] Existing user check failed:', error.message);
         return;
       }
-      if (data?.session) location.replace('/portal.html');
-    }).catch(error => console.warn('[auth page] Existing session check failed:', error));
+      if (data?.user) location.replace('/portal.html');
+    }).catch(error => console.warn('[auth page] Existing user check failed:', error));
   }
 })();
