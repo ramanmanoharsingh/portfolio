@@ -1,7 +1,9 @@
 /* Admin actions are guarded by profiles.role and re-enforced by database RLS/storage policies. */
 document.addEventListener('DOMContentLoaded',async()=>{
- const root=document.querySelector('[data-page="admin"]');if(!root||!window.supabaseClient)return;
- const sb=window.supabaseClient,$=s=>document.querySelector(s);
+ const root=document.querySelector('[data-page="admin"]');if(!root)return;
+ const $=s=>document.querySelector(s);
+ if(!window.supabaseClient){const el=$('[data-error-message]');if(el){el.hidden=false;el.textContent='The secure database connection did not initialize. Check that the Supabase SDK and portal-supabase.js loaded, then refresh.';}console.error('[admin portal] Supabase client is unavailable; dashboard initialization stopped.');return;}
+ const sb=window.supabaseClient;
  const say=(id,msg,bad=false)=>{const e=$('#'+id);if(e){e.textContent=msg;e.dataset.error=String(bad);}};
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const {data:{user},error:authError}=await sb.auth.getUser();
