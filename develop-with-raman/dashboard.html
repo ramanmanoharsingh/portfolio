@@ -46,9 +46,20 @@ input[type="submit"]{
  .btn,.top-link,input[type="button"],input[type="submit"]{min-height:40px;padding:9px 14px;font-size:12px}
 }
 </style>
+<style id="dashboard-header-simplification">
+/* Keep account details and sign-out in the workspace/sidebar, not beside the site-return control. */
+#top-identity,#top-signout{display:none!important}
+.top-right{margin-left:auto}
+.top-link.back-to-site{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:42px}
+.top-link.back-to-site>span[aria-hidden="true"]{font-size:18px;line-height:1}
+@media(max-width:650px){
+ .top-link.back-to-site{width:42px;height:40px;min-height:40px;padding:8px!important}
+ .top-link.back-to-site .back-label{display:none}
+}
+</style>
 </head>
 <body>
-<header class="top"><a class="brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a><div class="top-right"><a class="top-link back-to-site" href="/" aria-label="Back to website">Back to website</a><div id="top-identity" class="identity" hidden><div id="top-avatar" class="avatar">R</div><span id="top-name">Account</span></div><button class="top-link" id="top-signout" hidden type="button">Sign out</button></div></header>
+<header class="top"><a class="brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a><div class="top-right"><a class="top-link back-to-site" href="/" aria-label="Back to website" title="Back to website"><span aria-hidden="true">←</span><span class="back-label">Back to website</span></a><div id="top-identity" class="identity" hidden><div id="top-avatar" class="avatar">R</div><span id="top-name">Account</span></div><button class="top-link" id="top-signout" hidden type="button">Sign out</button></div></header>
 <main class="wrap">
 <section id="auth-view" class="auth-wrap" hidden>
  <aside class="auth-aside"><div><div class="eyebrow" style="color:#b7b7b7">CLIENT PORTAL</div><h1>Your work.<br>Your workspace.</h1><p>Track your projects, share requirements, follow delivery milestones, and keep important updates in one place.</p></div><div class="small" style="color:#999">Secure access powered by Supabase.</div></aside>
