@@ -542,6 +542,7 @@ header.top nav{
   section#about h2,section#about p,section#about .eb,section#about .ex{visibility:visible!important;opacity:1!important}
 }
 
+.hp-field{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ck" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol><symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol><symbol id="i-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/></symbol><symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l11.7 16H20L8.3 4H4zM4 20l6.8-7.2M20 4l-6.8 7.2"/></symbol><symbol id="i-ct" viewBox="0 0 24 24"><path d="M1 2h3l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 6H5.2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></symbol></svg>
 <header class="top" id="hd"><nav aria-label="Main"><div class="nl"><a href="#work" data-t="Work">Work</a><a href="#services" data-t="Services">Services</a><a href="#about" data-t="About">About</a><a href="#contact" data-t="Contact">Contact</a></div><a class="wm" href="#top">Develop with Raman</a><div class="nr"><div class="si"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico"><use href="#i-x"/></svg></a></div><a class="bk nav-action" href="#contact">Start a project</a><a class="bk nav-action" id="nav-auth-action" href="/auth.html" aria-label="Sign in to your account">Sign in</a><button class="tg" id="mb" aria-label="Open menu" aria-expanded="false">Menu</button></div></nav><i class="sp" aria-hidden="true"></i></header>
@@ -594,7 +595,7 @@ header.top nav{
 <section class="sec contact" id="contact"><div class="c two" style="align-items:start"><div><div class="eb">Contact</div><h2>Let’s build something real.</h2><p class="lead" style="margin:16px 0 32px">Tell me the goal and I’ll reply within 24 hours.</p>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn s" href="mailto:ramanmanoharsingh@gmail.com">Email directly</a><a class="btn" href="#account">Client portal</a></div>
 <div class="links"><a href="mailto:ramanmanoharsingh@gmail.com">ramanmanoharsingh@gmail.com</a><a href="tel:+917595974769">+91 75959 74769</a><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener">GitHub</a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/raman470" target="_blank" rel="noopener">X</a></div></div>
-<form id="f" novalidate><div class="fl"><label for="n">Name</label><input id="n" autocomplete="name"><span class="err" data-f="n"></span></div><div class="fl"><label for="e">Email</label><input id="e" type="email" autocomplete="email"><span class="err" data-f="e"></span></div><div class="fl"><label for="w">WhatsApp (optional)</label><input id="w" type="tel" autocomplete="tel" placeholder="+91"><span class="err" data-f="w"></span></div><div class="fl"><label for="t">Project type</label><select id="t"></select></div><div class="fl"><label for="b">Budget range</label><select id="b"></select></div><div class="fl"><label for="d">Preferred deadline</label><input id="d" type="date"></div><div class="fl"><label for="pay">Preferred payment method</label><select id="pay"><option>UPI (after scope approval)</option><option>Bank transfer (after scope approval)</option><option>Secure payment link (after scope approval)</option><option>Discuss with me first</option></select><p class="cap">No payment is collected on this website. Payment details are shared only after a written quote is approved.</p></div><div class="fl"><label for="m">Project details</label><textarea id="m" rows="4"></textarea><span class="err" data-f="m"></span></div>
+<form id="f" novalidate><div class="hp-field" aria-hidden="true"><label for="website">Leave this field blank</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div><div class="fl"><label for="n">Name</label><input id="n" autocomplete="name"><span class="err" data-f="n"></span></div><div class="fl"><label for="e">Email</label><input id="e" type="email" autocomplete="email"><span class="err" data-f="e"></span></div><div class="fl"><label for="w">WhatsApp (optional)</label><input id="w" type="tel" autocomplete="tel" placeholder="+91"><span class="err" data-f="w"></span></div><div class="fl"><label for="t">Project type</label><select id="t"></select></div><div class="fl"><label for="b">Budget range</label><select id="b"></select></div><div class="fl"><label for="d">Preferred deadline</label><input id="d" type="date"></div><div class="fl"><label for="pay">Preferred payment method</label><select id="pay"><option>UPI (after scope approval)</option><option>Bank transfer (after scope approval)</option><option>Secure payment link (after scope approval)</option><option>Discuss with me first</option></select><p class="cap">No payment is collected on this website. Payment details are shared only after a written quote is approved.</p></div><div class="fl"><label for="m">Project details</label><textarea id="m" rows="4"></textarea><span class="err" data-f="m"></span></div>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn" id="sd" type="submit">Submit enquiry</button></div></form></div></section>
 
 
@@ -944,7 +945,33 @@ async function refreshClient(userId=currentUser?.id){
   if(leadsResult.error){setStatus("Your account is open, but enquiries could not load: "+leadsResult.error.message,"error");return;}
   renderClient(leadsResult.data||[]);
 }
-async function submitLead(ev){ev.preventDefault();ev.stopImmediatePropagation();const form=$id("f"),button=$id("sd"),name=$id("n").value.trim(),email=$id("e").value.trim(),description=$id("m").value.trim();if(name.length<2||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||description.length<15){setStatus("Please complete your name, a valid email and at least 15 characters of project details.","error");return;}if(!supabase){setStatus("Free database setup is still required. Your details have not been sent.","error");return;}button.disabled=true;button.textContent="Submitting…";try{const payload={name,email,whatsapp:$id("w").value.trim(),project_type:$id("t").value,budget_range:$id("b").value,deadline:$id("d").value||null,preferred_payment:$id("pay").value,description,status:"New",user_id:currentUser?currentUser.id:null,client_email:currentUser?.email||email};const {error}=await supabase.from("leads").insert(payload);if(error)throw error;form.reset();setStatus("Enquiry submitted successfully. It is now in Raman’s dashboard.","ok");if(currentUser){await refreshClient();setTimeout(()=>clientDash.scrollIntoView({behavior:"smooth"}),250);}}catch(err){setStatus("Could not submit enquiry: "+(err?.message||"check your Supabase table and security policies"),"error");}finally{button.disabled=false;button.textContent="Submit enquiry";}}
+async function submitLead(ev){
+  ev.preventDefault();ev.stopImmediatePropagation();
+  const form=$id("f"),button=$id("sd"),name=$id("n").value.trim(),email=$id("e").value.trim(),description=$id("m").value.trim();
+  if(name.length<2||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||description.length<15){
+    setStatus("Please complete your name, a valid email and at least 15 characters of project details.","error");return;
+  }
+  if(!supabase){setStatus("The secure enquiry service is unavailable. Your details have not been sent.","error");return;}
+  button.disabled=true;button.textContent="Submitting…";
+  try{
+    const payload={
+      kind:"enquiry",website:$id("website").value,
+      name,email,whatsapp:$id("w").value.trim(),project_type:$id("t").value,
+      budget_range:$id("b").value,deadline:$id("d").value||null,
+      preferred_payment:$id("pay").value,description
+    };
+    const {data,error}=await supabase.functions.invoke("public-intake",{body:payload});
+    if(error){
+      let detail=error.message||"Please try again.";
+      try{const body=await error.context?.json();if(body?.error)detail=body.error;}catch{}
+      throw new Error(detail);
+    }
+    if(data?.ok!==true)throw new Error(data?.error||"The enquiry could not be saved. Please try again.");
+    form.reset();setStatus("Enquiry submitted successfully. It is now in Raman’s dashboard.","ok");
+    if(currentUser){await refreshClient();setTimeout(()=>clientDash.scrollIntoView({behavior:"smooth"}),250);}
+  }catch(err){setStatus(err?.message||"Could not submit enquiry. Please try again shortly.","error");}
+  finally{button.disabled=false;button.textContent="Submit enquiry";}
+}
 async function loadUser(user,{scrollToLogin=false,landing="welcome"}={}){
   const seq=++authLoadSequence;
   clearDash();currentUser=user;currentProfile=null;syncAuthActions(user);
