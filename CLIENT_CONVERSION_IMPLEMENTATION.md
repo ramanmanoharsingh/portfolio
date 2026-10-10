@@ -21,13 +21,31 @@ Treat this document as the acceptance criteria for the homepage and client enqui
 
 ## Authentication and routing logic
 
-### Already signed in
-- Selecting “Start a Project” takes the user to Services first.
-- Selecting a service prefills the enquiry form with that service.
-- On submit, persist the enquiry before redirecting.
-- Associate the record with the verified Supabase session user ID.
-- After a successful save, redirect to the existing client dashboard and show the submitted enquiry/status there.
-- Do not redirect on failure or pretend the request was saved when the database rejects it.
+### Signed-in client flow — authoritative behaviour
+1. Every “Start a Project” CTA lands on the Services section first, not on a submission form or directly in a dashboard.
+2. For an authenticated client, hide the public homepage “Project enquiry” form so there is only one signed-in submission surface. Do not delete the public form for signed-out visitors.
+3. When the authenticated client selects a service card, route to `/client-dashboard.html?request=1&service=<URL-encoded-service-name>`. The client dashboard must open its existing “New project request” modal and preselect that exact service.
+4. Reuse the existing `public.proposals` table and dashboard form. Persist the selected service in the proposal title/description using fields supported by the current schema; do not assume a `service_type` column exists unless a reviewed migration is added and applied.
+5. Set `client_id` only from the verified Supabase session user ID in the dashboard. Do not trust a client ID from query parameters or local/session storage.
+6. A signed-in service request must be submitted through the client dashboard. Do not also insert it into `public.leads`, and do not create duplicate rows in `leads` and `proposals`.
+7. After Supabase confirms the proposal insert, route to the dashboard’s “Project requests” tab and display the database-backed request. On failure, keep the modal/draft available, display an accessible error, and do not claim success.
+8. If the role lookup fails for an authenticated session, do not silently fall back to anonymous lead submission. Fail safely toward the authenticated workspace and surface recoverable errors.
+9. Admin users must retain their existing admin workflow; do not hide the homepage form or route them into the client-only flow when the verified profile role is `admin`.
+
+### Signed-out visitor flow
+- Visitors can browse Services and submit the public homepage enquiry if no listed service fits or they are not signed in.
+- Selecting a service prefills the public form and moves the visitor to it.
+- The public form continues to create a `public.leads` record under the existing insert policy. It must not pretend an anonymous lead is already in a client dashboard.
+- Keep the sign-in/client-dashboard action and direct “Email Raman” alternative near the public form submit action.
+- Preserve draft fields temporarily. If a session is established before a public form is submitted, transfer the draft and selected service into the client dashboard proposal modal rather than inserting a duplicate lead.
+
+### Post-authentication routing
+- If a user starts a project while signed out, preserve the requested return route and draft through email/password and Google sign-in.
+- After authentication, return the user to Services first when that was the initiating action. They must explicitly select the desired service before the dashboard request modal opens.
+- Validate any post-auth redirect against an allowlist of internal routes; never trust an arbitrary user-supplied redirect URL.
+- Handle expired sessions, OAuth callback errors, slow network requests, and database failures with accessible status messages and retry paths.
+
+
 
 ### Not signed in
 - Allow the visitor to explore Services and prepare an enquiry.
@@ -66,8 +84,11 @@ Treat this document as the acceptance criteria for the homepage and client enqui
 - Validate JavaScript syntax and HTML structure.
 - Check for duplicate IDs and broken internal links.
 - Test desktop and mobile navigation and the requested section order.
-- Test each service selection and custom enquiry.
-- Test signed-in and signed-out flows, including draft preservation and post-auth return.
+- Test each service selection and custom enquiry for signed-out visitors.
+- Test that a signed-in client is sent Services → client dashboard modal with the exact service preselected; verify the homepage enquiry form is hidden for clients but remains available to signed-out visitors.
+- Test that a signed-in request creates exactly one row in `proposals` with `client_id = auth.uid()`, appears in the Project requests tab after submission, and never creates a duplicate `leads` row.
+- Test draft preservation when the session becomes authenticated and when proposal insertion fails; verify retry does not duplicate records.
+- Test the admin role separately to confirm it retains its current admin dashboard and lead-review route.
 - Confirm successful submissions persist in Supabase and appear only to the correct client/admin.
 - Test invalid form data, repeated clicks, network/database failures, and expired sessions.
 - Run existing automated checks and review the complete diff.
