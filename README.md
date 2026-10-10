@@ -1,82 +1,65 @@
-# Develop with Raman — Supabase client workspace
+# Develop with Raman
 
-The site is a plain HTML/CSS/JavaScript website hosted on GitHub Pages. The client workspace is already wired to Supabase Auth and the `public.leads` table; it is waiting for your own Supabase project credentials. No React build step is required.
+Static portfolio and freelance-service website for **Develop with Raman**, hosted on Cloudflare Pages and backed by the existing Supabase project.
 
-## What is implemented
+- **Live site:** https://ramans.pages.dev
+- **Repository:** https://github.com/ramanmanoharsingh/portfolio
+- **Site source:** `develop-with-raman/`
+- **Stack:** HTML, CSS, vanilla JavaScript, Cloudflare Pages, Supabase Auth and Postgres
+- **Authentication goal:** email/password and Google OAuth
+- **Client access:** invite clients after a project is accepted
 
-- Custom-quote enquiry form (no fixed plan/package pricing).
-- Email/password sign-up, sign-in and password reset.
-- Google and Apple OAuth buttons (each provider must be configured in Supabase first).
-- Client dashboard showing enquiries linked to the signed-in account.
-- Owner dashboard for `ramanmanoharsingh@gmail.com`, with status filters, status updates, live refresh and CSV export.
-- Row Level Security (RLS) policies in `develop-with-raman/supabase-setup.sql`.
+## Safe maintenance rules
 
-## 1. Create a Supabase project
+- Preserve existing Supabase Auth users, profiles, projects, enquiries, and all other records.
+- Do not create a replacement Supabase project or run the initial setup SQL against the live database as a reset.
+- Do not put a Supabase service-role key, database password, OAuth client secret, or other server secret in browser code or Git.
+- The browser-safe Supabase publishable/anon key may be used in the frontend; row-level security (RLS) must enforce authorization.
+- Apply database changes only as reviewed, additive migrations. Back up data before any operation that could alter or remove it.
+- Test authentication, redirects, mobile navigation, and client/admin access before calling a deployment production-ready.
 
-1. Open [Supabase](https://supabase.com/) and sign in.
-2. Create a new project, choose a project name and a strong database password, and select the Free plan.
-3. Wait for the project to finish provisioning.
-4. In the project dashboard, open **Project Settings → API** (the exact menu label may be **API Keys** in the newer dashboard).
-5. Copy the **Project URL** and the browser-safe **publishable key** (or legacy `anon` key). Never copy a `service_role` or secret key into this website.
+## Site routes
 
-## 2. Connect the repository
+Cloudflare Pages route rewrites are defined in `develop-with-raman/_redirects`. Authentication, callback, client dashboard, profile, admin portal, and password reset pages are separate static files in the same directory.
 
-1. Open [the website HTML](https://github.com/ramanmanoharsingh/portfolio/blob/main/develop-with-raman/index.html).
-2. Find these two constants near the bottom of the file:
-   ```js
-   const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
-   const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-   ```
-3. Replace the placeholder URL and key with the values from your Supabase project. The publishable/anon key is designed to be used in browser code; database permissions must be enforced by RLS.
-4. Commit the edit to `main`. GitHub Pages will publish the updated static page.
+## Deployment
 
-## 3. Create the database and security policies
+Cloudflare Pages should deploy the `develop-with-raman/` directory as the site root, with no framework build command required for the static HTML/CSS/JavaScript site. Confirm the Pages project’s configured root directory and production branch before changing deployment settings.
 
-1. In Supabase, open **SQL Editor → New query**.
-2. Open [`develop-with-raman/supabase-setup.sql`](https://github.com/ramanmanoharsingh/portfolio/blob/main/develop-with-raman/supabase-setup.sql) in the repository, copy its full contents, paste into the SQL Editor, and run it.
-3. Confirm that the `public.leads` table exists under **Table Editor**.
-4. Keep RLS enabled. Do not make the table publicly readable and never add the service-role key to HTML.
+After a commit reaches the configured production branch, check the Cloudflare Pages deployment status and test the deployed URL. A GitHub commit alone does not prove that the live site has updated.
 
-The SQL policy grants owner access based on the configured owner email `ramanmanoharsingh@gmail.com`. The dashboard uses that same email to choose the owner UI. If you want to use another admin email, update both the HTML constant `OWNER_EMAIL` and the owner email checks in the SQL, then rerun the SQL.
+## Supabase checks
 
-## 4. Configure authentication URLs
+The live project already contains application tables for profiles, projects, leads, enquiries, milestones, tasks, messages, invoices, proposals, and deliverables. Preserve these tables and their data.
 
-In Supabase, open **Authentication → URL Configuration**:
+Before changing database security:
+1. Review each RLS policy's target roles and predicates.
+2. Verify that clients can only read records associated with their own user/project.
+3. Verify that admin-only changes require the server-validated admin predicate.
+4. Keep guest enquiry submission narrowly scoped to inserts; do not grant anonymous users broad read/update/delete access.
+5. Re-run the Supabase security and performance advisors after a reviewed migration.
 
-- **Site URL:** `https://ramanmanoharsingh.github.io/portfolio/develop-with-raman/`
-- Add that exact URL to **Redirect URLs**.
-- Also add your eventual custom-domain URL if you use one.
+The Supabase advisor may flag policies that intentionally apply to the `authenticated` role alongside anonymous-insert policies. Review the actual policy role list and predicate before modifying a policy; do not remove policies solely to silence a warning.
 
-Email confirmation is recommended. When enabled, test sign-up and follow the verification email before signing in.
+## Authentication configuration
 
-## 5. Enable Google sign-in
+In Supabase Authentication settings, configure the production site URL as `https://ramans.pages.dev` and allow only the required callback/redirect URLs for this domain and any active preview domain. Google OAuth must also be configured with the matching Supabase callback URL in the Google provider console.
 
-1. In Supabase, open **Authentication → Sign In / Providers → Google** and copy the callback URL shown there (it looks like `https://<project-ref>.supabase.co/auth/v1/callback`).
-2. Open [Google Cloud Console](https://console.cloud.google.com/), create/select a project, and configure the OAuth consent screen.
-3. Create an OAuth Client ID of type **Web application**.
-4. Add this as an **Authorized JavaScript origin**: `https://ramanmanoharsingh.github.io`
-5. Add the Supabase callback URL from step 1 as an **Authorized redirect URI**.
-6. Copy the Google Client ID and Client Secret into the Google provider settings in Supabase and enable the provider.
+Email/password and Google sign-in should be tested independently. Never rely on a frontend-only role check to protect the admin dashboard; authorization must be enforced by Supabase RLS and trusted database functions.
 
-Google OAuth credentials are configured in Supabase, not in the public HTML. Google sign-in will not work until this setup is complete.
+## Current known maintenance notes
 
-## 6. Apple sign-in (optional)
+- Keep the homepage as the root landing page; avoid persistent section hashes or scroll-restoration behavior that unexpectedly opens the page midway down.
+- Ensure the mobile navigation visibly exposes the sign-in action.
+- The last homepage patch was committed as [`934698b`](https://github.com/ramanmanoharsingh/portfolio/commit/934698b826954748f24d3e4f5b808192cf896319). Its live behavior still needs verification in Cloudflare Pages and on a phone.
+- Supabase's security advisor currently reports leaked-password protection as disabled. Enable it in Supabase Auth settings if supported by the project plan, then test password sign-in and reset flows.
 
-Apple sign-in also needs an Apple Developer configuration, including a Services ID, Sign in with Apple setup, key and domain/callback configuration. It may require a paid Apple Developer membership. If you do not have those credentials, leave Apple disabled for now; email and Google can work without it.
+## Change workflow
 
-## 7. Test both roles
-
-1. Open the live site and create a test client account using an email you control.
-2. Verify the email if prompted, then sign in and submit a test enquiry while signed in.
-3. Sign out and sign in as `ramanmanoharsingh@gmail.com`. The enquiry should appear in the owner dashboard.
-4. Sign back in as the client. The client dashboard should show only enquiries tied to that account.
-5. Test Google sign-in after provider configuration.
-6. Test status changes and CSV export from the owner dashboard.
-
-## Important limits
-
-- GitHub Pages only serves static files. Supabase provides authentication, database and row-level security.
-- The client dashboard currently tracks **enquiries and their statuses**. It is not yet a full project-management system with milestones, file uploads, invoices or payments.
-- Guest enquiries can be submitted, but because they have no signed-in user ID, they are visible to the owner and do not automatically attach to a client account later.
-- Supabase Free has usage and inactivity limits. Check the current Supabase pricing/limits before relying on it for a production business.
-- Never place a database password, OAuth client secret, service-role key, or other private server credential in the HTML or GitHub repository.
+1. Inspect the current production branch and relevant files.
+2. Make a small, scoped change.
+3. Review the diff and check for accidental secret exposure.
+4. Commit with a specific message.
+5. Verify the Cloudflare deployment.
+6. Test the relevant flows on desktop and mobile.
+7. Re-check Supabase advisors if database/auth configuration changed.
