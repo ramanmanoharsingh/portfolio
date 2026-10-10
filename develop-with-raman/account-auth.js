@@ -23,10 +23,11 @@
   const setBusy = (busy, label) => { state.busy=busy; submit.disabled=busy; submitLabel.textContent=busy?'Please wait…':label; submit.setAttribute('aria-busy',String(busy)); };
   function safeNextPath() {
     const next = new URLSearchParams(location.search).get('next');
-    if (!next || !next.startsWith('/') || next.startsWith('//') || next.includes('\\\\') ||
-        /^\\/(?:auth(?:\\.html)?|login)(?:[/?#]|$)/i.test(next)) return null;
+    if (!next || !next.startsWith('/') || next.startsWith('//') ||
+        next.indexOf(String.fromCharCode(92)) !== -1 ||
+        next.startsWith('/auth') || next.startsWith('/login')) return null;
     return next;
-  };
+  }
   async function postAuthPath(client, user) {
     const next = safeNextPath();
     let role = 'client';
@@ -38,8 +39,8 @@
       console.warn('Could not load account role after sign-in:', error.message);
     }
     if (next) {
-      if (role === 'admin' && /^\\/client-dashboard(?:\\.html)?(?:[/?#]|$)/i.test(next)) return '/admin-portal.html';
-      if (role !== 'admin' && /^\\/admin-portal(?:\\.html)?(?:[/?#]|$)/i.test(next)) return '/client-dashboard.html';
+      if (role === 'admin' && next.startsWith('/client-dashboard')) return '/admin-portal.html';
+      if (role !== 'admin' && next.startsWith('/admin-portal')) return '/client-dashboard.html';
       return next;
     }
     return role === 'admin' ? '/admin-portal.html' : '/client-dashboard.html';
