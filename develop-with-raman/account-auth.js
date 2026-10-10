@@ -80,7 +80,7 @@
       if(state.mode==='login'){
         const {data,error}=await client.auth.signInWithPassword({email,password:pass});if(error)throw error;
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
-        showMessage('Signed in successfully. Opening your workspace…','success');location.assign('/welcome.html');
+        showMessage('Signed in successfully. Opening your workspace…','success');location.assign('/portal.html');
       }else{
         const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/reset-password.html'});if(error)throw error;
         showMessage('If an account exists for that email, a password-reset link will arrive shortly.','success');
