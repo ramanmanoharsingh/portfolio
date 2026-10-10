@@ -21,6 +21,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(!data.session){fail('No active session found','The sign-in link may have expired or the provider may not be configured. Return to sign in and try again.');return;}
     title.textContent='You’re signed in';
     message.textContent='Taking you to your workspace…';
-    location.replace('/welcome.html');
+    const candidate=params.get('next')||'/welcome.html';
+    const next=candidate.startsWith('/')&&!candidate.startsWith('//')&&!candidate.includes('\\')&&
+      !/^\/(?:auth(?:\.html)?|login|reset-password(?:\.html)?|auth-callback(?:\.html)?)(?:[/?#]|$)/i.test(candidate)
+      ?candidate:'/welcome.html';
+    location.replace(next);
   }catch(err){fail('Could not verify your session',err?.message||'Please return to sign in and try again.');}
 });
