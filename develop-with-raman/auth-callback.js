@@ -19,8 +19,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const {data,error}=await window.supabaseClient.auth.getSession();
     if(error)throw error;
     if(!data.session){fail('No active session found','The sign-in link may have expired or the provider may not be configured. Return to sign in and try again.');return;}
+    const next=params.get('next')||'/dashboard.html';
+    const safeNext=next.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')&&!['/auth.html','/auth-callback.html','/reset-password.html'].some(p=>next===p||next.startsWith(p+'?'))?next:'/dashboard.html';
     title.textContent='You’re signed in';
     message.textContent='Taking you to your workspace…';
-    location.replace('/welcome.html');
+    location.replace(safeNext);
   }catch(err){fail('Could not verify your session',err?.message||'Please return to sign in and try again.');}
 });

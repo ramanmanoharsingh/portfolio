@@ -50,6 +50,7 @@
   };
   const scorePassword = value => {if(!value)return 0;let score=0;if(value.length>=8)score++;if(value.length>=12)score++;if(/[a-z]/.test(value)&&/[A-Z]/.test(value))score++;if(/\d/.test(value)||/[^A-Za-z0-9]/.test(value))score++;return Math.min(score,4);};
   const updateStrength = () => {const score=scorePassword(password.value);strength.dataset.level=String(score);strengthLabel.textContent=!password.value?'Use at least 8 characters':['','Needs more variety','Fair password','Good password','Strong password'][score];};
+  const safeNextPath = () => { const candidate=new URLSearchParams(location.search).get('next'); return candidate && candidate.startsWith('/') && !candidate.startsWith('//') && !candidate.includes('\\') && !['/auth.html','/auth-callback.html','/reset-password.html'].some(p=>candidate===p||candidate.startsWith(p+'?')) ? candidate : '/dashboard.html'; };
   const humanError = error => {
     const raw=String(error?.message||'Something went wrong. Please try again.');
     if(/invalid login credentials/i.test(raw))return 'Email or password is incorrect. Check your details and try again.';
@@ -67,7 +68,7 @@
   forgotLink.addEventListener('click',event=>{event.preventDefault();setMode('reset');});
   $('#auth-back-login').addEventListener('click',event=>{event.preventDefault();setMode('login');});
   $('#auth-back-home').addEventListener('click',event=>{event.preventDefault();location.href='/';});
-  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
+  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/auth-callback.html?next='+encodeURIComponent(safeNextPath()),...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(state.busy)return;clearMessage();
     const email=$('#auth-email').value.trim(),pass=password.value;
@@ -84,13 +85,13 @@
       if(state.mode==='login'){
         const {data,error}=await client.auth.signInWithPassword({email,password:pass});if(error)throw error;
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
-        showMessage('Signed in successfully. Opening your workspace…','success');location.assign('/#/welcome');
+        showMessage('Signed in successfully. Opening your workspace…','success');location.assign(safeNextPath());
       }else if(state.mode==='signup'){
-        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/'}});if(error)throw error;
-        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign('/welcome');}
+        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/auth-callback.html?next='+encodeURIComponent(safeNextPath())}});if(error)throw error;
+        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign(safeNextPath());}
         else{setMode('login');showMessage('Account created. Check your inbox for the email confirmation link, then return here to sign in.','success');}
       }else{
-        const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/'});if(error)throw error;
+        const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/reset-password.html'});if(error)throw error;
         showMessage('If an account exists for that email, a password-reset link will arrive shortly.','success');
       }
     }catch(error){showMessage(humanError(error));}
