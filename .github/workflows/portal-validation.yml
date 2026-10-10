@@ -85,7 +85,10 @@ jobs:
           grep -q "queryParams.get('request')==='1'" develop-with-raman/client-portal.js
           grep -q "sb.from('proposals').insert(data)" develop-with-raman/client-portal.js
           grep -q "location.replace('/client-dashboard.html?submitted=1#requests')" develop-with-raman/client-portal.js
-          echo "Similar-project handoff and authenticated proposal submission hooks are present."
+          grep -Fq 'identityLink.href=activeUserRole==="admin"?"/admin-portal.html":"/client-dashboard.html";' develop-with-raman/index.html
+          grep -Fq "root.dataset.role==='admin'&&role!=='admin'" develop-with-raman/client-portal.js
+          grep -Fq "root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'" develop-with-raman/client-portal.js
+          echo "Request handoff, proposal submission, and client/admin role-routing hooks are present."
 
       - name: Confirm workflow docs exist
         run: |
