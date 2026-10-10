@@ -53,7 +53,7 @@
   const humanError = error => {
     const raw=String(error?.message||'Something went wrong. Please try again.');
     if(/invalid login credentials/i.test(raw))return 'Email or password is incorrect. Check your details and try again.';
-    if(/email not confirmed/i.test(raw))return 'Please verify your email using the confirmation link we sent you.';
+    if(/email not confirmed/i.test(raw))return 'This account is not ready to sign in yet. Contact Develop with Raman for help.';
     if(/user already registered/i.test(raw))return 'An account with this email already exists. Try signing in instead.';
     if(/password should be at least/i.test(raw))return 'Choose a longer password that meets the minimum length requirement.';
     if(/rate limit/i.test(raw))return 'Too many attempts in a short time. Please wait a moment and try again.';
