@@ -5,25 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#f7f7f5">
-  <title>Opening your workspace · Develop with Raman</title>
-  <meta name="description" content="Open your secure Develop with Raman workspace.">
+  <title>Opening account access · Develop with Raman</title>
+  <meta name="description" content="Continue to secure Develop with Raman account access.">
   <script>
     (() => {
       const params = new URLSearchParams(location.search);
-      if (params.get('mode') === 'signup') {
-        location.replace('/auth.html?mode=signup');
-      } else if (params.get('mode') === 'recovery') {
+      if (params.get('mode') === 'recovery') {
         location.replace('/reset-password.html' + location.hash);
       } else {
-        location.replace('/welcome.html');
+        const signup = params.get('mode') === 'signup' ? '?mode=signup' : '';
+        location.replace('/auth.html' + signup);
       }
     })();
   </script>
 </head>
 <body>
   <main>
-    <h1>Opening your workspace…</h1>
-    <p>If you are not redirected, <a href="/welcome.html">continue to your workspace</a> or <a href="/auth.html">sign in</a>.</p>
+    <h1>Opening account access…</h1>
+    <p>If you are not redirected, <a href="/auth.html">continue to sign in</a>.</p>
   </main>
 </body>
 </html>
