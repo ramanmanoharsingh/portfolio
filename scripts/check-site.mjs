@@ -23,12 +23,13 @@ async function walk(dir) {
   }
 }
 
-function localPathFromUrl(raw) {
+function localPathFromUrl(raw, sourceFile = join(siteRoot, 'index.html')) {
   const value = raw.trim();
-  if (!value || value.startsWith('#') || /^(?:https?:|mailto:|tel:|data:|javascript:|\/\/)/i.test(value)) return null;
+  if (!value || value.startsWith('#') || /^(?:https?:|mailto:|tel:|data:|javascript:|\\/\\/)/i.test(value)) return null;
   let pathname;
   try {
-    pathname = new URL(value, 'https://site-check.invalid').pathname;
+    const sourceUrl = 'https://site-check.invalid/' + relative(siteRoot, sourceFile).split(sep).join('/');
+    pathname = new URL(value, sourceUrl).pathname;
   } catch {
     return null;
   }
@@ -60,7 +61,7 @@ for (const file of htmlFiles) {
   for (const match of html.matchAll(/\b(src|href)\s*=\s*["']([^"']+)["']/gi)) {
     const attribute = match[1].toLowerCase();
     const raw = match[2];
-    const target = localPathFromUrl(raw);
+    const target = localPathFromUrl(raw, file);
     if (!target) continue;
     const pathname = raw.split(/[?#]/, 1)[0];
     const isAsset = attribute === 'src' || /\.(?:html|css|js|mjs|json|svg|png|jpe?g|webp|gif|ico|woff2?|ttf|pdf)$/i.test(pathname);
@@ -81,7 +82,7 @@ if (await exists(redirectsFile)) {
     if (!trimmed || trimmed.startsWith('#')) continue;
     const [source, destination] = trimmed.split(/\s+/);
     if (!destination || /^https?:\/\//i.test(destination)) continue;
-    const target = localPathFromUrl(destination);
+    const target = localPathFromUrl(destination, redirectsFile);
     if (target && /\.[a-z0-9]+(?:[?#].*)?$/i.test(destination) && !(await exists(target))) {
       errors.push(`Redirect target "${destination}" from "${source}" does not exist`);
     }
