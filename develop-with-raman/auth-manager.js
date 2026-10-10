@@ -6,7 +6,7 @@
     on(type,fn){if(!this.events.has(type))this.events.set(type,new Set());this.events.get(type).add(fn);return()=>this.events.get(type)?.delete(fn);}
     emit(type,payload){for(const fn of this.events.get(type)||[])try{fn(payload);}catch(e){console.error(e);}}
   }
-  function safeNextPath(){const next=new URLSearchParams(location.search).get('next');return next&&next.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')&&!/^\/(?:auth(?:\.html)?|login)(?:[/?#]|$)/i.test(next)?next:'/welcome.html';}
+  function safeNextPath(){const next=new URLSearchParams(location.search).get('next');return next&&next.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')&&!/^\/(?:auth(?:\.html)?|login)(?:[/?#]|$)/i.test(next)?next:'/portal.html';}
   window.AuthState = new Emitter();
   window.AuthState.snapshot = {isLoggedIn:false,userRole:null,token:null,profileData:null};
   class AuthManager {
