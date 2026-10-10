@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
  const {data:{user},error:authError}=await sb.auth.getUser();
  if(authError||!user){location.replace('/auth.html?next='+encodeURIComponent('/admin-portal.html'));return;}
  const {data:profile,error:profileError}=await sb.from('profiles').select('role').eq('id',user.id).maybeSingle();
- if(profileError||profile?.role!=='admin'){location.replace('/client-dashboard.html');return;}
+ if(profileError){console.error('[admin portal] Could not verify account role:',profileError);const el=$('[data-error-message]');if(el){el.hidden=false;el.textContent='We could not verify administrator access. Please refresh and try again.';}return;}
+ if(profile?.role!=='admin'){location.replace('/client-dashboard.html');return;}
  let projects=[],clients=[];
  async function loadAll(){
   const [c,p,q,i,m]=await Promise.all([
