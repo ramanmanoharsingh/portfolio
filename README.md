@@ -80,3 +80,15 @@ The app uses root-relative paths such as `/auth.html` and `/client-dashboard.htm
 - Invitation links should return to `https://ramans.pages.dev/auth-callback.html`; password recovery should return to `https://ramans.pages.dev/reset-password.html`. Add these exact URLs to Supabase Authentication → URL Configuration (redirect allow list) and ensure the project Site URL is `https://ramans.pages.dev`.
 - Supabase's default mail service is restricted and intended for testing. Disabling email confirmation removes the signup-confirmation email only; invitation and password-recovery emails still need delivery. For reliable delivery to client addresses, configure a custom SMTP provider in Supabase Authentication → SMTP Settings. Use `developwithraman@gmail.com` as the sender only after the provider has verified/authorized it. Gmail SMTP may be used with a Google App Password if enabled on the account; never commit SMTP passwords or provider API keys to this repository.
 - Check Supabase Authentication logs for `mail.send` events and delivery errors. A logged send attempt does not guarantee inbox delivery; also check spam and the provider's delivery logs.
+
+
+## OAuth and client-profile troubleshooting
+
+- Google sign-in creates a Supabase Auth user first. The database trigger `on_auth_user_created` creates the matching `public.profiles` row with the **same UUID** and the default `client` role. Do not generate a separate client ID in browser code.
+- The profile bootstrap accepts both Supabase-style `full_name` / `avatar_url` and Google-style `name` / `picture` metadata. The portal also has an idempotent fallback if an older account is missing a profile.
+- The callback waits for the OAuth session to settle before navigating to `/portal.html`. That route reads the database role and sends admins to `/admin-portal.html` and clients to `/client-dashboard.html`.
+- If Google login fails before a user appears in `auth.users`, inspect Supabase Auth logs first. An `invalid_client` / invalid client-secret error is a provider configuration problem, not a profile-trigger problem.
+- In Google Cloud, the web OAuth client must have the production site origin `https://ramans.pages.dev` and the Supabase callback URL shown in Supabase's Google provider settings (typically `https://nmqntqxvficakxkticxc.supabase.co/auth/v1/callback`) under Authorized redirect URIs. Store the matching client ID and current client secret in Supabase Authentication → Sign In / Providers → Google. Never put the client secret in frontend code or Git.
+- In Supabase Authentication → URL Configuration, allow `https://ramans.pages.dev/auth-callback.html` and set the Site URL to `https://ramans.pages.dev`.
+- Authenticated workspace page branding links return to the role-aware portal entry rather than the public homepage. The public portfolio remains accessible from the authentication page's “Back to website” link.
+- The account profile page reports an authenticated account as “Active”; email confirmation is intentionally disabled. Invitations and password-reset links still rely on email delivery.
