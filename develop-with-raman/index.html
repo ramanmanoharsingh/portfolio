@@ -300,6 +300,7 @@ input[type="submit"]{
 @media(max-width:1023px){.nr{gap:10px!important}.top-action{min-height:38px;padding:9px 12px;font-size:12px}}
 @media(max-width:680px){#request-account-link{align-self:stretch;justify-content:center}}
 </style>
+<style id="client-enquiry-routing">html.client-authenticated #request{display:none!important}</style>
 </head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ck" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol><symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol><symbol id="i-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/></symbol><symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l11.7 16H20L8.3 4H4zM4 20l6.8-7.2M20 4l-6.8 7.2"/></symbol><symbol id="i-ct" viewBox="0 0 24 24"><path d="M1 2h3l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 6H5.2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></symbol></svg>
 <header class="top" id="hd"><nav aria-label="Main"><div class="nl"><a href="#work" data-t="Work">Work</a><a href="#work" data-t="Projects">Projects</a><a href="#services" data-t="Services">Services</a><a href="#about" data-t="About">About</a><a href="#contact" data-t="Contact">Contact</a></div><a class="wm" href="#top">Develop with Raman</a><div class="nr"><div class="si"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico"><use href="#i-x"/></svg></a></div><a class="top-action" href="dashboard.html" aria-label="Sign in to your dashboard">Sign in</a><button class="tg" id="mb" aria-label="Open menu" aria-expanded="false">Menu</button></div></nav><i class="sp" aria-hidden="true"></i></header>
@@ -404,7 +405,25 @@ const S=[['AI-assisted website / landing page','A focused, polished site built a
 $('#sg').innerHTML=S.map(s=>'<article class="card service-card"><h3 class="ch">'+s[0]+'</h3><p>'+s[1]+'</p><a class="btn s service-start" href="#request" data-service="'+s[0]+'">Discuss this service ↗</a></article>').join('');
 $('#t').innerHTML=S.map(s=>'<option value="'+s[0]+'">'+s[0]+'</option>').join('')+'<option value="Something else">Something else</option>';
 $('#b').innerHTML='<option value="">Not sure yet</option>'+['Under ₹5,000','₹5,000–₹15,000','₹15,000–₹40,000','₹40,000+','Discuss first'].map(x=>'<option value="'+x+'">'+x+'</option>').join('');
-$('#sg').addEventListener('click',ev=>{const link=ev.target.closest('[data-service]');if(link)$('#t').value=link.dataset.service;});
+$('#sg').addEventListener('click',async ev=>{
+ const link=ev.target.closest('[data-service]');
+ if(!link)return;
+ ev.preventDefault();
+ const selectedService=link.dataset.service||"Something else";
+ $('#t').value=selectedService;
+ saveDraft();
+ try{
+  const {data,error}=await client.auth.getSession();
+  if(error)throw error;
+  if(await isClientSession(data?.session||null)){
+   saveDashboardDraft(selectedService);
+   location.assign("/client-dashboard.html?request=1&service="+encodeURIComponent(selectedService));
+   return;
+  }
+ }catch(error){console.warn("Could not resolve sign-in state before opening a service request:",error);}
+ const target=document.getElementById("request");
+ if(target)target.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});
+});
 const EM='ramanmanoharsingh@gmail.com';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // command menu
@@ -448,6 +467,36 @@ const client=createClient("https://nmqntqxvficakxkticxc.supabase.co","sb_publish
 const form=document.getElementById("f"),status=document.getElementById("request-status"),service=document.getElementById("t");
 const requestAccountLink=document.getElementById("request-account-link");
 const draftKey="dwr-project-enquiry-draft-v1";
+const dashboardDraftKey="dwr-client-proposal-draft-v1";
+const saveDashboardDraft=selectedService=>{
+ const value=id=>document.getElementById(id)?.value?.trim()||"";
+ const description=[
+  "Requested service: "+selectedService,
+  "Project goal: "+(value("goal")||"Not specified"),
+  "Target audience: "+(value("audience")||"Not specified"),
+  "Pages / features / deliverables: "+(value("scope")||"Not specified"),
+  "Reference links: "+(value("reference")||"None provided"),
+  "Budget range: "+(value("b")||"Not specified"),
+  "Deadline: "+(value("d")||"Not specified"),
+  "",
+  "Project details:",
+  value("m")||("I would like to discuss "+selectedService+" and confirm the scope.")
+ ].join("\n");
+ const draft={service:selectedService,title:selectedService+" enquiry",description:description.slice(0,11000),budget:"",timeline:value("d")};
+ try{sessionStorage.setItem(dashboardDraftKey,JSON.stringify(draft));}catch(_e){}
+};
+const isClientSession=async session=>{
+ if(!session?.user?.id)return false;
+ try{
+  const {data,error}=await client.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
+  if(error)throw error;
+  return data?.role!=="admin";
+ }catch(error){
+  console.warn("Could not confirm the account role before routing a project request:",error);
+  // An authenticated request should not fall back into the public lead table on a profile lookup error.
+  return true;
+ }
+};
 const draftFields=["n","e","t","b","d","goal","audience","scope","reference","m"];
 const saveDraft=()=>{try{const draft={};draftFields.forEach(id=>{const el=document.getElementById(id);if(el)draft[id]=el.value});sessionStorage.setItem(draftKey,JSON.stringify(draft));}catch(_e){}};
 const restoreDraft=()=>{try{const raw=sessionStorage.getItem(draftKey);if(!raw)return;const draft=JSON.parse(raw);draftFields.forEach(id=>{const el=document.getElementById(id);if(el&&typeof draft[id]==="string")el.value=draft[id]});sessionStorage.removeItem(draftKey);}catch(_e){}};
@@ -461,6 +510,13 @@ form?.addEventListener("submit",async ev=>{
  ev.preventDefault();if(!form.reportValidity())return;const button=document.getElementById("sd");button.disabled=true;button.textContent="Submitting…";status.textContent="Sending your request securely…";
  try{
   const {data,error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;const session=data?.session||null;
+  if(await isClientSession(session)){
+   const selectedService=service.value||"Something else";
+   saveDashboardDraft(selectedService);
+   status.textContent="You are signed in. Finish and submit this request through your client dashboard.";
+   location.assign("/client-dashboard.html?request=1&service="+encodeURIComponent(selectedService));
+   return;
+  }
   const name=document.getElementById("n").value.trim(),email=document.getElementById("e").value.trim(),details=document.getElementById("m").value.trim();
   const description=["Project goal: "+(document.getElementById("goal").value.trim()||"Not specified"),"Target audience: "+(document.getElementById("audience").value.trim()||"Not specified"),"Pages / features / deliverables: "+(document.getElementById("scope").value.trim()||"Not specified"),"Reference links: "+(document.getElementById("reference").value.trim()||"None provided"),"","Project details:",details].join("\n");
   const payload={name,email,project_type:service.value||"Something else",budget_range:document.getElementById("b").value||null,deadline:document.getElementById("d").value||null,description,status:"New",user_id:session?.user?.id||null,client_email:session?.user?.email||email};
@@ -501,6 +557,7 @@ if(accountAction){
   }else avatar.textContent=initials(name);
  };
  let activeUserId="";
+ let activeUserRole="";
  let servicesFlowHandled=false;
  const focusServicesForFlow=session=>{
   if(servicesFlowHandled||new URLSearchParams(location.search).get("flow")!=="services"||!session?.user?.id)return;
@@ -516,6 +573,8 @@ if(accountAction){
   if(!signedIn){
    if(requestAccountLink){requestAccountLink.href="/dashboard.html?next=services";requestAccountLink.textContent="Sign in / client dashboard ↗";}
    activeUserId="";
+   activeUserRole="";
+   document.documentElement.classList.remove("client-authenticated");
    identityLink.hidden=true;
    identityName.textContent="";
    avatar.replaceChildren();
@@ -526,7 +585,7 @@ if(accountAction){
    accountAction.removeAttribute("aria-disabled");
    return;
   }
-  if(requestAccountLink){requestAccountLink.href="/dashboard.html";requestAccountLink.textContent="Open client dashboard ↗";}
+  if(requestAccountLink){requestAccountLink.href="/client-dashboard.html";requestAccountLink.textContent="Open client dashboard ↗";}
   const id=user.id;
   const meta=user.user_metadata||{};
   let name=meta.full_name||meta.name||user.email?.split("@")[0]||"Account";
@@ -543,9 +602,12 @@ if(accountAction){
   if(activeUserId===id)return;
   activeUserId=id;
   try{
-   const {data,error}=await client.from("profiles").select("full_name,avatar_url").eq("id",id).maybeSingle();
+   const {data,error}=await client.from("profiles").select("full_name,avatar_url,role").eq("id",id).maybeSingle();
    if(error)console.warn("Could not load the account profile for the main-site header:",error);
    if(activeUserId!==id)return;
+   activeUserRole=data?.role||"client";
+   document.documentElement.classList.toggle("client-authenticated",activeUserRole!=="admin");
+   identityLink.href=activeUserRole==="admin"?"/dashboard.html":"/client-dashboard.html";
    if(data?.full_name)name=data.full_name;
    if(data?.avatar_url)photo=data.avatar_url;
    identityName.textContent=name;
