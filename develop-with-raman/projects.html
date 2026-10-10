@@ -1,15 +1,206 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="0; url=index.html#work">
-<title>Projects — Develop with Raman</title>
-<link rel="canonical" href="https://ramans.pages.dev/#work">
-<script>window.location.replace(new URL("index.html#work", window.location.href).href);</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#121410">
+  <meta name="description" content="Explore projects by Raman, browse available source code, and request a build inspired by a project.">
+  <title>Projects & Source Code · Develop with Raman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#11120f;--panel:#191a16;--panel-2:#20211b;--ink:#f4f3ed;--muted:#a2a399;--line:rgba(242,243,231,.13);--accent:#c8f169;--radius:22px}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:90px}
+    body{margin:0;background:radial-gradient(ellipse at 85% 2%,rgba(200,241,105,.08),transparent 30%),var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.55}
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    .shell{width:min(1160px,calc(100% - 40px));margin:auto}
+    .top{height:82px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{font:700 15px/1 "Space Grotesk",sans-serif;letter-spacing:-.4px}
+    .top-link,.pill,.action{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);border-radius:999px;min-height:42px;padding:10px 16px;font-size:13px;font-weight:700;transition:transform .2s,border-color .2s,background .2s}
+    .top-link:hover,.pill:hover,.action:hover{transform:translateY(-2px);border-color:rgba(200,241,105,.55)}
+    .hero{padding:76px 0 42px;max-width:780px}
+    .eyebrow{text-transform:uppercase;letter-spacing:.17em;font-size:10px;font-weight:700;color:var(--accent)}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.045em}
+    h1{font-size:clamp(42px,7vw,76px);line-height:.99;margin:18px 0}
+    .hero p{max-width:610px;color:var(--muted);font-size:16px}
+    .toolbar{display:grid;gap:14px;margin:28px 0 30px}
+    .search{min-height:52px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:15px;padding:0 17px;width:100%;outline-offset:2px}
+    .filters{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{background:transparent;color:var(--muted);cursor:pointer;min-height:36px;padding:8px 13px;font-size:12px}
+    .pill[aria-pressed=true]{background:var(--accent);color:#181a13;border-color:var(--accent)}
+    .results{color:var(--muted);font-size:12px;margin:0 0 14px}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding-bottom:82px}
+    .card{display:flex;flex-direction:column;min-height:315px;padding:24px;background:linear-gradient(145deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);transition:transform .22s,border-color .22s}
+    .card:hover{transform:translateY(-4px);border-color:rgba(200,241,105,.42)}
+    .card[hidden]{display:none}
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .category{color:var(--accent);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+    .number{color:#73756b;font:600 12px "Space Grotesk",sans-serif}
+    .card h2{font-size:24px;line-height:1.1;margin:24px 0 10px}
+    .card p{font-size:13px;color:var(--muted);margin:0 0 14px}
+    .stack{font-size:11px;color:#d7d8cf;margin:0 0 20px}
+    .source-note{font-size:11px;color:#85877c;margin-bottom:15px}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:8px}
+    .action{font-size:11px;min-height:38px;padding:9px 12px;cursor:pointer}
+    .action.primary{background:var(--accent);color:#171912;border-color:var(--accent)}
+    .action.ghost{background:transparent;color:var(--ink)}
+    .empty{grid-column:1/-1;border:1px dashed var(--line);border-radius:var(--radius);padding:36px;color:var(--muted);text-align:center}
+    .footer{padding:28px 0 38px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+    .footer a{text-decoration:underline;text-underline-offset:4px}
+    @media(max-width:920px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding-top:58px}}
+    @media(max-width:600px){.shell{width:min(100% - 28px,1160px)}.top{height:70px}.top-link{padding:8px 11px;font-size:11px;min-height:38px}.hero{padding:48px 0 22px}h1{font-size:48px}.hero p{font-size:14px}.grid{grid-template-columns:1fr;gap:12px;padding-bottom:55px}.card{min-height:0;padding:22px}.card h2{margin-top:18px}.footer{display:grid}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.top-link,.pill,.action{transition:none}}
+  </style>
 </head>
 <body>
-<p>Projects have moved to the main Develop with Raman website.</p>
-<p><a href="index.html#work">Open the Projects section on the main website</a></p>
+  <header class="top shell">
+    <a class="brand" href="/" aria-label="Develop with Raman homepage">Develop with Raman</a>
+    <a class="top-link" href="/#work">Back to portfolio ↗</a>
+  </header>
+  <main class="shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="eyebrow">Project library</div>
+      <h1 id="page-title">Work worth<br>opening up.</h1>
+      <p>Explore builds, experiments and learning projects. Open the code where a dedicated source folder is available, or use a project as a starting point for your own brief.</p>
+    </section>
+    <section class="toolbar" aria-label="Search and filter projects">
+      <label>
+        <span class="eyebrow" style="display:block;margin-bottom:9px">Find a project</span>
+        <input id="project-search" class="search" type="search" placeholder="Search by name, tools or project type…" autocomplete="off">
+      </label>
+      <div class="filters" id="project-filters" role="group" aria-label="Filter by category">
+        <button class="pill" type="button" data-filter="All" aria-pressed="true">All</button>
+        <button class="pill" type="button" data-filter="AI / ML" aria-pressed="false">AI / ML</button>
+        <button class="pill" type="button" data-filter="Web" aria-pressed="false">Web</button>
+        <button class="pill" type="button" data-filter="Data" aria-pressed="false">Data</button>
+        <button class="pill" type="button" data-filter="Python" aria-pressed="false">Python</button>
+        <button class="pill" type="button" data-filter="Business" aria-pressed="false">Business</button>
+      </div>
+    </section>
+    <p id="project-results" class="results" role="status" aria-live="polite">Showing 7 projects</p>
+    <section class="grid" id="project-grid" aria-label="All projects">
+      <article class="card" data-category="AI / ML" data-search="plant disease detector AI machine learning python tensorflow streamlit opencv grad-cam">
+        <div class="card-head"><span class="category">AI / ML</span><span class="number">01</span></div>
+        <h2>Plant Disease Detector</h2>
+        <p>Upload a leaf photo and receive a prediction, with Grad-CAM heatmaps to help explain what the model focused on.</p>
+        <div class="stack">Python · TensorFlow · Streamlit · OpenCV</div>
+        <div class="actions">
+          <a class="action primary" href="https://github.com/ramanmanoharsingh/portfolio/tree/main/projects/plant-disease-detector" target="_blank" rel="noopener noreferrer">Open source ↗</a>
+          <button class="action ghost" type="button" data-request-similar data-project-title="Plant Disease Detector" data-project-service="AI-assisted prototype" data-project-summary="A leaf-image classification app with Grad-CAM heatmaps, confidence scores and treatment recommendations.">Request similar ↗</button>
+        </div>
+      </article>
+      <article class="card" data-category="Web" data-search="playmatch sports network web app javascript match simulation">
+        <div class="card-head"><span class="category">Web</span><span class="number">02</span></div>
+        <h2>PlayMatch Sports Network</h2>
+        <p>Matches nearby players by sport priority and rating, including a match simulation and transparent event logs.</p>
+        <div class="stack">HTML · CSS · JavaScript</div>
+        <div class="actions">
+          <a class="action primary" href="https://github.com/ramanmanoharsingh/portfolio/tree/main/projects/playmatch-sports-network" target="_blank" rel="noopener noreferrer">Open source ↗</a>
+          <button class="action ghost" type="button" data-request-similar data-project-title="PlayMatch Sports Network" data-project-service="Hackathon / demo polish" data-project-summary="A sports matching app with locality matching, region priority, fair ratings, match simulation and event logs.">Request similar ↗</button>
+        </div>
+      </article>
+      <article class="card" data-category="Data" data-search="titanic kaggle machine learning prediction jupyter pandas scikit-learn">
+        <div class="card-head"><span class="category">Data</span><span class="number">03</span></div>
+        <h2>Titanic Kaggle ML</h2>
+        <p>Survival prediction on the Titanic dataset, from data cleaning and preprocessing to final predictions.</p>
+        <div class="stack">Python · Jupyter · pandas · scikit-learn</div>
+        <div class="actions">
+          <a class="action primary" href="https://github.com/ramanmanoharsingh/portfolio/tree/main/projects/titanic-kaggle-ml" target="_blank" rel="noopener noreferrer">Open source ↗</a>
+          <button class="action ghost" type="button" data-request-similar data-project-title="Titanic Kaggle ML" data-project-service="Data dashboard / report" data-project-summary="An end-to-end data science workflow covering preprocessing, survival prediction and output generation.">Request similar ↗</button>
+        </div>
+      </article>
+      <article class="card" data-category="Web" data-search="playmate finder sports partners discovery javascript frontend prototype">
+        <div class="card-head"><span class="category">Web</span><span class="number">04</span></div>
+        <h2>PlayMate Finder</h2>
+        <p>An early prototype for discovering sports partners, with player search and a simple discovery flow.</p>
+        <div class="stack">HTML · CSS · JavaScript</div>
+        <div class="actions">
+          <a class="action primary" href="https://github.com/ramanmanoharsingh/portfolio/tree/main/projects/playmate-finder" target="_blank" rel="noopener noreferrer">Open source ↗</a>
+          <button class="action ghost" type="button" data-request-similar data-project-title="PlayMate Finder" data-project-service="AI-assisted website / landing page" data-project-summary="A frontend prototype for finding sports partners, with player search and discovery.">Request similar ↗</button>
+        </div>
+      </article>
+      <article class="card" data-category="Python" data-search="python assignments practice programming documented outputs">
+        <div class="card-head"><span class="category">Python</span><span class="number">05</span></div>
+        <h2>Python Assignments</h2>
+        <p>A library of practice programs with the outputs documented for easy review.</p>
+        <div class="stack">Python</div>
+        <div class="actions">
+          <a class="action primary" href="https://github.com/ramanmanoharsingh/portfolio/tree/main/projects/python-assignments" target="_blank" rel="noopener noreferrer">Open source ↗</a>
+          <button class="action ghost" type="button" data-request-similar data-project-title="Python Assignments" data-project-service="Something else" data-project-summary="A structured Python practice library with documented program outputs.">Request similar ↗</button>
+        </div>
+      </article>
+      <article class="card" data-category="Business" data-search="business sales management customer sales product dashboards workflow">
+        <div class="card-head"><span class="category">Business</span><span class="number">06</span></div>
+        <h2>Business Sales Management</h2>
+        <p>Concept work around sales tracking, customer records, products and useful management views.</p>
+        <div class="stack">Workflows · Dashboards · Business processes</div>
+        <div class="source-note">No dedicated public source folder is linked from this portfolio. The button opens your available GitHub repositories.</div>
+        <div class="actions">
+          <a class="action primary" href="https://github.com/ramanmanoharsingh?tab=repositories" target="_blank" rel="noopener noreferrer">Browse repositories ↗</a>
+          <button class="action ghost" type="button" data-request-similar data-project-title="Business Sales Management" data-project-service="Data dashboard / report" data-project-summary="A business workflow focused on sales, customers, products and management dashboards.">Request similar ↗</button>
+        </div>
+      </article>
+      <article class="card" data-category="Business" data-search="oemlinker website business web design emergent AI assisted">
+        <div class="card-head"><span class="category">Business</span><span class="number">07</span></div>
+        <h2>OEMLinker Website</h2>
+        <p>AI-assisted website work for OEMLinker, focused on a credible business presence and clear positioning.</p>
+        <div class="stack">Emergent · AI-assisted building · Web design</div>
+        <div class="source-note">A dedicated public source repository is not linked from this portfolio.</div>
+        <div class="actions">
+          <a class="action primary" href="https://oemlinker.com" target="_blank" rel="noopener noreferrer">Visit live website ↗</a>
+          <a class="action ghost" href="https://github.com/ramanmanoharsingh?tab=repositories" target="_blank" rel="noopener noreferrer">Browse repositories ↗</a>
+          <button class="action ghost" type="button" data-request-similar data-project-title="OEMLinker Website" data-project-service="Business website refresh" data-project-summary="A business website created with AI-assisted tooling and a clear business positioning.">Request similar ↗</button>
+        </div>
+      </article>
+      <p id="no-projects" class="empty" hidden>No projects match your search. Try another keyword or choose “All”.</p>
+    </section>
+  </main>
+  <footer class="footer shell">
+    <span>Develop with Raman · Project library</span>
+    <span><a href="/">Home</a> · <a href="mailto:ramanmanoharsingh@gmail.com?subject=Project%20enquiry">Email Raman</a></span>
+  </footer>
+  <script>
+    (() => {
+      const search = document.getElementById('project-search');
+      const cards = [...document.querySelectorAll('#project-grid .card')];
+      const filters = [...document.querySelectorAll('[data-filter]')];
+      const results = document.getElementById('project-results');
+      const empty = document.getElementById('no-projects');
+      let active = 'All';
+      const render = () => {
+        const query = search.value.trim().toLowerCase();
+        let count = 0;
+        cards.forEach(card => {
+          const matchCategory = active === 'All' || card.dataset.category === active;
+          const matchQuery = card.dataset.search.toLowerCase().includes(query) || card.textContent.toLowerCase().includes(query);
+          const visible = matchCategory && matchQuery;
+          card.hidden = !visible;
+          if (visible) count++;
+        });
+        results.textContent = 'Showing ' + count + ' of ' + cards.length + ' projects';
+        empty.hidden = count !== 0;
+      };
+      filters.forEach(button => button.addEventListener('click', () => {
+        active = button.dataset.filter;
+        filters.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        render();
+      }));
+      search.addEventListener('input', render);
+      document.querySelectorAll('[data-request-similar]').forEach(button => button.addEventListener('click', () => {
+        const params = new URLSearchParams({
+          requestSimilar: '1',
+          project: button.dataset.projectTitle || 'Selected project',
+          service: button.dataset.projectService || 'Something else',
+          summary: button.dataset.projectSummary || ''
+        });
+        location.assign('/?' + params.toString() + '#request');
+      }));
+      render();
+    })();
+  </script>
 </body>
 </html>
