@@ -438,8 +438,8 @@ $('#sg').addEventListener('click',async ev=>{
    return;
   }
  }catch(error){console.warn("Could not resolve sign-in state before opening a service request:",error);}
- const target=document.getElementById("request");
- if(target)target.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});
+ // Route admins and signed-out visitors through the public enquiry form with the selected service preserved.
+ location.assign("/?service="+encodeURIComponent(selectedService)+"#request");
 });
 const EM='ramanmanoharsingh@gmail.com';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
