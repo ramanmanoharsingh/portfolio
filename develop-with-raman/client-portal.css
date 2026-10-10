@@ -7,7 +7,7 @@
 .portal-nav-button{appearance:none;border:0;background:transparent;color:#696a65;padding:12px 14px;border-radius:12px;text-align:left;font-size:14px;cursor:pointer}.portal-nav-button:hover{background:#f1f2ed;color:#151515}.portal-nav-button span{display:inline-block;width:26px}@media(prefers-color-scheme:dark){.portal-nav-button{color:var(--portal-muted)}.portal-nav-button:hover{background:#272923;color:var(--portal-ink)}}
 /* Consistent portal chrome: centred site identity and one deliberate button language. */
 .portal-topbar{position:relative;isolation:isolate}
-.portal-header-brand{position:absolute;left:50%;top:0;transform:translateX(-50%);z-index:2;display:inline-flex;align-items:center;justify-content:center;max-width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;font-weight:800;letter-spacing:-.45px;text-align:center}
+.portal-header-brand{position:absolute;left:50%;top:-22px;transform:translateX(-50%);z-index:2;display:inline-flex;align-items:center;justify-content:center;max-width:42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;font-weight:800;letter-spacing:-.45px;text-align:center}
 .portal-header-brand:hover{opacity:.72}
 .portal-body .button,.portal-body .portal-button,.portal-body .portal-nav-button{transition:transform .2s ease,background-color .2s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease}
 .portal-body .button:hover:not(:disabled),.portal-body .portal-button:hover:not(:disabled){box-shadow:0 5px 16px #0000000d}
