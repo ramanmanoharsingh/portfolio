@@ -75,6 +75,18 @@ jobs:
           test -f develop-with-raman/client-portal.css
           echo "Client dashboard update hooks and role navigation are present."
 
+      - name: Validate similar-project request handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "requestSimilar: '1'" develop-with-raman/projects.html
+          grep -q "params.get('requestSimilar')==='1'" develop-with-raman/index.html
+          grep -q "client-dashboard.html?request=1&service=" develop-with-raman/index.html
+          grep -q "queryParams.get('request')==='1'" develop-with-raman/client-portal.js
+          grep -q "sb.from('proposals').insert(data)" develop-with-raman/client-portal.js
+          grep -q "location.replace('/client-dashboard.html?submitted=1#requests')" develop-with-raman/client-portal.js
+          echo "Similar-project handoff and authenticated proposal submission hooks are present."
+
       - name: Confirm workflow docs exist
         run: |
           test -f docs/WORKFLOW_OVERHAUL_PLAN.md
