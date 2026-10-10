@@ -129,7 +129,7 @@
         const serviceName=String(form.elements.service?.value||'').trim();
         const title=String(form.elements.title.value||'').trim();
         const rawDescription=String(form.elements.description.value||'').trim();
-        const description='Requested service: '+(serviceName||'Something else')+'\\n\\n'+rawDescription;
+        const description=['Requested service: '+(serviceName||'Something else'),'',rawDescription].join(String.fromCharCode(10));
         const data={
           client_id:user.id,
           title,
