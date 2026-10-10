@@ -90,7 +90,7 @@
   password.addEventListener('input',updateStrength);
   forgotLink.addEventListener('click',event=>{event.preventDefault();setMode('reset');});
   $('#auth-back-login').addEventListener('click',event=>{event.preventDefault();setMode('login');});
-  $('#auth-back-home').addEventListener('click',event=>{event.preventDefault();location.href='/';});
+  $('#auth-back-home')?.addEventListener('click',event=>{event.preventDefault();location.href='/';});
   $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(state.busy)return;clearMessage();
