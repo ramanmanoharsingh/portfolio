@@ -42,7 +42,7 @@ The app uses root-relative paths such as `/auth.html` and `/client-dashboard.htm
 3. Add exact local development URLs only when needed; avoid broad wildcards in production.
 4. In **Authentication → Sign In / Providers**, enable Email and Google. Configure Google credentials only in Supabase and Google Cloud Console.
 5. In Supabase Auth settings, disable public sign-ups if the invitation-only client model is required. Hiding the registration button is not a backend security control.
-6. Enable email confirmation and leaked-password protection. Configure the email templates and test invitation and recovery links.
+6. In Supabase Authentication → Sign In / Providers → Email, turn **Confirm email OFF** so email/password accounts do not have to verify their address before signing in. Keep leaked-password protection enabled. This setting removes the signup confirmation step; it does not remove invitation or password-recovery emails.
 7. After a project is accepted, invite the client in Supabase **Authentication → Users → Invite user**. Use `https://ramans.pages.dev/auth-callback.html` as the redirect URL. The callback should send invited clients to set their password.
 8. Confirm the administrator account has the `admin` role in `public.profiles`. Never grant admin role from browser code or client-editable metadata.
 
@@ -58,12 +58,12 @@ The app uses root-relative paths such as `/auth.html` and `/client-dashboard.htm
 ## Test before launch
 
 - Public pages work while logged out.
-- Uninvited sign-up is rejected by Supabase when public sign-ups are disabled.
+- Uninvited sign-up is rejected by Supabase when public sign-ups are disabled, even with email confirmation turned off.
 - An invited client can accept the invitation, set a password, sign in, and see only their own project data.
 - Google login works for an authorized account and shows useful errors when setup is missing or consent is cancelled.
 - Password recovery and expired/invalid links are handled clearly.
 - A client cannot read another client's projects, messages, milestones, invoices, or files, or perform admin actions.
-- Only the verified administrator account with the database-backed admin role can use admin operations.
+- Only the administrator account with the database-backed admin role can use admin operations.
 - Sign-out, refresh, session expiry, mobile layout, and keyboard navigation work.
 
 ## Free-tier cost notes
@@ -74,9 +74,9 @@ The app uses root-relative paths such as `/auth.html` and `/client-dashboard.htm
 - Before removing indexes, review real query plans and usage over time. An index can show zero use on a small/new project while still protecting future queries.
 
 
-## Email verification and invitation delivery
+## Email confirmation and invitation delivery
 
-- Client workspaces are invitation-only. The legacy dashboard sign-in now no longer offers public account creation; use the invitation flow after a project is accepted.
-- Confirmation/invitation links should return to `https://ramans.pages.dev/auth-callback.html`; password recovery should return to `https://ramans.pages.dev/reset-password.html`. Add these exact URLs to Supabase Authentication → URL Configuration (redirect allow list) and ensure the project Site URL is `https://ramans.pages.dev`.
-- Supabase's default mail service is restricted and intended for testing. For reliable delivery to client addresses, configure a custom SMTP provider in Supabase Authentication → SMTP Settings. Use `developwithraman@gmail.com` as the sender only after the provider has verified/authorized it. Gmail SMTP may be used with a Google App Password if enabled on the account, but a transactional email provider is generally more appropriate; never commit SMTP passwords or provider API keys to this repository.
+- Client workspaces are invitation-only. The legacy dashboard sign-in does not offer public account creation; use the invitation flow after a project is accepted. Email confirmation is intentionally disabled, but invitation and password-recovery links still use email.
+- Invitation links should return to `https://ramans.pages.dev/auth-callback.html`; password recovery should return to `https://ramans.pages.dev/reset-password.html`. Add these exact URLs to Supabase Authentication → URL Configuration (redirect allow list) and ensure the project Site URL is `https://ramans.pages.dev`.
+- Supabase's default mail service is restricted and intended for testing. Disabling email confirmation removes the signup-confirmation email only; invitation and password-recovery emails still need delivery. For reliable delivery to client addresses, configure a custom SMTP provider in Supabase Authentication → SMTP Settings. Use `developwithraman@gmail.com` as the sender only after the provider has verified/authorized it. Gmail SMTP may be used with a Google App Password if enabled on the account; never commit SMTP passwords or provider API keys to this repository.
 - Check Supabase Authentication logs for `mail.send` events and delivery errors. A logged send attempt does not guarantee inbox delivery; also check spam and the provider's delivery logs.
