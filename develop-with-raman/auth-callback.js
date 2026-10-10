@@ -56,6 +56,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         }));
         timer = setTimeout(() => finish(null), 12000);
+        // Close the small race where the session becomes available just before the listener attaches.
+        client.auth.getSession().then(({ data: latest, error }) => {
+          if (!error && latest?.session) finish(latest.session);
+        }).catch(() => {});
       });
     }
 
