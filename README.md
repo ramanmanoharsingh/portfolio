@@ -56,6 +56,8 @@ The current database audit found row-level security enabled on every table in th
 
 Cloudflare Pages should deploy the `develop-with-raman/` directory as the site root, with no framework build command required for the static HTML/CSS/JavaScript site. Confirm the Pages project’s configured root directory and production branch before changing deployment settings.
 
+A dependency-free static audit is available at `scripts/check-site.mjs` and is wired into `.github/workflows/site-check.yml`. It checks JavaScript syntax, duplicate HTML IDs, local asset references, required account pages, redirect targets, and that `auth.html` remains the single canonical account form. These automated checks complement—but do not replace—live OAuth, Supabase authorization, mobile-browser, and Cloudflare deployment smoke tests.
+
 After a commit reaches the configured production branch, check the Cloudflare Pages deployment status and test the deployed URL. A GitHub commit alone does not prove that the live site has updated.
 
 ## Supabase checks
