@@ -46,10 +46,10 @@ jobs:
           from pathlib import Path
 
           html = Path("develop-with-raman/index.html").read_text(encoding="utf-8")
-          scripts = re.findall(r'<script\\b([^>]*)>([\\s\\S]*?)</script>', html, re.IGNORECASE)
+          scripts = re.findall(r'<script\b([^>]*)>([\s\S]*?)</script>', html, re.IGNORECASE)
           checked = 0
           for attributes, source in scripts:
-              module = re.search(r'\\btype\\s*=\\s*["\\']module["\\']', attributes, re.IGNORECASE)
+              module = re.search(r'\btype\s*=\s*["\\']module["\\']', attributes, re.IGNORECASE)
               command = ["node", "--check", "--input-type=module"] if module else ["node", "--check"]
               result = subprocess.run(command, input=source, text=True, capture_output=True)
               if result.returncode:
