@@ -41,9 +41,12 @@ header.top a{color:#fff}header.top a:hover{text-decoration:none;opacity:.7}
 .account-avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .account-identity-name{display:block;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 13px/1.2 "Space Grotesk","DM Sans",Arial,sans-serif}
 .account-identity-link:hover{opacity:.78}
+.account-notifications-link{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 11px;border:1px solid rgba(255,255,255,.35);border-radius:999px;color:#fff!important;font:600 12px/1 "Space Grotesk",Arial,sans-serif;white-space:nowrap}
+.account-notifications-link[hidden]{display:none!important}
+.account-notifications-link:hover{background:#fff;color:#080808!important;text-decoration:none}
 .account-signout{cursor:pointer}
 @media(max-width:1023px){.account-avatar{width:34px;height:34px}.account-identity-link{gap:7px;max-width:150px}.account-identity-name{max-width:82px;font-size:11px}}
-@media(max-width:560px){.account-avatar{width:30px;height:30px}.account-identity-link{gap:5px;max-width:92px}.account-identity-name{max-width:55px;font-size:10px}.account-signout{padding:7px 8px!important;font-size:10px!important}}
+@media(max-width:560px){.account-avatar{width:30px;height:30px}.account-identity-link{gap:5px;max-width:92px}.account-identity-name{max-width:55px;font-size:10px}.account-notifications-link{padding:7px 8px;font-size:10px}.account-signout{padding:7px 8px!important;font-size:10px!important}}
 .top .nr{gap:clamp(8px,1.1vw,16px)}
 .top .nr .si{gap:clamp(10px,1.4vw,22px)}
 @media(max-width:1023px){.top .nr{display:flex!important;gap:8px!important}.top .nr .si{display:none!important}.top-action{min-height:38px;padding:8px 11px;font-size:12px}.top .wm{margin-left:0!important}}
@@ -601,6 +604,13 @@ if(accountAction){
  const avatar=document.createElement("span");
  avatar.className="account-avatar";
  avatar.setAttribute("aria-hidden","true");
+ const updatesLink=document.createElement("a");
+ updatesLink.className="account-notifications-link";
+ updatesLink.href="/client-dashboard.html#notifications";
+ updatesLink.textContent="♧ Updates";
+ updatesLink.setAttribute("aria-label","View client updates");
+ updatesLink.hidden=true;
+ identityLink.insertAdjacentElement("afterend",updatesLink);
  const identityName=document.createElement("span");
  identityName.className="account-identity-name";
  identityLink.append(avatar,identityName);
@@ -638,6 +648,7 @@ if(accountAction){
    activeUserRole="";
    document.documentElement.classList.remove("client-authenticated");
    identityLink.hidden=true;
+   updatesLink.hidden=true;
    identityName.textContent="";
    avatar.replaceChildren();
    accountAction.textContent=signedOutLabel;
@@ -653,6 +664,7 @@ if(accountAction){
   let name=meta.full_name||meta.name||user.email?.split("@")[0]||"Account";
   let photo=meta.avatar_url||meta.picture||"";
   identityLink.hidden=false;
+  updatesLink.hidden=true;
   identityLink.setAttribute("aria-label","Open dashboard for "+name);
   identityName.textContent=name;
   renderAvatar(photo,name);
@@ -669,7 +681,8 @@ if(accountAction){
    if(activeUserId!==id)return;
    activeUserRole=data?.role||"client";
    document.documentElement.classList.toggle("client-authenticated",activeUserRole!=="admin");
-   identityLink.href=activeUserRole==="admin"?"/dashboard.html":"/client-dashboard.html";
+   identityLink.href=activeUserRole==="admin"?"/admin-portal.html":"/client-dashboard.html";
+   updatesLink.hidden=activeUserRole==="admin";
    if(data?.full_name)name=data.full_name;
    if(data?.avatar_url)photo=data.avatar_url;
    identityName.textContent=name;

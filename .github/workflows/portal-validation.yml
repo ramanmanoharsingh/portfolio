@@ -1,0 +1,103 @@
+name: Portal validation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, feature/workflow-overhaul]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portal-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-validation:
+    name: Static validation (no production changes)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax-check JavaScript files
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            node --check "$file"
+          done < <(find develop-with-raman -type f -name '*.js' -print0)
+
+      - name: Syntax-check inline scripts in homepage HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          import subprocess
+          from pathlib import Path
+
+          html = Path("develop-with-raman/index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r'<script\b([^>]*)>([\s\S]*?)</script>', html, re.IGNORECASE)
+          checked = 0
+          for attributes, source in scripts:
+              module = "type=\"module\"" in attributes.lower()
+              command = ["node", "--check", "--input-type=module"] if module else ["node", "--check"]
+              result = subprocess.run(command, input=source, text=True, capture_output=True)
+              if result.returncode:
+                  print(result.stderr)
+                  raise SystemExit(result.returncode)
+              checked += 1
+          if not checked:
+              raise SystemExit("No inline scripts found in homepage HTML")
+          print(f"Syntax-checked {checked} inline homepage script(s).")
+          PY
+
+      - name: Validate client dashboard update hooks
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'data-dashboard-tab="notifications"' develop-with-raman/client-dashboard.html
+          grep -q 'data-dashboard-panel="notifications"' develop-with-raman/client-dashboard.html
+          grep -q 'data-notification-list' develop-with-raman/client-dashboard.html
+          grep -q 'data-notification-count' develop-with-raman/client-dashboard.html
+          grep -q 'data-mark-updates-read' develop-with-raman/client-dashboard.html
+          grep -q 'client-dashboard.html#notifications' develop-with-raman/index.html
+          grep -q 'admin-portal.html' develop-with-raman/index.html
+          test -f develop-with-raman/client-portal.css
+          echo "Client dashboard update hooks and role navigation are present."
+
+      - name: Validate similar-project request handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "requestSimilar: '1'" develop-with-raman/projects.html
+          grep -q "params.get('requestSimilar')==='1'" develop-with-raman/index.html
+          grep -q "client-dashboard.html?request=1&service=" develop-with-raman/index.html
+          grep -q "queryParams.get('request')==='1'" develop-with-raman/client-portal.js
+          grep -q "sb.from('proposals').insert(data)" develop-with-raman/client-portal.js
+          grep -q "location.replace('/client-dashboard.html?submitted=1#requests')" develop-with-raman/client-portal.js
+          grep -Fq 'identityLink.href=activeUserRole==="admin"?"/admin-portal.html":"/client-dashboard.html";' develop-with-raman/index.html
+          grep -Fq "root.dataset.role==='admin'&&role!=='admin'" develop-with-raman/client-portal.js
+          grep -Fq "root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'" develop-with-raman/client-portal.js
+          echo "Request handoff, proposal submission, and client/admin role-routing hooks are present."
+          grep -q 'href="#milestones-admin"' develop-with-raman/admin-portal.html
+          grep -q 'href="#deliverables-admin"' develop-with-raman/admin-portal.html
+          grep -q 'href="#billing-admin"' develop-with-raman/admin-portal.html
+          grep -q 'href="#proposals-admin"' develop-with-raman/admin-portal.html
+          grep -q 'data-admin-refresh' develop-with-raman/admin-portal.html
+          grep -q "Dashboard data refreshed." develop-with-raman/admin-portal.js
+          echo "Admin navigation and refresh controls are present."
+
+      - name: Confirm workflow docs exist
+        run: |
+          test -f docs/WORKFLOW_OVERHAUL_PLAN.md
+          test -f docs/DEPLOYMENT_AND_ROLLBACK.md
