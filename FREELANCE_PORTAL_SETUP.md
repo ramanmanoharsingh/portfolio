@@ -52,3 +52,10 @@ The connected project already has a client portal schema including `profiles`, `
 - Client attempts to access another client's records and all admin mutations are rejected by RLS.
 - The administrator can manage portal data only while using the verified admin account.
 - Sign-out, page refresh, session expiry, mobile layout, and keyboard focus behavior are checked before launch.
+
+
+## Additional database hardening (2026-10-10)
+
+- Tightened the `Clients submit own proposals` insert policy so an authenticated client can create a proposal only for their own user ID and only with the initial `submitted` status. Clients cannot use the insert policy to create proposals already marked `accepted`, `declined`, `quoted`, or `converted`.
+- The migration was applied to the connected Supabase project and is also recorded in `develop-with-raman/migrations/20261010_restrict_client_proposal_status.sql`.
+- Admin proposal management remains covered by the separate administrator policy. Follow up with authenticated client/admin integration tests and re-run Supabase advisors.
