@@ -53,14 +53,18 @@ await walk(siteRoot);
 
 for (const file of htmlFiles) {
   const html = await readFile(file, 'utf8');
+  // Ignore script/style bodies: they may contain JavaScript template strings, not DOM markup.
+  const staticHtml = html
+    .replace(/(<script\b[^>]*>)[\s\S]*?(<\/script\s*>)/gi, '$1$2')
+    .replace(/(<style\b[^>]*>)[\s\S]*?(<\/style\s*>)/gi, '$1$2');
   const seen = new Set();
-  for (const match of html.matchAll(/\bid\s*=\s*["']([^"']+)["']/gi)) {
+  for (const match of staticHtml.matchAll(/\bid\s*=\s*["']([^"']+)["']/gi)) {
     const id = match[1];
     if (seen.has(id)) errors.push(`Duplicate id "${id}" in ${relative(repoRoot, file)}`);
     seen.add(id);
   }
 
-  for (const match of html.matchAll(/\b(src|href)\s*=\s*["']([^"']+)["']/gi)) {
+  for (const match of staticHtml.matchAll(/\b(src|href)\s*=\s*["']([^"']+)["']/gi)) {
     const attribute = match[1].toLowerCase();
     const raw = match[2];
     const target = localPathFromUrl(raw, file);
@@ -114,7 +118,10 @@ if (await exists(redirectsFile)) {
 const authFormPages = [];
 for (const file of htmlFiles) {
   const html = await readFile(file, 'utf8');
-  if (/\bid\s*=\s*["']account-form["']/i.test(html)) authFormPages.push(relative(repoRoot, file));
+  const staticHtml = html
+    .replace(/(<script\b[^>]*>)[\s\S]*?(<\/script\s*>)/gi, '$1$2')
+    .replace(/(<style\b[^>]*>)[\s\S]*?(<\/style\s*>)/gi, '$1$2');
+  if (/\bid\s*=\s*["']account-form["']/i.test(staticHtml)) authFormPages.push(relative(repoRoot, file));
 }
 if (authFormPages.length !== 1 || authFormPages[0] !== 'develop-with-raman/auth.html') {
   errors.push(`Expected exactly one canonical account form in develop-with-raman/auth.html; found: ${authFormPages.join(', ') || 'none'}`);
