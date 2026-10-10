@@ -194,7 +194,7 @@
         // Reuse the main site's existing request handler. It routes signed-in clients
         // to their proposal form and lets anonymous visitors use the public enquiry form.
         const params = new URLSearchParams({
-          request: '1',
+          requestSimilar: '1',
           project: button.dataset.projectTitle || 'Selected project',
           service: button.dataset.projectService || 'Something else',
           summary: button.dataset.projectSummary || ''
