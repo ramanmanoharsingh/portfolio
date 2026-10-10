@@ -1,28 +1,85 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const title=document.querySelector('#callback-title');
-  const message=document.querySelector('#callback-message');
-  const action=document.querySelector('#callback-action');
-  const fail=(heading,detail)=>{title.textContent=heading;message.textContent=detail;action.hidden=false;};
-  const params=new URLSearchParams(location.search);
-  const hash=new URLSearchParams(location.hash.replace(/^#/,''));
-  const authType=params.get('type')||hash.get('type')||'';
-  const error=params.get('error_description')||params.get('error')||hash.get('error_description')||hash.get('error');
-  if(error){
-    const code=params.get('error_code')||hash.get('error_code')||'';
-    const detail=String(error);
-    fail('Sign-in could not be completed',code==='provider_disabled'||/provider.*not enabled|unsupported provider/i.test(detail)
-      ?'Social sign-in is not enabled in the authentication settings yet. The site owner must enable the provider and add its OAuth credentials in Supabase.'
-      :detail);
+  const title = document.querySelector('#callback-title');
+  const message = document.querySelector('#callback-message');
+  const action = document.querySelector('#callback-action');
+  const fail = (heading, detail) => {
+    title.textContent = heading;
+    message.textContent = detail;
+    action.hidden = false;
+  };
+  const params = new URLSearchParams(location.search);
+  const hash = new URLSearchParams(location.hash.replace(/^#/, ''));
+  const authType = params.get('type') || hash.get('type') || '';
+  const error = params.get('error_description') || params.get('error') ||
+    hash.get('error_description') || hash.get('error');
+
+  if (error) {
+    const code = params.get('error_code') || hash.get('error_code') || '';
+    fail('Sign-in could not be completed',
+      code === 'provider_disabled' || /provider.*not enabled|unsupported provider/i.test(String(error))
+        ? 'Google sign-in is not enabled or its provider credentials are invalid. The site owner must check the Google provider settings in Supabase.'
+        : String(error));
     return;
   }
-  if(!window.supabaseClient?.auth){fail('Authentication service unavailable','Please reload this page. If the problem continues, contact the site owner.');return;}
-  try{
-    const {data,error}=await window.supabaseClient.auth.getSession();
-    if(error)throw error;
-    if(!data.session){fail('No active session found','The sign-in link may have expired or the provider may not be configured. Return to sign in and try again.');return;}
-    if(authType==='invite'||authType==='recovery'){location.replace('/reset-password.html?mode='+encodeURIComponent(authType));return;}
-    title.textContent='You’re signed in';
-    message.textContent='Taking you to your workspace…';
+
+  const client = window.supabaseClient;
+  if (!client?.auth) {
+    fail('Authentication service unavailable', 'Please reload this page. If the problem continues, contact the site owner.');
+    return;
+  }
+
+  try {
+    // Supabase processes the OAuth callback during client initialization. A code exchange
+    // may finish just after this page starts, so do not fail on the first empty session.
+    let { data, error: sessionError } = await client.auth.getSession();
+    if (sessionError) throw sessionError;
+    let session = data.session;
+
+    const hasCallbackPayload = params.has('code') ||
+      hash.has('access_token') || hash.has('refresh_token');
+
+    if (!session && hasCallbackPayload) {
+      session = await new Promise(resolve => {
+        let settled = false;
+        let timer;
+        let subscription = null;
+        const finish = value => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          subscription?.unsubscribe();
+          resolve(value || null);
+        };
+        timer = setTimeout(() => finish(null), 12000);
+        const listener = client.auth.onAuthStateChange((event, nextSession) => {
+          if (nextSession && ['SIGNED_IN', 'INITIAL_SESSION', 'TOKEN_REFRESHED'].includes(event)) {
+            finish(nextSession);
+          }
+        });
+        subscription = listener.data.subscription;
+        if (settled) subscription?.unsubscribe();
+        // Close the small race where the session becomes available just before the listener attaches.
+        client.auth.getSession().then(({ data: latest, error }) => {
+          if (!error && latest?.session) finish(latest.session);
+        }).catch(() => {});
+      });
+    }
+
+    if (!session) {
+      fail('No active session found', 'The sign-in may have expired or Google could not complete authentication. Return to sign in and try again.');
+      return;
+    }
+
+    if (authType === 'invite' || authType === 'recovery') {
+      location.replace('/reset-password.html?mode=' + encodeURIComponent(authType));
+      return;
+    }
+
+    title.textContent = 'You’re signed in';
+    message.textContent = 'Opening the correct workspace…';
     location.replace('/portal.html');
-  }catch(err){fail('Could not verify your session',err?.message||'Please return to sign in and try again.');}
+  } catch (err) {
+    console.error('[auth callback]', err);
+    fail('Could not verify your session', err?.message || 'Please return to sign in and try again.');
+  }
 });
