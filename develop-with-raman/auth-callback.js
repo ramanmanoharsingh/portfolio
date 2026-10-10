@@ -23,6 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(authType==='invite'||authType==='recovery'){location.replace('/reset-password.html?mode='+encodeURIComponent(authType));return;}
     title.textContent='You’re signed in';
     message.textContent='Taking you to your workspace…';
-    location.replace('/welcome.html');
+    location.replace('/portal.html');
   }catch(err){fail('Could not verify your session',err?.message||'Please return to sign in and try again.');}
 });
