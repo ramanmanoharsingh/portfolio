@@ -15,7 +15,7 @@ input[type="submit"],
   font-weight:600!important;
   letter-spacing:-.015em;
 }
-.auth-submit,
+.auth-primary,
 .auth-social,
 .auth-tab,
 .auth-back,
@@ -23,12 +23,12 @@ input[type="submit"],
   border-radius:999px;
   line-height:1.1;
 }
-.auth-submit,
+.auth-primary,
 .auth-social{
   min-height:42px;
   padding:10px 18px;
   font-size:13px;
 }
 @media(max-width:650px){
- .auth-submit,.auth-social{min-height:40px;padding:9px 14px;font-size:12px}
+ .auth-primary,.auth-social{min-height:40px;padding:9px 14px;font-size:12px}
 }
