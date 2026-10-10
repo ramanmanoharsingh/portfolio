@@ -965,4 +965,9 @@ else{setStatus("Free setup needed: create a Supabase project, then add its Proje
   if(rail){rail.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();rail.scrollBy({left:(e.key==='ArrowRight'?1:-1)*Math.min(rail.clientWidth*.72,520),behavior:reduce?'auto':'smooth'})}})}
 })();
 </script>
+
+<script>
+// When the homepage is reloaded from an in-page section, return to the top instead of restoring the old section hash.
+(function(){if(location.hash && performance.getEntriesByType("navigation")[0]?.type === "reload"){history.replaceState(null, document.title, location.pathname + location.search);window.scrollTo(0,0);}})();
+</script>
 </body></html>
