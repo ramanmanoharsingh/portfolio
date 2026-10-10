@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#191b17">
+  <title>Workspace · Develop with Raman</title>
+  <link rel="stylesheet" href="/client-portal.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="/portal-supabase.js"></script>
+  <style>
+    .entry-wrap{min-height:100vh;display:grid;place-items:center;padding:28px;background:var(--portal-bg,#f6f5f1)}
+    .entry-card{width:min(100%,560px);padding:clamp(28px,6vw,52px);background:var(--portal-card,#fff);border:1px solid rgba(20,24,20,.1);border-radius:24px;box-shadow:0 24px 70px rgba(20,24,20,.08)}
+    .entry-mark{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:14px;background:#191b17;color:#fff;font-weight:700;font-size:22px;margin-bottom:24px}
+    .entry-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.65}
+    .entry-title{font-size:clamp(30px,6vw,42px);line-height:1.08;letter-spacing:-.04em;margin:12px 0}
+    .entry-copy{line-height:1.65;opacity:.75;margin-bottom:24px}
+    .entry-status{padding:14px 16px;border-radius:12px;background:rgba(25,27,23,.05);font-size:14px;line-height:1.5}
+    .entry-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+    .entry-links a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border:1px solid rgba(20,24,20,.18);border-radius:999px;text-decoration:none;color:inherit;font-size:14px}
+    .entry-links a.primary{background:#191b17;color:#fff;border-color:#191b17}
+    .entry-status[hidden],.entry-links[hidden]{display:none}
+  </style>
+</head>
+<body class="portal-body">
+  <main class="entry-wrap">
+    <section class="entry-card" aria-labelledby="entry-title">
+      <a href="/" aria-label="Develop with Raman homepage" class="entry-mark">R</a>
+      <div class="entry-eyebrow">Develop with Raman · Secure workspace</div>
+      <h1 id="entry-title" class="entry-title">Your projects, in one place.</h1>
+      <p class="entry-copy">Sign in to continue to your client workspace, or open your freelancer dashboard if you manage the business.</p>
+      <div id="entry-status" class="entry-status" role="status" aria-live="polite">Checking your secure session…</div>
+      <div id="entry-links" class="entry-links" hidden>
+        <a class="primary" href="/auth.html">Sign in</a>
+        <a href="/">Back to website</a>
+      </div>
+    </section>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const status = document.getElementById('entry-status');
+      const links = document.getElementById('entry-links');
+      const showFallback = (message) => { status.textContent = message; links.hidden = false; };
+      try {
+        if (!window.supabaseClient?.auth) throw new Error('The sign-in service did not load. Please try again.');
+        const { data: { user }, error } = await window.supabaseClient.auth.getUser();
+        if (error) throw error;
+        if (!user) {
+          location.replace('/auth.html?next=' + encodeURIComponent('/portal.html'));
+          return;
+        }
+        const { data: profile, error: profileError } = await window.supabaseClient.from('profiles').select('role').eq('id', user.id).maybeSingle();
+        if (profileError) throw profileError;
+        status.textContent = 'Session verified. Opening your workspace…';
+        location.replace(profile?.role === 'admin' ? '/admin-portal.html' : '/client-dashboard.html');
+      } catch (error) {
+        console.error('[workspace entry]', error);
+        showFallback(error?.message || 'We could not open your workspace. Please sign in again.');
+      }
+    });
+  </script>
+</body>
+</html>

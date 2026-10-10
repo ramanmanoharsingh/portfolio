@@ -8,3 +8,7 @@
 /dashboard/admin /admin-portal.html 200
 /admin /admin-portal.html 200
 /reset-password /reset-password.html 200
+/client-portal /portal.html 200
+/portal /portal.html 200
+/workspace /portal.html 200
+/client-portal.html /portal.html 200
