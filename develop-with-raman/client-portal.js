@@ -126,7 +126,7 @@
     const requestedProject=queryParams.get('project')||'';
     const requestedSummary=queryParams.get('summary')||'';
     const requestedTitle=queryParams.get('title')||(requestedProject?'Build inspired by '+requestedProject:'');
-    const openRequestedForm=queryParams.get('request')==='1';
+    const openRequestedForm=queryParams.get('request')==='1'||queryParams.get('requestSimilar')==='1';
     const submittedFromRequest=queryParams.get('submitted')==='1';
     const dashboardDraftKey='dwr-client-proposal-draft-v1';
     let dashboardDraft=null;
