@@ -50,8 +50,6 @@
     const pendingInvoices=inv.filter(i=>['pending','overdue'].includes(i.status));
     $('[data-metric-completed]').textContent=pendingMilestones;
     const invoicesDueMetric=$('[data-metric-invoices-due]');if(invoicesDueMetric)invoicesDueMetric.textContent=pendingInvoices.length;
-    const total=inv.filter(i=>i.status==='paid').reduce((n,i)=>n+Number(i.amount||0),0);
-    $('[data-investment-total]')?.replaceChildren(document.createTextNode(money(total)));
     const nextDate=milestones.filter(m=>m.due_date&&!['completed','approved'].includes(m.status)).map(m=>m.due_date).sort()[0];
     const dateEl=$('[data-next-milestone]');if(dateEl)dateEl.textContent=date(nextDate);
     const projectBoxes=document.querySelectorAll('[data-project-list]');
