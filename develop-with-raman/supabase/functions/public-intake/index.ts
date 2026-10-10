@@ -1,7 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? "";
 const SUPABASE_SECRET_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? Deno.env.get("SUPABASE_SECRET_KEY") ?? "";
 
 const allowedExact = new Set([
@@ -65,7 +64,7 @@ Deno.serve(async (req: Request) => {
   if (!originAllowed(origin)) return response(null, 403, { ok: false, error: "This origin is not allowed." });
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
   if (req.method !== "POST") return response(origin, 405, { ok: false, error: "Use POST for submissions." });
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SECRET_KEY) {
+  if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
     return response(origin, 503, { ok: false, error: "The secure intake service is not configured yet." });
   }
 
