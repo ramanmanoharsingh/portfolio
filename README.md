@@ -26,7 +26,7 @@ Cloudflare Pages route rewrites are defined in `develop-with-raman/_redirects`. 
 - `/auth-callback.html` — OAuth and email-confirmation callback.
 - `/welcome.html` — authenticated, role-aware entry point; administrators are routed to the admin portal.
 - `/client-dashboard.html` — client project, milestone, deliverable, proposal, and billing workspace.
-- `/admin-portal.html` — administrator workspace for clients, projects, milestones, deliverables, proposals, and invoices.
+- `/admin-portal.html` — administrator workspace for clients, website enquiries, project leads, projects, milestones, deliverables, proposals, and invoices.
 - `/profile.html` — account details and security settings.
 - `/reset-password.html` — password reset completion.
 - `/dashboard.html` — legacy sign-in URL that forwards to `/auth.html` (or the password-reset completion page for old recovery links).
@@ -45,6 +45,12 @@ Before calling a release production-ready, verify the live Cloudflare Pages depl
 5. The administrator can load client/project data, update a project and milestone, manage proposals/invoices, and upload a private deliverable.
 6. Private deliverables are opened using expiring signed URLs; role enforcement remains in Supabase RLS, not only frontend checks.
 7. No JavaScript console errors, broken route loops, duplicate sign-in surfaces, or mobile overflow remain.
+
+## Data model notes
+
+The connected database currently has both `public.enquiries` and `public.leads`, with different columns and status values. The admin workspace displays both queues so submissions are not hidden. Do not merge or drop either table until the public form destinations and any existing integrations have been verified; keep any eventual consolidation as a reviewed, additive migration.
+
+The current database audit found row-level security enabled on every table in the `public` schema. Admin access is checked through the private `private.is_admin()` helper and profile role, while client reads are scoped by user/project ownership. The Supabase advisors still report policy-overlap and unused-index notices; review these against actual policy predicates and query history before changing production policies or removing indexes.
 
 ## Deployment
 
