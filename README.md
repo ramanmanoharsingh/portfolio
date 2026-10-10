@@ -24,6 +24,10 @@ This is a plain HTML/CSS/JavaScript freelance portfolio with a Supabase-backed p
 - RLS enabled on inspected application tables and private storage policies for client deliverables
 - Cloudflare Pages `_headers` and `_redirects` files in `develop-with-raman/`
 
+## Workspace entry and role routing
+
+Use `/client-portal`, `/portal`, or `/workspace` as the single workspace entry URL. The role-aware `portal.html` verifies the active Supabase session and routes database-authorized admins to `/admin-portal.html` and clients to `/client-dashboard.html`. If the visitor is signed out, it sends them to `/auth.html`; direct dashboard routes remain protected by the existing auth checks and Supabase RLS. This avoids relying on separate, potentially stale client/admin portal links.
+
 ## Cloudflare Pages configuration
 
 The app uses root-relative paths such as `/auth.html` and `/client-dashboard.html`. Configure Cloudflare Pages so the contents of `develop-with-raman/` are the deployed site root (build command can be blank for this static site; output directory should be `develop-with-raman`). Verify this against the existing project settings before changing deployment settings.
@@ -61,3 +65,10 @@ The app uses root-relative paths such as `/auth.html` and `/client-dashboard.htm
 - A client cannot read another client's projects, messages, milestones, invoices, or files, or perform admin actions.
 - Only the verified administrator account with the database-backed admin role can use admin operations.
 - Sign-out, refresh, session expiry, mobile layout, and keyboard navigation work.
+
+## Free-tier cost notes
+
+- Supabase Log Drains are not available on the Free plan; current Supabase documentation limits them to Pro, Team, and Enterprise. They are a paid add-on, so do not enable one unless the project is intentionally upgraded and a destination is configured.
+- The client and project identifiers use UUIDs because they reference Supabase Auth users and existing foreign keys. UUIDs are fixed-size 16-byte values; changing them to shorter IDs would require broad schema and relationship changes for negligible savings and is not recommended.
+- Keep project lists bounded and select only columns the UI needs. Avoid storing duplicate client profile fields in project tables, but retain foreign keys such as `client_id` on invoices and proposals because they support access control and efficient filtering.
+- Before removing indexes, review real query plans and usage over time. An index can show zero use on a small/new project while still protecting future queries.
