@@ -81,6 +81,9 @@
     // A service selected on the public site opens this same authenticated request form.
     const queryParams=new URLSearchParams(location.search);
     const requestedService=queryParams.get('service')||'';
+    const requestedProject=queryParams.get('project')||'';
+    const requestedSummary=queryParams.get('summary')||'';
+    const requestedTitle=queryParams.get('title')||(requestedProject?'Build inspired by '+requestedProject:'');
     const openRequestedForm=queryParams.get('request')==='1';
     const submittedFromRequest=queryParams.get('submitted')==='1';
     const dashboardDraftKey='dwr-client-proposal-draft-v1';
@@ -101,6 +104,13 @@
       if(typeof dashboardDraft.description==='string')descriptionField.value=dashboardDraft.description;
       if(typeof dashboardDraft.budget==='string'||typeof dashboardDraft.budget==='number')budgetField.value=String(dashboardDraft.budget);
       if(typeof dashboardDraft.timeline==='string')timelineField.value=dashboardDraft.timeline;
+    }
+    if(requestedTitle&&titleField&&!titleField.value.trim())titleField.value=requestedTitle;
+    if(requestedProject&&descriptionField&&!descriptionField.value.trim()){
+      const context=[ 'I would like a build inspired by: '+requestedProject ];
+      if(requestedSummary)context.push('Reference project summary: '+requestedSummary);
+      context.push('What I would change or add: ');
+      descriptionField.value=context.join(String.fromCharCode(10)+String.fromCharCode(10));
     }
     if(serviceToSelect&&titleField&&!titleField.value.trim()){
       titleField.value=serviceField?.value?serviceField.value+' enquiry':'New project enquiry';
