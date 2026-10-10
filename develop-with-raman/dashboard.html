@@ -115,12 +115,22 @@ $("admin-new-project-toggle").onclick=()=>{$("admin-project-form").hidden=!$("ad
 $("project-cancel").onclick=()=>{$("admin-project-form").reset();$("admin-project-form").hidden=true;status($("project-status-msg"),"");};
 $("admin-project-form").addEventListener("submit",async ev=>{
  ev.preventDefault();if(role!=="admin")return;const client_id=$("project-client").value,title=$("project-title").value.trim();if(!client_id||title.length<3){status($("project-status-msg"),"Choose a client and enter a project name.","error");return;}
- $("project-create").disabled=true;status($("project-status-msg"),"Creating project…");
- const payload={client_id,title,description:$("project-description").value.trim(),service_type:$("project-service").value.trim()||"Web Development",status:$("project-status").value,start_date:$("project-start").value||null,due_date:$("project-due").value||null,created_by:user.id};
- const {error}=await supabase.from("projects").insert(payload);$("project-create").disabled=false;if(error){status($("project-status-msg"),"Could not create project: "+error.message,"error");return;}
  const sourceLead=$("admin-project-form").dataset.sourceLead||"";
- if(sourceLead){const {error:linkError}=await supabase.from("leads").update({status:"Converted",user_id:client_id,updated_at:new Date().toISOString()}).eq("id",sourceLead);if(linkError){$("admin-project-form").reset();$("project-service").value="Web Development";$("admin-project-form").hidden=true;delete $("admin-project-form").dataset.sourceLead;status($("project-status-msg"),"Project created, but the request could not be linked automatically. Open Enquiries and link it to the client manually.","error");await loadData();return;}}
- $("admin-project-form").reset();$("project-service").value="Web Development";$("admin-project-form").hidden=true;delete $("admin-project-form").dataset.sourceLead;status($("project-status-msg"),"Project created and linked to the client workspace.","ok");await loadData();toast("Project created.");
+ $("project-create").disabled=true;status($("project-status-msg"),sourceLead?"Creating and linking project in one transaction…":"Creating project…");
+ const payload={client_id,title,description:$("project-description").value.trim(),service_type:$("project-service").value.trim()||"Web Development",status:$("project-status").value,start_date:$("project-start").value||null,due_date:$("project-due").value||null,created_by:user.id};
+ let error=null;
+ if(sourceLead){
+  const {error:rpcError}=await supabase.rpc("create_project_from_lead",{p_lead_id:sourceLead,p_client_id:client_id,p_title:title,p_description:payload.description,p_service_type:payload.service_type,p_status:payload.status,p_start_date:payload.start_date,p_due_date:payload.due_date});
+  error=rpcError;
+ }else{
+  const {error:insertError}=await supabase.from("projects").insert(payload);
+  error=insertError;
+ }
+ $("project-create").disabled=false;
+ if(error){status($("project-status-msg"),"Could not create project: "+error.message,"error");return;}
+ $("admin-project-form").reset();$("project-service").value="Web Development";$("admin-project-form").hidden=true;delete $("admin-project-form").dataset.sourceLead;
+ status($("project-status-msg"),sourceLead?"Project created and request linked to the client workspace atomically.":"Project created successfully.","ok");
+ await loadData();toast(sourceLead?"Project created and request converted.":"Project created.");
 });
 $("admin-projects-list").addEventListener("change",()=>{});
 
