@@ -52,17 +52,9 @@ The connected database currently has both `public.enquiries` and `public.leads`,
 
 The current database audit found row-level security enabled on every table in the `public` schema. Admin access is checked through the private `private.is_admin()` helper and profile role, while client reads are scoped by user/project ownership. The Supabase advisors still report policy-overlap and unused-index notices; review these against actual policy predicates and query history before changing production policies or removing indexes.
 
-## Database migrations
-
-Reviewed schema changes are tracked under `supabase/migrations/`. The latest additive migration, `20261010080526_enforce_portal_data_integrity.sql`, is applied to the connected Supabase project. It enforces that an invoice's selected project belongs to the same client and adds database constraints for project/milestone progress (0–100), non-negative invoice amounts, and non-negative optional proposal budgets. The preflight audit found no existing rows that violate these rules.
-
-Keep the migration filename/version aligned with the Supabase migration history. Do not replay the initial setup SQL against production or make schema changes outside reviewed migrations.
-
 ## Deployment
 
 Cloudflare Pages should deploy the `develop-with-raman/` directory as the site root, with no framework build command required for the static HTML/CSS/JavaScript site. Confirm the Pages project’s configured root directory and production branch before changing deployment settings.
-
-A dependency-free static audit is available at `scripts/check-site.mjs` and is wired into `.github/workflows/site-check.yml`. It checks JavaScript syntax, duplicate HTML IDs, local asset references, required account pages, redirect targets, and that `auth.html` remains the single canonical account form. These automated checks complement—but do not replace—live OAuth, Supabase authorization, mobile-browser, and Cloudflare deployment smoke tests.
 
 After a commit reaches the configured production branch, check the Cloudflare Pages deployment status and test the deployed URL. A GitHub commit alone does not prove that the live site has updated.
 
@@ -89,7 +81,7 @@ Email/password and Google sign-in should be tested independently. Never rely on 
 
 - Keep the homepage as the root landing page; avoid persistent section hashes or scroll-restoration behavior that unexpectedly opens the page midway down.
 - Ensure the mobile navigation visibly exposes the sign-in action.
-- The latest focused homepage sign-in cleanup is [`e4a1bc8`](https://github.com/ramanmanoharsingh/portfolio/commit/e4a1bc8b02360dac770b55ecb627097ce2660e66); the mobile About-section restoration is in [`c189dfacee5f`](https://github.com/ramanmanoharsingh/portfolio/commit/c189dfacee5f49d7214402db1762426593ca45ca). Static HTML checks now pass, but the About section, header spacing, and auth flow still need a live mobile/desktop browser smoke test.
+- The last homepage patch was committed as [`934698b`](https://github.com/ramanmanoharsingh/portfolio/commit/934698b826954748f24d3e4f5b808192cf896319). Its live behavior still needs verification in Cloudflare Pages and on a phone.
 - Supabase's security advisor currently reports leaked-password protection as disabled. Enable it in Supabase Auth settings if supported by the project plan, then test password sign-in and reset flows.
 
 ## Change workflow
