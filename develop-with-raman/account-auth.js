@@ -74,7 +74,7 @@
   forgotLink.addEventListener('click',event=>{event.preventDefault();setMode('reset');});
   $('#auth-back-login').addEventListener('click',event=>{event.preventDefault();setMode('login');});
   $('#auth-back-home').addEventListener('click',event=>{event.preventDefault();location.href='/';});
-  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/auth-callback.html',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
+  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/auth-callback.html?next='+encodeURIComponent(safeNextPath()),...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(state.busy)return;clearMessage();
     const email=$('#auth-email').value.trim(),pass=password.value;
@@ -93,7 +93,7 @@
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
         showMessage('Signed in successfully. Opening your workspace…','success');location.assign(safeNextPath());
       }else if(state.mode==='signup'){
-        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/auth-callback.html'}});if(error)throw error;
+        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/auth-callback.html?next='+encodeURIComponent(safeNextPath())}});if(error)throw error;
         if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign(safeNextPath());}
         else if(Array.isArray(data.user?.identities)&&data.user.identities.length===0){
           // Supabase hides "already registered" when email confirmation is on, so say it ourselves instead of promising an email that will not come.
