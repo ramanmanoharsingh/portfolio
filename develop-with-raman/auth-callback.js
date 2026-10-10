@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       session = await new Promise(resolve => {
         let settled = false;
         let timer;
+        let subscription = null;
         const finish = value => {
           if (settled) return;
           settled = true;
@@ -49,11 +50,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           subscription?.unsubscribe();
           resolve(value || null);
         };
-        const { data: { subscription } } = client.auth.onAuthStateChange((event, nextSession) => {
+        ({ data: { subscription } } = client.auth.onAuthStateChange((event, nextSession) => {
           if (nextSession && ['SIGNED_IN', 'INITIAL_SESSION', 'TOKEN_REFRESHED'].includes(event)) {
             finish(nextSession);
           }
-        });
+        }));
         timer = setTimeout(() => finish(null), 12000);
       });
     }
