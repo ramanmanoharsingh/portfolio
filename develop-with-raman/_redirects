@@ -2,6 +2,7 @@
 /auth /auth.html 200
 /login /auth.html 200
 /welcome /welcome.html 200
+/dashboard /portal.html 302
 /dashboard/client /client-dashboard.html 200
 /client-dashboard /client-dashboard.html 200
 /profile /profile.html 200
