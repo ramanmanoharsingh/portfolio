@@ -67,6 +67,46 @@
     $('[data-print-invoices]')?.addEventListener('click',()=>{const w=window.open('','_blank');if(!w){toast('Allow pop-ups to print the invoice summary.',true);return;}w.opener=null;w.document.write('<!doctype html><html><head><title>Invoice summary</title><style>body{font:14px system-ui;padding:30px}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:10px;border-bottom:1px solid #ddd}</style></head><body><h1>Invoice summary</h1><p>Prepared '+esc(date(new Date().toISOString()))+'</p>'+invBox.querySelector('.table-scroll').innerHTML+'</body></html>');w.document.close();w.focus();w.print();});
     const dBox=$('[data-deliverable-list]');if(dBox){if(!deliverables.length)dBox.innerHTML='<p class="muted">Your shared files will appear here.</p>';else{const links=await Promise.all(deliverables.map(async d=>{const fileRef=String(d.file_url||'');let href='';if(/^https:\/\//i.test(fileRef)){href=safeUrl(fileRef);}else if(fileRef){const {data,error}=await sb.storage.from('client-deliverables').createSignedUrl(fileRef,3600);href=error?'':data?.signedUrl||'';}return '<article class="request-row"><div><strong>'+esc(d.title)+'</strong><span>'+esc(d.description||nice(d.status))+' · '+esc(date(d.created_at))+'</span></div>'+(href?'<a class="button" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Open file ↗</a>':'<span class="status">'+esc(nice(d.status))+'</span>')+'</article>';}));dBox.innerHTML=links.join('');}}
     const proposalBoxes=document.querySelectorAll('[data-proposal-list]');proposalBoxes.forEach(pBox=>pBox.innerHTML=props.length?props.map(p=>'<article class="request-row"><div><strong>'+esc(p.title)+'</strong><span>'+esc(date(p.created_at))+' · '+esc(nice(p.status))+'</span></div><span class="status">'+esc(nice(p.status))+'</span></article>').join(''):'<p class="muted">No proposals submitted yet.</p>');
+    // Client activity is built from real, RLS-protected records already loaded above.
+    // Read markers are per-account and per-browser; the activity itself is never fabricated.
+    const updateItems=[];
+    const addUpdate=(key,title,detail,when,tab,kind='update')=>updateItems.push({key,title,detail,when,tab,kind});
+    props.forEach(p=>addUpdate('proposal:'+p.id+':'+p.status,'Request: '+(p.title||'Project enquiry'),'Request status: '+nice(p.status),p.created_at,'requests','request'));
+    (projects||[]).forEach(p=>addUpdate('project:'+p.id+':'+p.status+':'+(p.updated_at||''),'Project: '+(p.title||'Project'),'Project status: '+nice(p.status),p.updated_at,'projects','project'));
+    milestones.forEach(m=>{
+      const meaningful=['submitted_for_approval','approved','completed','blocked'].includes(m.status);
+      if(meaningful)addUpdate('milestone:'+m.id+':'+m.status,'Milestone: '+(m.title||'Project milestone'),m.status==='submitted_for_approval'?'Your review is needed':('Milestone status: '+nice(m.status)),m.approved_at||m.due_date,'projects','milestone');
+    });
+    deliverables.forEach(d=>addUpdate('deliverable:'+d.id,'New deliverable: '+(d.title||'Shared file'),'A project file is available in your dashboard.',d.created_at,'projects','deliverable'));
+    inv.forEach(i=>{
+      if(['pending','overdue','paid'].includes(i.status))addUpdate('invoice:'+i.id+':'+i.status,'Invoice '+(i.invoice_number||''),i.status==='overdue'?'This invoice is overdue.':i.status==='pending'?'An invoice is awaiting payment.':'Payment recorded.',i.issued_at||i.due_at,'billing','invoice');
+    });
+    updateItems.sort((a,b)=>(new Date(b.when||0).getTime()||0)-(new Date(a.when||0).getTime()||0));
+    const updatesKey='dwr-client-updates-read-v1:'+user.id;
+    const readUpdates=()=>{try{return new Set(JSON.parse(localStorage.getItem(updatesKey)||'[]'));}catch(_error){return new Set();}};
+    const renderUpdates=()=>{
+      const read=readUpdates(),list=$('[data-notification-list]'),badge=$('[data-notification-count]');
+      const unread=updateItems.filter(item=>!read.has(item.key)).length;
+      if(badge){badge.textContent=String(unread);badge.hidden=unread===0;}
+      if(!list)return;
+      list.innerHTML=updateItems.length?updateItems.slice(0,30).map(item=>'<a class="client-update-row'+(read.has(item.key)?' is-read':'')+'" href="#'+esc(item.tab)+'" data-update-tab="'+esc(item.tab)+'" data-update-key="'+esc(item.key)+'"><span class="client-update-icon" aria-hidden="true">'+(item.kind==='invoice'?'₹':item.kind==='deliverable'?'↧':item.kind==='milestone'?'✓':item.kind==='project'?'↗':'•')+'</span><span class="client-update-copy"><strong>'+esc(item.title)+'</strong><span>'+esc(item.detail)+'</span><small>'+esc(date(item.when))+'</small></span>'+(read.has(item.key)?'':'<span class="client-update-unread" aria-label="Unread"></span>')+'</a>').join(''):'<div class="empty-state"><span>✓</span><strong>You are all caught up</strong><p>New project and request activity will appear here.</p></div>';
+    };
+    renderUpdates();
+    $('[data-mark-updates-read]')?.addEventListener('click',()=>{
+      try{localStorage.setItem(updatesKey,JSON.stringify(updateItems.map(item=>item.key)));}catch(_error){}
+      renderUpdates();toast('All current updates marked as read.');
+    });
+    $('[data-notification-list]')?.addEventListener('click',event=>{
+      const link=event.target.closest('[data-update-tab]');if(!link)return;
+      event.preventDefault();
+      const tab=link.dataset.updateTab;
+      const button=$('[data-dashboard-tab="'+tab+'"]');
+      if(button)button.click();
+      const key=link.dataset.updateKey;
+      if(key){const read=readUpdates();read.add(key);try{localStorage.setItem(updatesKey,JSON.stringify([...read]));}catch(_error){}renderUpdates();}
+      history.replaceState(null,'',location.pathname+'#'+(tab==='requests'?'requests':tab==='billing'?'billing':'projects'));
+    });
+
     document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-dashboard-tab]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('[data-dashboard-panel]').forEach(p=>p.hidden=p.dataset.dashboardPanel!==b.dataset.dashboardTab);}));
     const modal=$('#proposal-modal');
     const proposalForm=$('#proposal-form');
