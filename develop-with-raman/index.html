@@ -34,6 +34,15 @@ header.top.sm nav{height:76px}
 header.top a{color:#fff}header.top a:hover{text-decoration:none;opacity:.7}
 .top-action{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 15px;border:1px solid rgba(255,255,255,.62);border-radius:999px;background:transparent;color:#fff!important;font:600 13px/1 "Space Grotesk",Helvetica,Arial,sans-serif;white-space:nowrap;transition:background .2s,color .2s,border-color .2s;opacity:1!important}
 .top-action:hover{background:#fff;color:#080808!important;border-color:#fff;opacity:1!important}
+/* Signed-in account controls on the main website. */
+.account-dashboard-action[hidden],.account-id-bar[hidden]{display:none!important}
+.account-id-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding:8px clamp(18px,5vw,72px);background:#f5f5f2;color:#454545;border-bottom:1px solid #e4e4df;font:11px/1.5 "Space Grotesk",Arial,sans-serif}
+.account-id-label{font-weight:600;white-space:nowrap}
+.account-id-value{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;user-select:text}
+.account-id-copy{border:1px solid #bcbcb5;border-radius:999px;background:transparent;color:inherit;padding:4px 9px;font:600 10px/1.2 "Space Grotesk",Arial,sans-serif;cursor:pointer}
+.account-id-copy:hover{background:#fff}
+@media(max-width:650px){.account-id-bar{justify-content:flex-start;padding:8px 14px;gap:7px;font-size:10px}.account-id-value{font-size:9px}.account-id-copy{padding:5px 8px}}
+
 .top .nr{gap:clamp(8px,1.1vw,16px)}
 .top .nr .si{gap:clamp(10px,1.4vw,22px)}
 @media(max-width:1023px){.top .nr{display:flex!important;gap:8px!important}.top .nr .si{display:none!important}.top-action{min-height:38px;padding:8px 11px;font-size:12px}.top .wm{margin-left:0!important}}
@@ -436,16 +445,58 @@ form?.addEventListener("submit",async ev=>{
  finally{button.disabled=false;button.textContent="Submit project request ↗";}
 });
 
-// Keep the main-site account action in sync with the persisted Supabase session.
-// Returning from either portal should show Sign out while the visitor is authenticated.
+// Keep the main-site account actions in sync with the persisted Supabase session.
 const accountAction=document.querySelector(".top-action");
 if(accountAction){
  const signedOutLabel=accountAction.textContent.trim()||"Sign in";
+ const dashboardAction=document.createElement("a");
+ dashboardAction.className="top-action account-dashboard-action";
+ dashboardAction.href="dashboard.html";
+ dashboardAction.textContent="Dashboard";
+ dashboardAction.setAttribute("aria-label","Return to your dashboard");
+ dashboardAction.hidden=true;
+ accountAction.insertAdjacentElement("beforebegin",dashboardAction);
+
+ const accountIdBar=document.createElement("div");
+ accountIdBar.className="account-id-bar";
+ accountIdBar.hidden=true;
+ const accountIdLabel=document.createElement("span");
+ accountIdLabel.className="account-id-label";
+ accountIdLabel.textContent="Signed in · User ID:";
+ const accountIdValue=document.createElement("span");
+ accountIdValue.className="account-id-value";
+ const copyIdButton=document.createElement("button");
+ copyIdButton.type="button";
+ copyIdButton.className="account-id-copy";
+ copyIdButton.textContent="Copy ID";
+ copyIdButton.setAttribute("aria-label","Copy your account user ID");
+ accountIdBar.append(accountIdLabel,accountIdValue,copyIdButton);
+ const siteHeader=accountAction.closest("header");
+ if(siteHeader)siteHeader.insertAdjacentElement("afterend",accountIdBar);
+
+ copyIdButton.addEventListener("click",async()=>{
+  const id=accountIdValue.textContent;
+  if(!id)return;
+  try{
+   await navigator.clipboard.writeText(id);
+   copyIdButton.textContent="Copied";
+   setTimeout(()=>copyIdButton.textContent="Copy ID",1600);
+  }catch(error){
+   console.warn("Could not copy account ID:",error);
+   copyIdButton.textContent="Select ID above";
+  }
+ });
+
  const syncAccountAction=session=>{
-  const signedIn=Boolean(session?.user);
+  const user=session?.user||null;
+  const signedIn=Boolean(user?.id);
   accountAction.textContent=signedIn?"Sign out":signedOutLabel;
   accountAction.setAttribute("aria-label",signedIn?"Sign out of your account":"Sign in to your dashboard");
   accountAction.dataset.authenticated=String(signedIn);
+  dashboardAction.hidden=!signedIn;
+  accountIdBar.hidden=!signedIn;
+  accountIdValue.textContent=signedIn?user.id:"";
+  accountIdValue.title=signedIn?user.id:"";
   accountAction.removeAttribute("aria-disabled");
  };
  client.auth.getSession().then(({data,error})=>{
