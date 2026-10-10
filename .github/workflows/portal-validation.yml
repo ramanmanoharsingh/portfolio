@@ -1,0 +1,95 @@
+name: Portal validation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, feature/workflow-overhaul]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portal-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-validation:
+    name: Static validation (no production changes)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax-check JavaScript files
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            node --check "$file"
+          done < <(find develop-with-raman -type f -name '*.js' -print0)
+
+      - name: Validate local HTML asset references and dashboard tabs
+        shell: python
+        run: |
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import sys
+
+          root = Path("develop-with-raman")
+          errors = []
+
+          class PageParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.ids = set()
+                  self.tabs = set()
+                  self.panels = set()
+                  self.assets = []
+              def handle_starttag(self, tag, attrs):
+                  a = dict(attrs)
+                  if a.get("id"):
+                      if a["id"] in self.ids:
+                          errors.append(f"duplicate id={a['id']}")
+                      self.ids.add(a["id"])
+                  if a.get("data-dashboard-tab"):
+                      self.tabs.add(a["data-dashboard-tab"])
+                  if a.get("data-dashboard-panel"):
+                      self.panels.add(a["data-dashboard-panel"])
+                  for key in ("src", "href"):
+                      value = a.get(key, "")
+                      if value and not value.startswith(("http://", "https://", "mailto:", "tel:", "#", "data:", "javascript:")):
+                          if key == "src" or (tag == "link" and a.get("rel") in ("stylesheet", "icon")):
+                              self.assets.append(value.split("?")[0].split("#")[0])
+
+          for page in root.glob("*.html"):
+              parser = PageParser()
+              parser.feed(page.read_text(encoding="utf-8"))
+              for asset in parser.assets:
+                  candidate = (page.parent / asset.lstrip("/")).resolve() if not asset.startswith("/") else (root / asset.lstrip("/")).resolve()
+                  if not candidate.exists():
+                      errors.append(f"{page}: missing local asset {asset}")
+              missing_panels = parser.tabs - parser.panels
+              # Dashboard pages may intentionally use tabs without panels only for external links.
+              if missing_panels and page.name in ("client-dashboard.html", "admin-portal.html"):
+                  errors.append(f"{page}: tabs without panels: {sorted(missing_panels)}")
+              if errors:
+                  print(f"Checked {page.name}; issues found so far.")
+              else:
+                  print(f"Checked {page.name}")
+          if errors:
+              print("\n".join(f"ERROR: {e}" for e in errors))
+              sys.exit(1)
+          print("Static HTML reference and dashboard panel checks passed.")
+
+      - name: Confirm workflow docs exist
+        run: |
+          test -f docs/WORKFLOW_OVERHAUL_PLAN.md
+          test -f docs/DEPLOYMENT_AND_ROLLBACK.md
