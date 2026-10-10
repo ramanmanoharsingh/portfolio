@@ -542,6 +542,10 @@ header.top nav{
   section#about h2,section#about p,section#about .eb,section#about .ex{visibility:visible!important;opacity:1!important}
 }
 
+
+/* Reliability guard: core About and Work content must never depend on reveal JS. */
+#about,#work{display:block!important;visibility:visible!important;opacity:1!important;content-visibility:visible!important}
+#about .rv,#about .reveal-up,#work .rv,#work .reveal-up{visibility:visible!important;opacity:1!important;transform:none!important;filter:none!important}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ck" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol><symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol><symbol id="i-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/></symbol><symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l11.7 16H20L8.3 4H4zM4 20l6.8-7.2M20 4l-6.8 7.2"/></symbol><symbol id="i-ct" viewBox="0 0 24 24"><path d="M1 2h3l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 6H5.2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></symbol></svg>
 <header class="top" id="hd"><nav aria-label="Main"><div class="nl"><a href="#work" data-t="Work">Work</a><a href="#services" data-t="Services">Services</a><a href="#about" data-t="About">About</a><a href="#contact" data-t="Contact">Contact</a></div><a class="wm" href="#top">Develop with Raman</a><div class="nr"><div class="si"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico"><use href="#i-x"/></svg></a></div><a class="bk nav-action" href="#contact">Start a project</a><a class="bk nav-action" id="nav-auth-action" href="/dashboard.html" aria-label="Open client account">Sign in</a><button class="tg" id="mb" aria-label="Open menu" aria-expanded="false">Menu</button></div></nav><i class="sp" aria-hidden="true"></i></header>
@@ -800,9 +804,9 @@ function syncAuthActions(user,profile=currentProfile){
   const avatarHtml=avatar?'<span class="account-link-content"><span class="account-avatar"><img src="'+safe(avatar)+'" alt="" referrerpolicy="no-referrer"></span><span>Welcome, '+safe(firstName)+'</span></span>':'<span class="account-link-content"><span class="account-avatar">'+safe(firstName.charAt(0).toUpperCase())+'</span><span>Welcome, '+safe(firstName)+'</span></span>';
   for(const link of [navAuthAction,menuAuthAction]){
     if(!link)continue;
-    link.textContent=signedIn?"Sign out":"Sign in";
-    link.href=signedIn?"#signout":"/dashboard.html";
-    link.setAttribute("aria-label",signedIn?"Sign out of your account":"Sign in to your account");
+    link.textContent=signedIn?(profile?.role==="admin"?"Admin Portal":"Back to Client Portal"):"Sign in";
+    link.href=signedIn?"#/welcome":"/dashboard.html";
+    link.setAttribute("aria-label",signedIn?(profile?.role==="admin"?"Open the admin portal":"Return to your client portal"):"Sign in to your account");
     link.dataset.signedIn=signedIn?"true":"false";
   }
 }
@@ -849,7 +853,7 @@ for(const link of [navAuthAction,menuAuthAction]){
   link?.addEventListener("click",event=>{
     if(!currentUser)return;
     event.preventDefault();
-    void doSignOut();
+    void openWorkspaceDashboard();
   });
 }
 syncAuthActions(null);
@@ -983,6 +987,14 @@ if(configReady){const sessionOnly=document.cookie.split(';').some(c=>c.trim()===
   setTimeout(()=>{void loadUser(user,{scrollToLogin:event==="SIGNED_OUT",landing});},0);
 });$id("auth-form").addEventListener("submit",async ev=>{ev.preventDefault();const email=$id("auth-email").value.trim(),password=$id("auth-password").value;try{const result=signup?await supabase.auth.signUp({email,password,options:{data:{full_name:$id("auth-name")?.value?.trim()||email.split("@")[0]},emailRedirectTo:new URL("/dashboard.html",location.origin).href}}):await supabase.auth.signInWithPassword({email,password});if(result.error)throw result.error;if(signup)setStatus("Account created. Check your email to verify your account.","ok");else {setStatus("Signing in…","ok");location.assign("/dashboard.html");}}catch(err){setStatus(err.message||"Sign-in failed.","error");}});$id("auth-toggle").onclick=()=>{location.href="/dashboard.html?mode=signup";};$id("auth-reset").onclick=async()=>{const email=$id("auth-email").value.trim();if(!email){setStatus("Enter your email address first.","error");return;}const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:new URL("/dashboard.html?mode=recovery",location.origin).href});setStatus(error?error.message:"Password reset email sent.","ok");};const startOAuth=async(provider,label)=>{setStatus("Connecting to "+label+"…");try{const {error}=await supabase.auth.signInWithOAuth({provider,options:{redirectTo:new URL("/dashboard.html",location.origin).href,...(provider==="google"?{scopes:"email"}:{})}});if(error){const msg=String(error.message||"");if(/unsupported provider|provider is not enabled/i.test(msg)){setStatus(label+" sign-in is not enabled in Supabase yet. In Supabase, open Authentication → Sign In / Providers, enable "+label+", add its OAuth credentials, and allow this website URL in the Auth URL Configuration. Email/password sign-in is separate.","error");}else{setStatus(label+" sign-in failed: "+msg,"error");}}}catch(err){setStatus(label+" sign-in failed: "+(err?.message||"Please try again."),"error");}};$id("google-login").onclick=()=>startOAuth("google","Google");$id("f").addEventListener("submit",submitLead,true);$id("signout-client").onclick=doSignOut;$id("signout-owner").onclick=doSignOut;$id("welcome-signout").onclick=doSignOut;$id("profile-signout").onclick=doSignOut;
 $id("welcome-open-dashboard").onclick=()=>{void openWorkspaceDashboard();};
+$id("welcome-start-project")?.addEventListener("click",event=>{
+  event.preventDefault();
+  hideWorkspacePages();
+  history.replaceState(null,"",location.pathname+location.search+"#contact");
+  const contact=$id("contact");
+  contact?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+  setTimeout(()=>{$id("n")?.focus({preventScroll:true});},250);
+});
 $id("welcome-open-profile").onclick=openProfile;
 $id("client-profile-open").onclick=openProfile;
 $id("client-welcome-back").onclick=returnToWelcome;
