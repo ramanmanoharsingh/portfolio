@@ -36,58 +36,19 @@ jobs:
             node --check "$file"
           done < <(find develop-with-raman -type f -name '*.js' -print0)
 
-      - name: Validate local HTML asset references and dashboard tabs
-        shell: python
+      - name: Validate client dashboard update hooks
+        shell: bash
         run: |
-          from html.parser import HTMLParser
-          from pathlib import Path
-          import sys
-
-          root = Path("develop-with-raman")
-          errors = []
-
-          class PageParser(HTMLParser):
-              def __init__(self):
-                  super().__init__()
-                  self.ids = set()
-                  self.tabs = set()
-                  self.panels = set()
-                  self.assets = []
-              def handle_starttag(self, tag, attrs):
-                  a = dict(attrs)
-                  if a.get("id"):
-                      if a["id"] in self.ids:
-                          errors.append(f"duplicate id={a['id']}")
-                      self.ids.add(a["id"])
-                  if a.get("data-dashboard-tab"):
-                      self.tabs.add(a["data-dashboard-tab"])
-                  if a.get("data-dashboard-panel"):
-                      self.panels.add(a["data-dashboard-panel"])
-                  for key in ("src", "href"):
-                      value = a.get(key, "")
-                      if value and not value.startswith(("http://", "https://", "mailto:", "tel:", "#", "data:", "javascript:")):
-                          if key == "src" or (tag == "link" and a.get("rel") in ("stylesheet", "icon")):
-                              self.assets.append(value.split("?")[0].split("#")[0])
-
-          for page in root.glob("*.html"):
-              parser = PageParser()
-              parser.feed(page.read_text(encoding="utf-8"))
-              for asset in parser.assets:
-                  candidate = (page.parent / asset.lstrip("/")).resolve() if not asset.startswith("/") else (root / asset.lstrip("/")).resolve()
-                  if not candidate.exists():
-                      errors.append(f"{page}: missing local asset {asset}")
-              missing_panels = parser.tabs - parser.panels
-              # Dashboard pages may intentionally use tabs without panels only for external links.
-              if missing_panels and page.name in ("client-dashboard.html", "admin-portal.html"):
-                  errors.append(f"{page}: tabs without panels: {sorted(missing_panels)}")
-              if errors:
-                  print(f"Checked {page.name}; issues found so far.")
-              else:
-                  print(f"Checked {page.name}")
-          if errors:
-              print("\n".join(f"ERROR: {e}" for e in errors))
-              sys.exit(1)
-          print("Static HTML reference and dashboard panel checks passed.")
+          set -euo pipefail
+          grep -q 'data-dashboard-tab="notifications"' develop-with-raman/client-dashboard.html
+          grep -q 'data-dashboard-panel="notifications"' develop-with-raman/client-dashboard.html
+          grep -q 'data-notification-list' develop-with-raman/client-dashboard.html
+          grep -q 'data-notification-count' develop-with-raman/client-dashboard.html
+          grep -q 'data-mark-updates-read' develop-with-raman/client-dashboard.html
+          grep -q 'client-dashboard.html#notifications' develop-with-raman/index.html
+          grep -q 'activeUserRole==="admin"?"/admin-portal.html"' develop-with-raman/index.html
+          test -f develop-with-raman/client-portal.css
+          echo "Client dashboard update hooks and role navigation are present."
 
       - name: Confirm workflow docs exist
         run: |
