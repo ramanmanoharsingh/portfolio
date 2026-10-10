@@ -108,6 +108,8 @@
     });
 
     document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-dashboard-tab]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('[data-dashboard-panel]').forEach(p=>p.hidden=p.dataset.dashboardPanel!==b.dataset.dashboardTab);}));
+    const initialPanel=location.hash==='#notifications'?'notifications':location.hash==='#requests'?'requests':location.hash==='#billing'?'billing':location.hash==='#projects'?'projects':'';
+    if(initialPanel)$('[data-dashboard-tab="'+initialPanel+'"]')?.click();
     const modal=$('#proposal-modal');
     const proposalForm=$('#proposal-form');
     document.querySelectorAll('[data-open-proposal]').forEach(b=>b.addEventListener('click',()=>{
