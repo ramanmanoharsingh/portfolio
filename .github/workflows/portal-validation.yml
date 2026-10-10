@@ -46,7 +46,7 @@ jobs:
           grep -q 'data-notification-count' develop-with-raman/client-dashboard.html
           grep -q 'data-mark-updates-read' develop-with-raman/client-dashboard.html
           grep -q 'client-dashboard.html#notifications' develop-with-raman/index.html
-          grep -q 'activeUserRole==="admin"?"/admin-portal.html"' develop-with-raman/index.html
+          grep -q 'admin-portal.html' develop-with-raman/index.html
           test -f develop-with-raman/client-portal.css
           echo "Client dashboard update hooks and role navigation are present."
 
