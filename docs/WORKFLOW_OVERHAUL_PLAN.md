@@ -276,3 +276,34 @@ References consulted:
 - [ ] Implement the admin dashboard navigation/sections incrementally.
 - [ ] Validate charts and time-management calculations against actual records.
 - [ ] Run regression/security checks and verify deployment.
+
+
+## Implementation log — 10 October 2026
+
+### Verified code change
+
+- Updated `develop-with-raman/projects.html` on `feature/workflow-overhaul` so “Request similar” passes project title, service, and summary to the existing homepage handler at `/?request=1&...`.
+- Verified the branch file now points to the homepage enquiry handler and no longer sends this action directly to `/client-dashboard.html`.
+- The homepage already contains a request handler that opens the authenticated proposal flow for a recognised client session and the public enquiry form for visitors without a client session.
+- Commit: `7b3e628490f7bc0e9d401b36e5cb2141ea95770b`.
+- This change has **not** been merged into `main` or verified on the deployed site.
+
+### Audit findings that affect the next steps
+
+- `client-dashboard.html` is explicitly a protected client workspace. `client-portal.js` redirects unauthenticated visitors to the existing auth page and submits registered-client proposals to `public.proposals` with `client_id = user.id`. That is appropriate for client-owned proposals but is not an anonymous submission path.
+- The homepage project enquiry form writes to `public.leads`, which already supports anonymous submissions with `user_id = null` and authenticated submissions linked to the session.
+- `admin-portal.html` currently has only Overview, Clients, Projects, and Client preview navigation. Its existing sections include project/milestone management, deliverable uploads, invoices/payment links, and incoming project briefs.
+- `admin-portal.js` currently queries profiles, projects, proposals, invoices, and milestones. The current setup SQL does not define a dedicated feedback/questions table. No feedback table should be assumed until the complete live schema and migrations are reviewed.
+- The leads schema includes `project_type`, status, and timestamps, which can support a provisional service-interest view only if its values are confirmed to represent the service categories consistently. Missing or inconsistent historical values must be reported rather than guessed.
+- Project/milestone due dates exist in the current admin code and can support an initial deadline view. A full timesheet or time-entry feature is not yet supported by evidence of an existing time-entry schema.
+
+### Updated task status
+
+- [x] Add expanded three-workstream scope to this plan.
+- [x] Make and verify the focused “Request similar” route change on the feature branch.
+- [x] Identify the existing public enquiry path and the protected client proposal path.
+- [ ] Verify service enquiry handling end-to-end.
+- [ ] Complete live schema/RLS audit before adding feedback storage or changing admin data access.
+- [ ] Add admin project overview, service analytics, and time-management views using verified fields.
+- [ ] Decide and implement the feedback/question persistence workflow after schema review.
+- [ ] Run syntax, regression, permission, and deployed-site checks.
