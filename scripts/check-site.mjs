@@ -88,6 +88,15 @@ if (await exists(redirectsFile)) {
   }
 }
 
+const authFormPages = [];
+for (const file of htmlFiles) {
+  const html = await readFile(file, 'utf8');
+  if (/\bid\s*=\s*["']account-form["']/i.test(html)) authFormPages.push(relative(repoRoot, file));
+}
+if (authFormPages.length !== 1 || authFormPages[0] !== 'develop-with-raman/auth.html') {
+  errors.push(`Expected exactly one canonical account form in develop-with-raman/auth.html; found: ${authFormPages.join(', ') || 'none'}`);
+}
+
 const requiredFiles = [
   'index.html', 'auth.html', 'auth-callback.html', 'reset-password.html',
   'welcome.html', 'client-dashboard.html', 'admin-portal.html', 'profile.html',
