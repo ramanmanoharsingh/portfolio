@@ -47,7 +47,9 @@
     const inv=invoices.data||[],props=proposals.data||[],enquiries=enquiryResult.data||[],active=(projects||[]).filter(p=>!['completed','cancelled'].includes(p.status));
     $('[data-metric-projects]').textContent=active.length;
     const pendingMilestones=milestones.filter(m=>m.status==='submitted_for_approval').length;
+    const pendingInvoices=inv.filter(i=>['pending','overdue'].includes(i.status));
     $('[data-metric-completed]').textContent=pendingMilestones;
+    const invoicesDueMetric=$('[data-metric-invoices-due]');if(invoicesDueMetric)invoicesDueMetric.textContent=pendingInvoices.length;
     const total=inv.filter(i=>i.status==='paid').reduce((n,i)=>n+Number(i.amount||0),0);
     $('[data-investment-total]')?.replaceChildren(document.createTextNode(money(total)));
     const nextDate=milestones.filter(m=>m.due_date&&!['completed','approved'].includes(m.status)).map(m=>m.due_date).sort()[0];
