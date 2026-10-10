@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded',async()=>{
  const root=document.querySelector('[data-page="admin"]');if(!root||!window.supabaseClient)return;
  const sb=window.supabaseClient,$=s=>document.querySelector(s);
- const say=(id,msg,bad=false)=>{const e=$('#'+id);if(e){e.textContent=msg;e.dataset.error=String(bad);}};
+ const say=(id,msg,bad=false)=>{const e=$('#'+id);if(e){e.hidden=false;e.textContent=msg;e.dataset.error=String(bad);}};
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const {data:{user},error:authError}=await sb.auth.getUser();
  if(authError||!user){location.replace('/auth.html?next='+encodeURIComponent('/admin-portal.html'));return;}
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
   const filtered=leads.filter(x=>[x.name,x.email,x.whatsapp,x.project_type,x.description,x.status].join(' ').toLowerCase().includes(term));
   const count=$('#admin-lead-count');if(count)count.textContent=filtered.length+' of '+leads.length+' requests';
   const body=$('[data-admin-lead-list]');if(!body)return;
-  const states=['New','Reviewing','Contacted','Converted','Closed'];
+  const states=['New','Reviewing','Contacted','Scoped','In Progress','Waiting on Client','Completed','Declined','Converted','Closed'];
   body.innerHTML=filtered.length?filtered.map(x=>{const status=states.find(s=>s.toLowerCase()===String(x.status||'New').toLowerCase())||'New';return '<tr><td><strong>'+esc(x.name||'Unnamed visitor')+'</strong><small>'+esc(x.email||'No email')+'</small>'+(x.whatsapp?'<small>'+esc(x.whatsapp)+'</small>':'')+'</td><td><strong>'+esc(x.project_type||'General enquiry')+'</strong><details style="max-width:360px"><summary style="cursor:pointer;font-size:12px">Read project brief</summary><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(x.description||'No description supplied')+'</p></details></td><td>'+esc(x.budget_range||'Not specified')+'<small>Due: '+esc(x.deadline||'Not specified')+'</small></td><td>'+esc(x.created_at?new Date(x.created_at).toLocaleString():'—')+'</td><td><select aria-label="Update request status" data-lead-status="'+esc(x.id)+'">'+states.map(s=>'<option value="'+s+'" '+(s===status?'selected':'')+'>'+s+'</option>').join('')+'</select></td></tr>';}).join(''):'<tr><td colspan="5">No project requests match this search.</td></tr>';
  }
  async function loadAll(){
