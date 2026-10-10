@@ -721,7 +721,7 @@ $('#dg').onclick=e=>{if(e.target===e.currentTarget)e.currentTarget.close()};
 $('#sim').onclick=async()=>{const L=['[network] GET /players?locality=nearby','[match] 12 players ranked by region priority','[request] Player A → Player B sent','[request] Player B accepted','[sim] Final: A 3 – 2 B','[rating] A 1480 → 1494 · B 1475 → 1461','[done] Event logged'],o=$('#log'),b=$('#sim');o.textContent='';b.disabled=true;for(const l of L){o.textContent+=l+'\n';await new Promise(r=>setTimeout(r,380))}b.disabled=false};
 // services
 const S=[['AI-assisted website / landing page','Fast, polished single-page sites.'],['Student / freelancer portfolio','A sharp personal brand site.'],['Business website refresh','Modernise an existing site.'],['Prompt workflow setup','Reusable prompts for your tasks.'],['Data dashboard / report','Clean charts and insights.'],['Hackathon / demo polish','Make your project judge-ready.'],['AI-assisted prototype','A working proof of concept.']];
-$('#sg').innerHTML=S.map((s,i)=>`<div class="card"><h3 class="ch">${s[0]}</h3><p>${s[1]}</p><span class="cap" style="margin-top:auto">Custom quote after discovery</span><button class="lk add-service" type="button" data-service="${i}" style="margin-top:18px;align-self:flex-start">Discuss this service →</button></div>`).join('');
+$('#sg').innerHTML=S.map((s,i)=>`<div class="card"><h3 class="ch">${s[0]}</h3><p>${s[1]}</p><span class="cap" style="margin-top:auto">Custom quote after discovery</span><button class="btn s add-service" type="button" data-service="${i}" style="margin-top:18px;align-self:flex-start">Discuss this service →</button></div>`).join('');
 $('#qs').innerHTML='<option>Not sure yet</option>'+S.map(s=>`<option>${s[0]}</option>`).join('');
 $('#t').innerHTML=S.map(s=>`<option>${s[0]}</option>`).join('')+'<option>Something else</option>';
 $('#b').innerHTML=['Prefer to discuss','Under ₹5,000','₹5,000 – ₹10,000','₹10,000 – ₹20,000','₹20,000+','Flexible for the right scope'].map(x=>`<option>${x}</option>`).join('');
@@ -734,12 +734,7 @@ const EM='ramanmanoharsingh@gmail.com',WA='917595974769';
 function chk(){let ok=true;for(const k in V){const r=V[k]($('#'+k).value);$(`[data-f=${k}]`).textContent=r===true?'':r;if(r!==true)ok=false}if(!ok)toast('Please fix the highlighted fields');return ok}
 const msg=()=>`Hi Raman, I'm ${$('#n').value.trim()} (${$('#e').value.trim()}${$('#w').value.trim()?', '+$('#w').value.trim():''}).\nProject: ${$('#t').value} · Budget: ${$('#b').value}${$('#d').value?' · Deadline: '+$('#d').value:''}\nPreferred payment: ${$('#pay').value}\n\n${$('#m').value.trim()}`;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let DB=null;
-$('#f').onsubmit=async ev=>{ev.preventDefault();if(!chk())return;const b=$('#sd');b.disabled=true;b.textContent='Sending…';
-const lead={name:$('#n').value.trim(),email:$('#e').value.trim(),whatsapp:$('#w').value.trim(),project_type:$('#t').value,budget_range:$('#b').value,deadline:$('#d').value,description:$('#m').value.trim(),status:'New',created_at:new Date().toISOString()};
-try{if(!DB)throw 0;await DB.collection('leads').doc('l'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)).set(lead);toast('Enquiry received. I will reply within 24 hours.');$('#f').reset()}
-catch(e){location.href=`mailto:${EM}?subject=${encodeURIComponent('Project enquiry')}&body=${encodeURIComponent(msg())}`;toast('Opening your email app')}
-b.disabled=false;b.textContent='Submit enquiry'};
+let DB=null; // Retained for legacy dashboard code; enquiry submission is handled only by Supabase below.
 // admin dashboard (owner only)
 function initAdmin(){$('#admin').hidden=false;let leads=[],notes={},flt='All';const ST=['New','Contacted','In Progress','Completed'];
 $('#af').innerHTML=['All',...ST].map(s=>`<button class="chip" aria-pressed="${s==='All'}">${s}</button>`).join('');
