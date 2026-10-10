@@ -451,6 +451,9 @@ begin
   return new;
 end;
 $function$;
+drop trigger if exists leads_notify_admins on public.leads;
+create trigger leads_notify_admins after insert on public.leads
+for each row execute function private.on_lead_created();
 
 create or replace function private.on_project_progress_change()
 returns trigger language plpgsql security definer set search_path=''
@@ -591,7 +594,7 @@ returns trigger language plpgsql security definer set search_path=''
 as $function$
 begin
   perform private.write_audit(case when tg_op='INSERT' then 'time_entry_created' else 'time_entry_updated' end,'time_entry',coalesce(new.id,old.id),jsonb_build_object('project_id',coalesce(new.project_id,old.project_id),'billable',coalesce(new.billable,old.billable)));
-  return coalesce(new,old);
+  return new;
 end;
 $function$;
 drop trigger if exists time_entries_audit on public.time_entries;
