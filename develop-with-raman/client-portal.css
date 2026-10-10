@@ -18,3 +18,12 @@
  .portal-topbar{padding-top:30px;align-items:flex-start;flex-wrap:wrap}
  .portal-topbar>.button,.portal-topbar>.portal-button{max-width:100%}
 }
+
+/* Keep the portal's site identity anchored at the far left instead of floating over the title. */
+.portal-topbar{justify-content:flex-start}
+.portal-header-brand{position:static!important;left:auto!important;top:auto!important;transform:none!important;margin-right:auto!important;max-width:100%!important;text-align:left!important;justify-content:flex-start!important}
+.portal-topbar>:last-child{margin-left:auto}
+@media(max-width:650px){
+ .portal-header-brand{top:auto!important;max-width:100%!important;font-size:14px}
+ .portal-topbar{padding-top:0;align-items:flex-start}
+}
