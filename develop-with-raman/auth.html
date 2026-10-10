@@ -41,14 +41,11 @@
         <div class="auth-eyebrow">Your account · Your projects</div>
         <h2 class="auth-title" id="auth-title">Welcome back.</h2>
         <p class="auth-description" id="auth-description">Sign in to pick up where your project left off.</p>
-
         <div class="auth-message" id="auth-message" aria-live="polite"></div>
-
         <div class="auth-tabs" id="auth-tabs" role="tablist" aria-label="Account access options">
           <button class="auth-tab" type="button" role="tab" id="tab-login" data-mode="login" aria-selected="true">Sign in</button>
           <button class="auth-tab" type="button" role="tab" id="tab-signup" data-mode="signup" aria-selected="false">Create account</button>
         </div>
-
         <form id="account-form" novalidate>
           <div class="auth-field auth-hidden" id="name-field">
             <label for="auth-name">Your name</label>
@@ -74,12 +71,10 @@
               <button class="auth-show-password" id="auth-show-confirm" type="button" aria-label="Show confirmation password">Show</button>
             </div>
           </div>
-
           <div class="auth-row" id="remember-row">
             <label class="auth-remember" for="auth-remember"><input id="auth-remember" name="remember" type="checkbox" checked> Keep me signed in</label>
             <button class="auth-link" id="forgot-link" type="button">Forgot password?</button>
           </div>
-
           <label class="auth-terms auth-hidden" id="auth-terms-row" for="auth-terms">
             <input id="auth-terms" type="checkbox">
             <span>I agree to use my account responsibly and understand my project information is private to my account.</span>
@@ -87,16 +82,15 @@
           <button class="auth-primary" id="auth-submit" type="submit"><span id="auth-submit-label">Sign in to your account</span><span aria-hidden="true"> ↗</span></button>
           <p style="text-align:center;margin:13px 0 0"><button type="button" class="auth-link auth-hidden" id="auth-back-login">← Back to sign in</button></p>
         </form>
-
         <div id="auth-social-section">
           <div class="auth-divider">or continue with</div>
           <div class="auth-socials">
-            <button class="auth-social" type="button" data-provider="google" aria-label="Continue with Google"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.35 12.23c0-.72-.06-1.42-.18-2.09H12v3.96h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.26Z"/><path fill="#34A853" d="M12 21.6c2.63 0 4.83-.87 6.44-2.36l-3.14-2.45c-.87.58-1.98.93-3.3.93-2.54 0-4.7-1.71-5.47-4.01H3.28v2.53A9.72 9.72 0 0 0 12 21.6Z"/><path fill="#FBBC05" d="M6.53 13.71a5.85 5.85 0 0 1 0-3.42V7.76H3.28a9.72 9.72 0 0 0 0 8.48l3.25-2.53Z"/><path fill="#EA4335" d="M12 6.28c1.43 0 2.71.49 3.72 1.47l2.79-2.79A9.33 9.33 0 0 0 12 2.4a9.72 9.72 0 0 0-8.72 5.36l3.25 2.53C7.3 7.99 9.46 6.28 12 6.28Z"/></svg>Google</button>
-            <button class="auth-social" type="button" data-provider="github" aria-label="Continue with GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.54v-2.1c-3.1.67-3.76-1.32-3.76-1.32-.5-1.29-1.24-1.63-1.24-1.63-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15.99 1.7 2.6 1.21 3.23.92.1-.72.39-1.21.71-1.49-2.48-.28-5.09-1.24-5.09-5.52 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.95 0 0 .94-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.11-1.44 3.05-1.14 3.05-1.14.61 1.53.23 2.67.11 2.95.72.78 1.15 1.77 1.15 2.99 0 4.29-2.62 5.24-5.12 5.51.4.35.75 1.03.75 2.08v3.08c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z"/></svg>GitHub</button>
-            <button class="auth-social" type="button" data-provider="linkedin_oidc" aria-label="Continue with LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M5.17 3.3a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2ZM3.35 9h3.64v11.65H3.35V9Zm5.92 0h3.49v1.59h.05a3.83 3.83 0 0 1 3.45-1.9c3.69 0 4.37 2.43 4.37 5.59v6.37h-3.64V15c0-1.35-.02-3.09-1.88-3.09-1.89 0-2.18 1.47-2.18 2.99v5.75H9.27V9Z"/></svg>LinkedIn</button>
+            <button class="auth-social" type="button" data-provider="google" aria-label="Continue with Google">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.35 12.23c0-.72-.06-1.42-.18-2.09H12v3.96h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.26Z"/><path fill="#34A853" d="M12 21.6c2.63 0 4.83-.87 6.44-2.36l-3.14-2.45c-.87.58-1.98.93-3.3.93-2.54 0-4.7-1.71-5.47-4.01H3.28v2.53A9.72 9.72 0 0 0 12 21.6Z"/><path fill="#FBBC05" d="M6.53 13.71a5.85 5.85 0 0 1 0-3.42V7.76H3.28a9.72 9.72 0 0 0 0 8.48l3.25-2.53Z"/><path fill="#EA4335" d="M12 6.28c1.43 0 2.71.49 3.72 1.47l2.79-2.79A9.33 9.33 0 0 0 12 2.4a9.72 9.72 0 0 0-8.72 5.36l3.25 2.53C7.3 7.99 9.46 6.28 12 6.28Z"/></svg>
+              Continue with Google
+            </button>
           </div>
         </div>
-
         <p class="auth-legal" id="auth-legal">By continuing, you agree to our <a href="/#privacy">privacy practices</a> and to keep your account credentials private.</p>
         <p class="auth-footer-note">Secure account access · Develop with Raman</p>
       </div>
