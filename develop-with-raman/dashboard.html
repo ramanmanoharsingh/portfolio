@@ -18,10 +18,23 @@
 .top-link.back-to-site{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
 @media(max-width:900px){.top{grid-template-columns:minmax(0,1fr) auto!important;align-items:center;padding:12px 16px!important}.brand{display:inline-flex!important;grid-column:1!important;grid-row:1!important;justify-self:start!important;font-size:14px!important}.top-right{grid-column:2!important;grid-row:1!important;justify-self:end!important;gap:6px!important}.mobile-brand{display:none!important}.back-to-site{padding:8px 10px;font-size:11px}}
 @media(max-width:600px){.top{height:66px;padding:0 12px!important}.brand{font-size:12px!important;letter-spacing:-.035em!important}.top-right{gap:5px!important}.back-to-site{padding:7px 8px;font-size:10px!important}.wrap{padding:20px 12px 38px!important}.auth-aside{min-height:220px;padding:24px!important}.auth-main{padding:22px!important}}
+
+/* Shared, compact workspace header. */
+.top{position:sticky!important;top:0!important;z-index:180!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;align-items:center!important;height:64px!important;min-height:64px!important;padding:0 clamp(14px,3vw,38px)!important}
+.top .brand{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;display:inline-flex!important;justify-content:center!important;max-width:calc(100% - 168px)!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font:600 13px/1 "Space Grotesk",Helvetica,Arial,sans-serif!important;letter-spacing:-.025em!important;text-transform:none!important}
+.top-menu{position:relative;grid-column:1;justify-self:start;z-index:4}
+.top-menu summary{list-style:none;display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 13px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);font:500 12px/1 "Space Grotesk",sans-serif;cursor:pointer}
+.top-menu summary::-webkit-details-marker{display:none}
+.top-menu-panel{position:absolute;left:0;top:calc(100% + 8px);display:grid;gap:3px;min-width:210px;padding:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 38px #0002}
+.top-menu-panel a{padding:10px 12px;border-radius:7px;color:var(--ink);font:500 12px/1.35 "Space Grotesk",sans-serif;text-decoration:none}
+.top-menu-panel a:hover{background:var(--soft)}
+.top-right{grid-column:2!important;justify-self:end!important;position:relative;z-index:2;display:flex!important;align-items:center!important;gap:8px!important}
+.top-right>.top-link{font:500 12px/1 "Space Grotesk",sans-serif!important}
+@media(max-width:900px){.top{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;padding:0 12px!important;height:60px!important;min-height:60px!important}.top .brand{font-size:12px!important;max-width:calc(100% - 145px)!important}.top-right{gap:5px!important}.top-right>.top-link{font-size:11px!important}}
 </style>
 </head>
 <body>
-<header class="top"><a class="brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a><div class="top-right"><a class="top-link back-to-site" href="/" aria-label="Back to website">Back to website</a><div id="top-identity" class="identity" hidden><div id="top-avatar" class="avatar">R</div><span id="top-name">Account</span></div><button class="top-link" id="top-signout" hidden type="button">Sign out</button></div></header>
+<header class="top"><details class="top-menu"><summary aria-label="Open site menu">Menu</summary><div class="top-menu-panel"><a href="/">Home</a><a href="/#services">Services</a><a href="/#start-project">Start a project</a><a href="/projects.html">Projects</a><a href="/#contact">Contact</a><a href="/dashboard.html">Workspace / Sign in</a></div></details><a class="brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a><div class="top-right"><a class="top-link back-to-site" href="/" aria-label="Back to website">Back to website</a><div id="top-identity" class="identity" hidden><div id="top-avatar" class="avatar">R</div><span id="top-name">Account</span></div><button class="top-link" id="top-signout" hidden type="button">Sign out</button></div></header>
 <main class="wrap">
 <section id="auth-view" class="auth-wrap" hidden>
  <aside class="auth-aside"><div><div class="eyebrow" style="color:#b7b7b7">CLIENT PORTAL</div><h1>Your work.<br>Your workspace.</h1><p>Track your projects, share requirements, follow delivery milestones, and keep important updates in one place.</p></div><div class="small" style="color:#999">Secure access powered by Supabase.</div></aside>
