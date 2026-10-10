@@ -50,12 +50,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           subscription?.unsubscribe();
           resolve(value || null);
         };
-        ({ data: { subscription } } = client.auth.onAuthStateChange((event, nextSession) => {
+        timer = setTimeout(() => finish(null), 12000);
+        const listener = client.auth.onAuthStateChange((event, nextSession) => {
           if (nextSession && ['SIGNED_IN', 'INITIAL_SESSION', 'TOKEN_REFRESHED'].includes(event)) {
             finish(nextSession);
           }
-        }));
-        timer = setTimeout(() => finish(null), 12000);
+        });
+        subscription = listener.data.subscription;
+        if (settled) subscription?.unsubscribe();
         // Close the small race where the session becomes available just before the listener attaches.
         client.auth.getSession().then(({ data: latest, error }) => {
           if (!error && latest?.session) finish(latest.session);
