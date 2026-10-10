@@ -1,82 +1,63 @@
-# Develop with Raman — Supabase client workspace
+# Develop with Raman
 
-The site is a plain HTML/CSS/JavaScript website hosted on GitHub Pages. The client workspace is already wired to Supabase Auth and the `public.leads` table; it is waiting for your own Supabase project credentials. No React build step is required.
+**Production site:** https://ramans.pages.dev  
+**Repository:** https://github.com/ramanmanoharsingh/portfolio
 
-## What is implemented
+This is a plain HTML/CSS/JavaScript freelance portfolio with a Supabase-backed private client workspace. The public portfolio remains accessible without an account; project records, messages, milestones, invoices, and deliverables are reserved for authorized clients and the administrator.
 
-- Custom-quote enquiry form (no fixed plan/package pricing).
-- Email/password sign-up, sign-in and password reset.
-- Google and Apple OAuth buttons (each provider must be configured in Supabase first).
-- Client dashboard showing enquiries linked to the signed-in account.
-- Owner dashboard for `ramanmanoharsingh@gmail.com`, with status filters, status updates, live refresh and CSV export.
-- Row Level Security (RLS) policies in `develop-with-raman/supabase-setup.sql`.
+## Chosen stack
 
-## 1. Create a Supabase project
+- **Frontend:** existing HTML, CSS, and JavaScript (no framework migration)
+- **Hosting:** Cloudflare Pages at `https://ramans.pages.dev`
+- **Authentication and database:** existing Supabase project
+- **Sign-in methods:** email/password and Google
+- **Client access:** client accounts are intended to be invited after a project is accepted
+- **Roles:** client and admin, enforced by Supabase Row Level Security (RLS) and the private `private.is_admin()` helper—not by UI visibility alone
 
-1. Open [Supabase](https://supabase.com/) and sign in.
-2. Create a new project, choose a project name and a strong database password, and select the Free plan.
-3. Wait for the project to finish provisioning.
-4. In the project dashboard, open **Project Settings → API** (the exact menu label may be **API Keys** in the newer dashboard).
-5. Copy the **Project URL** and the browser-safe **publishable key** (or legacy `anon` key). Never copy a `service_role` or secret key into this website.
+## Current implementation
 
-## 2. Connect the repository
+- Public portfolio and enquiry form
+- Supabase email/password sign-in and password reset
+- Google OAuth entry point (requires Google and Supabase provider configuration)
+- Client workspace for assigned projects, milestones, messages, profile, and private deliverables
+- Admin workspace for managing client projects, proposals, invoices, milestones, and deliverables
+- RLS enabled on inspected application tables and private storage policies for client deliverables
+- Cloudflare Pages `_headers` and `_redirects` files in `develop-with-raman/`
 
-1. Open [the website HTML](https://github.com/ramanmanoharsingh/portfolio/blob/main/develop-with-raman/index.html).
-2. Find these two constants near the bottom of the file:
-   ```js
-   const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
-   const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-   ```
-3. Replace the placeholder URL and key with the values from your Supabase project. The publishable/anon key is designed to be used in browser code; database permissions must be enforced by RLS.
-4. Commit the edit to `main`. GitHub Pages will publish the updated static page.
+## Cloudflare Pages configuration
 
-## 3. Create the database and security policies
+The app uses root-relative paths such as `/auth.html` and `/client-dashboard.html`. Configure Cloudflare Pages so the contents of `develop-with-raman/` are the deployed site root (build command can be blank for this static site; output directory should be `develop-with-raman`). Verify this against the existing project settings before changing deployment settings.
 
-1. In Supabase, open **SQL Editor → New query**.
-2. Open [`develop-with-raman/supabase-setup.sql`](https://github.com/ramanmanoharsingh/portfolio/blob/main/develop-with-raman/supabase-setup.sql) in the repository, copy its full contents, paste into the SQL Editor, and run it.
-3. Confirm that the `public.leads` table exists under **Table Editor**.
-4. Keep RLS enabled. Do not make the table publicly readable and never add the service-role key to HTML.
+## Supabase configuration checklist
 
-The SQL policy grants owner access based on the configured owner email `ramanmanoharsingh@gmail.com`. The dashboard uses that same email to choose the owner UI. If you want to use another admin email, update both the HTML constant `OWNER_EMAIL` and the owner email checks in the SQL, then rerun the SQL.
+1. In Supabase **Authentication → URL Configuration**, set the production Site URL to `https://ramans.pages.dev`.
+2. Add these exact production redirects to the allowed redirect URL list:
+   - `https://ramans.pages.dev/auth-callback.html`
+   - `https://ramans.pages.dev/reset-password.html`
+   - `https://ramans.pages.dev/`
+3. Add exact local development URLs only when needed; avoid broad wildcards in production.
+4. In **Authentication → Sign In / Providers**, enable Email and Google. Configure Google credentials only in Supabase and Google Cloud Console.
+5. In Supabase Auth settings, disable public sign-ups if the invitation-only client model is required. Hiding the registration button is not a backend security control.
+6. Enable email confirmation and leaked-password protection. Configure the email templates and test invitation and recovery links.
+7. After a project is accepted, invite the client in Supabase **Authentication → Users → Invite user**. Use `https://ramans.pages.dev/auth-callback.html` as the redirect URL. The callback should send invited clients to set their password.
+8. Confirm the administrator account has the `admin` role in `public.profiles`. Never grant admin role from browser code or client-editable metadata.
 
-## 4. Configure authentication URLs
+## Security notes
 
-In Supabase, open **Authentication → URL Configuration**:
+- The Supabase publishable key in browser code is intentionally public; it is not a server secret. Never put a service-role/secret key, database password, or OAuth client secret in HTML, JavaScript, or Git.
+- RLS must remain enabled. Frontend role checks are for navigation/UX; RLS and server-side authorization are the actual boundary.
+- The connected Supabase security advisor reported **Leaked Password Protection Disabled**. Enable it in Supabase Auth settings.
+- This static frontend uses Supabase JS-managed browser sessions, not an HttpOnly server-side cookie. Do not store any additional secrets or tokens yourself.
+- Provider setup, production redirects, public sign-up settings, email delivery, and live end-to-end tests must be verified in the Supabase/Cloudflare dashboards. A code commit alone cannot configure these external settings.
+- No production security certification is implied by this README.
 
-- **Site URL:** `https://ramanmanoharsingh.github.io/portfolio/develop-with-raman/`
-- Add that exact URL to **Redirect URLs**.
-- Also add your eventual custom-domain URL if you use one.
+## Test before launch
 
-Email confirmation is recommended. When enabled, test sign-up and follow the verification email before signing in.
-
-## 5. Enable Google sign-in
-
-1. In Supabase, open **Authentication → Sign In / Providers → Google** and copy the callback URL shown there (it looks like `https://<project-ref>.supabase.co/auth/v1/callback`).
-2. Open [Google Cloud Console](https://console.cloud.google.com/), create/select a project, and configure the OAuth consent screen.
-3. Create an OAuth Client ID of type **Web application**.
-4. Add this as an **Authorized JavaScript origin**: `https://ramanmanoharsingh.github.io`
-5. Add the Supabase callback URL from step 1 as an **Authorized redirect URI**.
-6. Copy the Google Client ID and Client Secret into the Google provider settings in Supabase and enable the provider.
-
-Google OAuth credentials are configured in Supabase, not in the public HTML. Google sign-in will not work until this setup is complete.
-
-## 6. Apple sign-in (optional)
-
-Apple sign-in also needs an Apple Developer configuration, including a Services ID, Sign in with Apple setup, key and domain/callback configuration. It may require a paid Apple Developer membership. If you do not have those credentials, leave Apple disabled for now; email and Google can work without it.
-
-## 7. Test both roles
-
-1. Open the live site and create a test client account using an email you control.
-2. Verify the email if prompted, then sign in and submit a test enquiry while signed in.
-3. Sign out and sign in as `ramanmanoharsingh@gmail.com`. The enquiry should appear in the owner dashboard.
-4. Sign back in as the client. The client dashboard should show only enquiries tied to that account.
-5. Test Google sign-in after provider configuration.
-6. Test status changes and CSV export from the owner dashboard.
-
-## Important limits
-
-- GitHub Pages only serves static files. Supabase provides authentication, database and row-level security.
-- The client dashboard currently tracks **enquiries and their statuses**. It is not yet a full project-management system with milestones, file uploads, invoices or payments.
-- Guest enquiries can be submitted, but because they have no signed-in user ID, they are visible to the owner and do not automatically attach to a client account later.
-- Supabase Free has usage and inactivity limits. Check the current Supabase pricing/limits before relying on it for a production business.
-- Never place a database password, OAuth client secret, service-role key, or other private server credential in the HTML or GitHub repository.
+- Public pages work while logged out.
+- Uninvited sign-up is rejected by Supabase when public sign-ups are disabled.
+- An invited client can accept the invitation, set a password, sign in, and see only their own project data.
+- Google login works for an authorized account and shows useful errors when setup is missing or consent is cancelled.
+- Password recovery and expired/invalid links are handled clearly.
+- A client cannot read another client's projects, messages, milestones, invoices, or files, or perform admin actions.
+- Only the verified administrator account with the database-backed admin role can use admin operations.
+- Sign-out, refresh, session expiry, mobile layout, and keyboard navigation work.

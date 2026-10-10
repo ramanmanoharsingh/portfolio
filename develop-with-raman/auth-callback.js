@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fail=(heading,detail)=>{title.textContent=heading;message.textContent=detail;action.hidden=false;};
   const params=new URLSearchParams(location.search);
   const hash=new URLSearchParams(location.hash.replace(/^#/,''));
+  const authType=params.get('type')||hash.get('type')||'';
   const error=params.get('error_description')||params.get('error')||hash.get('error_description')||hash.get('error');
   if(error){
     const code=params.get('error_code')||hash.get('error_code')||'';
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const {data,error}=await window.supabaseClient.auth.getSession();
     if(error)throw error;
     if(!data.session){fail('No active session found','The sign-in link may have expired or the provider may not be configured. Return to sign in and try again.');return;}
+    if(authType==='invite'||authType==='recovery'){location.replace('/reset-password.html?mode='+encodeURIComponent(authType));return;}
     title.textContent='You’re signed in';
     message.textContent='Taking you to your workspace…';
     location.replace('/welcome.html');
