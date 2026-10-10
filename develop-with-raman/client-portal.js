@@ -68,8 +68,91 @@
     const dBox=$('[data-deliverable-list]');if(dBox){if(!deliverables.length)dBox.innerHTML='<p class="muted">Your shared files will appear here.</p>';else{const links=await Promise.all(deliverables.map(async d=>{const fileRef=String(d.file_url||'');let href='';if(/^https:\/\//i.test(fileRef)){href=safeUrl(fileRef);}else if(fileRef){const {data,error}=await sb.storage.from('client-deliverables').createSignedUrl(fileRef,3600);href=error?'':data?.signedUrl||'';}return '<article class="request-row"><div><strong>'+esc(d.title)+'</strong><span>'+esc(d.description||nice(d.status))+' · '+esc(date(d.created_at))+'</span></div>'+(href?'<a class="button" href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Open file ↗</a>':'<span class="status">'+esc(nice(d.status))+'</span>')+'</article>';}));dBox.innerHTML=links.join('');}}
     const proposalBoxes=document.querySelectorAll('[data-proposal-list]');proposalBoxes.forEach(pBox=>pBox.innerHTML=props.length?props.map(p=>'<article class="request-row"><div><strong>'+esc(p.title)+'</strong><span>'+esc(date(p.created_at))+' · '+esc(nice(p.status))+'</span></div><span class="status">'+esc(nice(p.status))+'</span></article>').join(''):'<p class="muted">No proposals submitted yet.</p>');
     document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-dashboard-tab]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('[data-dashboard-panel]').forEach(p=>p.hidden=p.dataset.dashboardPanel!==b.dataset.dashboardTab);}));
-    const modal=$('#proposal-modal');document.querySelectorAll('[data-open-proposal]').forEach(b=>b.addEventListener('click',()=>{modal.hidden=false;modal.querySelector('input')?.focus();}));modal?.querySelectorAll('[data-close-modal]').forEach(b=>b.addEventListener('click',()=>modal.hidden=true));modal?.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true;});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal&&!modal.hidden)modal.hidden=true;});
-    $('#proposal-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,btn=form.querySelector('[type=submit]');btn.disabled=true;try{const data={client_id:user.id,title:form.elements.title.value.trim(),description:form.elements.description.value.trim(),budget:form.elements.budget.value?Number(form.elements.budget.value):null,timeline:form.elements.timeline.value.trim()||null,status:'submitted'};if(data.title.length<3||data.description.length<20)throw new Error('Add a title and at least 20 characters describing your project.');const {error}=await sb.from('proposals').insert(data);if(error)throw error;form.reset();modal.hidden=true;toast('Project brief submitted.');location.reload();}catch(err){toast(err.message||'Could not submit the brief.',true);}finally{btn.disabled=false;}});
+    const modal=$('#proposal-modal');
+    const proposalForm=$('#proposal-form');
+    document.querySelectorAll('[data-open-proposal]').forEach(b=>b.addEventListener('click',()=>{
+      modal.hidden=false;
+      (proposalForm?.elements.title||modal.querySelector('input'))?.focus();
+    }));
+    modal?.querySelectorAll('[data-close-modal]').forEach(b=>b.addEventListener('click',()=>modal.hidden=true));
+    modal?.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true;});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal&&!modal.hidden)modal.hidden=true;});
+
+    // A service selected on the public site opens this same authenticated request form.
+    const queryParams=new URLSearchParams(location.search);
+    const requestedService=queryParams.get('service')||'';
+    const openRequestedForm=queryParams.get('request')==='1';
+    const submittedFromRequest=queryParams.get('submitted')==='1';
+    const dashboardDraftKey='dwr-client-proposal-draft-v1';
+    let dashboardDraft=null;
+    try{dashboardDraft=JSON.parse(sessionStorage.getItem(dashboardDraftKey)||'null');}catch(_error){}
+    const serviceField=$('#brief-service');
+    const titleField=$('#brief-title');
+    const descriptionField=$('#brief-description');
+    const budgetField=$('#brief-budget');
+    const timelineField=$('#brief-timeline');
+    const serviceFromDraft=typeof dashboardDraft?.service==='string'?dashboardDraft.service:'';
+    const serviceToSelect=serviceFromDraft||requestedService;
+    if(serviceField&&serviceToSelect){
+      serviceField.value=[...serviceField.options].some(option=>option.value===serviceToSelect)?serviceToSelect:'Something else';
+    }
+    if(proposalForm&&dashboardDraft){
+      if(typeof dashboardDraft.title==='string'&&dashboardDraft.title.trim())titleField.value=dashboardDraft.title;
+      if(typeof dashboardDraft.description==='string')descriptionField.value=dashboardDraft.description;
+      if(typeof dashboardDraft.budget==='string'||typeof dashboardDraft.budget==='number')budgetField.value=String(dashboardDraft.budget);
+      if(typeof dashboardDraft.timeline==='string')timelineField.value=dashboardDraft.timeline;
+    }
+    if(serviceToSelect&&titleField&&!titleField.value.trim()){
+      titleField.value=serviceField?.value?serviceField.value+' enquiry':'New project enquiry';
+    }
+    serviceField?.addEventListener('change',()=>{
+      if(titleField&&!titleField.value.trim()&&serviceField.value)titleField.value=serviceField.value+' enquiry';
+    });
+    if(openRequestedForm){
+      modal.hidden=false;
+      (titleField||modal.querySelector('input'))?.focus();
+      // The selected service is already in the form, so refresh/back won't reopen a duplicate form.
+      history.replaceState(null,'',location.pathname+(location.hash||''));
+    }
+    if(submittedFromRequest){
+      $('[data-dashboard-tab="requests"]')?.click();
+      toast('Project request submitted. It is now listed in Project requests.');
+      history.replaceState(null,'',location.pathname+'#requests');
+    }
+
+    proposalForm?.addEventListener('submit',async e=>{
+      e.preventDefault();
+      const form=e.currentTarget,btn=form.querySelector('[type=submit]');
+      if(btn.disabled)return;
+      btn.disabled=true;
+      try{
+        const serviceName=String(form.elements.service?.value||'').trim();
+        const title=String(form.elements.title.value||'').trim();
+        const rawDescription=String(form.elements.description.value||'').trim();
+        const description='Requested service: '+(serviceName||'Something else')+'\\n\\n'+rawDescription;
+        const data={
+          client_id:user.id,
+          title,
+          description,
+          budget:form.elements.budget.value?Number(form.elements.budget.value):null,
+          timeline:form.elements.timeline.value.trim()||null,
+          status:'submitted'
+        };
+        if(!serviceName)throw new Error('Choose the service you are enquiring about.');
+        if(data.title.length<3||rawDescription.length<20)throw new Error('Add a title and at least 20 characters describing your project.');
+        if(data.description.length>12000)throw new Error('Please shorten the project brief slightly and submit again.');
+        const {error}=await sb.from('proposals').insert(data);
+        if(error)throw error;
+        try{sessionStorage.removeItem(dashboardDraftKey);sessionStorage.removeItem('dwr-project-enquiry-draft-v1');}catch(_error){}
+        form.reset();
+        modal.hidden=true;
+        location.replace('/client-dashboard.html?submitted=1#requests');
+      }catch(err){
+        toast(err.message||'Could not submit the brief.',true);
+      }finally{
+        btn.disabled=false;
+      }
+    });
   }
   document.addEventListener('DOMContentLoaded',init);
 })();
