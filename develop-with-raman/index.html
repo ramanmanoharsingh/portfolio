@@ -723,9 +723,9 @@ function syncAuthActions(user,profile=currentProfile){
   const avatarHtml=avatar?'<span class="account-link-content"><span class="account-avatar"><img src="'+safe(avatar)+'" alt="" referrerpolicy="no-referrer"></span><span>Welcome, '+safe(firstName)+'</span></span>':'<span class="account-link-content"><span class="account-avatar">'+safe(firstName.charAt(0).toUpperCase())+'</span><span>Welcome, '+safe(firstName)+'</span></span>';
   for(const link of [navAuthAction,menuAuthAction]){
     if(!link)continue;
-    link.innerHTML=signedIn?avatarHtml:"Sign in";
-    link.href="/dashboard.html";
-    link.setAttribute("aria-label",signedIn?"Open account for "+name:"Sign in to your account");
+    link.textContent=signedIn?"Sign out":"Sign in";
+    link.href=signedIn?"#signout":"/dashboard.html";
+    link.setAttribute("aria-label",signedIn?"Sign out of your account":"Sign in to your account");
     link.dataset.signedIn=signedIn?"true":"false";
   }
 }
@@ -772,7 +772,7 @@ for(const link of [navAuthAction,menuAuthAction]){
   link?.addEventListener("click",event=>{
     if(!currentUser)return;
     event.preventDefault();
-    showWelcome();
+    void doSignOut();
   });
 }
 syncAuthActions(null);
