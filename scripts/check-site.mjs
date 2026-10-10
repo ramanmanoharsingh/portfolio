@@ -25,7 +25,7 @@ async function walk(dir) {
 
 function localPathFromUrl(raw, sourceFile = join(siteRoot, 'index.html')) {
   const value = raw.trim();
-  if (!value || value.startsWith('#') || /^(?:https?:|mailto:|tel:|data:|javascript:|\\/\\/)/i.test(value)) return null;
+  if (!value || value.startsWith('#') || /^(?:https?:|mailto:|tel:|data:|javascript:|\/\/)/i.test(value)) return null;
   let pathname;
   try {
     const sourceUrl = 'https://site-check.invalid/' + relative(siteRoot, sourceFile).split(sep).join('/');
