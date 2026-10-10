@@ -42,8 +42,7 @@
   };
   const getClient = () => {
     const remember=$('#auth-remember')?.checked!==false;
-    document.cookie='portal_session='+(remember?'0':'1')+'; Path=/; SameSite=Lax; Secure'+(remember?'; Max-Age=31536000':'');
-    document.cookie=remember?'portal_session=; Max-Age=0; Path=/; SameSite=Lax':'portal_session=1; Max-Age=86400; Path=/; SameSite=Lax';
+    document.cookie=remember?'portal_session=; Max-Age=0; Path=/; SameSite=Lax; Secure':'portal_session=1; Max-Age=86400; Path=/; SameSite=Lax; Secure';
     if(typeof window.createPortalSupabaseClient==='function'){state.client=window.createPortalSupabaseClient(remember);return state.client;}
     if(window.supabaseClient)return window.supabaseClient;
     throw new Error('The authentication service did not load. Please refresh and try again.');
@@ -60,6 +59,12 @@
     if(/provider.*not enabled|unsupported provider/i.test(raw))return 'This social sign-in provider is not configured yet. Please use email and password for now.';
     return raw;
   };
+  const safeNextPath = () => {
+    const candidate = new URLSearchParams(location.search).get('next');
+    return candidate && candidate.startsWith('/') && !candidate.startsWith('//') && !candidate.includes('\\') &&
+      !/^\/(?:auth(?:\.html)?|login|reset-password(?:\.html)?|auth-callback(?:\.html)?)(?:[/?#]|$)/i.test(candidate)
+      ? candidate : '/welcome.html';
+  };
   tabs.forEach(tab=>tab.addEventListener('click',()=>setMode(tab.dataset.mode)));
   $('#auth-show-password').addEventListener('click',()=>{const reveal=password.type==='password';password.type=reveal?'text':'password';$('#auth-show-password').textContent=reveal?'Hide':'Show';$('#auth-show-password').setAttribute('aria-pressed',String(reveal));});
   $('#auth-show-confirm').addEventListener('click',()=>{const reveal=confirmPassword.type==='password';confirmPassword.type=reveal?'text':'password';$('#auth-show-confirm').textContent=reveal?'Hide':'Show';});
@@ -67,7 +72,7 @@
   forgotLink.addEventListener('click',event=>{event.preventDefault();setMode('reset');});
   $('#auth-back-login').addEventListener('click',event=>{event.preventDefault();setMode('login');});
   $('#auth-back-home').addEventListener('click',event=>{event.preventDefault();location.href='/';});
-  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
+  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/auth-callback.html',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(state.busy)return;clearMessage();
     const email=$('#auth-email').value.trim(),pass=password.value;
@@ -84,18 +89,23 @@
       if(state.mode==='login'){
         const {data,error}=await client.auth.signInWithPassword({email,password:pass});if(error)throw error;
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
-        showMessage('Signed in successfully. Opening your workspace…','success');location.assign('/#/welcome');
+        showMessage('Signed in successfully. Opening your workspace…','success');location.assign(safeNextPath());
       }else if(state.mode==='signup'){
-        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/'}});if(error)throw error;
-        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign('/welcome');}
+        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/auth-callback.html'}});if(error)throw error;
+        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign(safeNextPath());}
         else{setMode('login');showMessage('Account created. Check your inbox for the email confirmation link, then return here to sign in.','success');}
       }else{
-        const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/'});if(error)throw error;
+        const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/reset-password.html'});if(error)throw error;
         showMessage('If an account exists for that email, a password-reset link will arrive shortly.','success');
       }
     }catch(error){showMessage(humanError(error));}
     finally{setBusy(false,state.mode==='login'?'Sign in to your account':state.mode==='signup'?'Create your account':'Send reset link');}
   });
   $('#auth-email').addEventListener('input',()=>{if(message.dataset.kind==='error')clearMessage();});
+  if(window.supabaseClient?.auth?.getSession){
+    window.supabaseClient.auth.getSession().then(({data,error})=>{
+      if(!error&&data?.session)location.replace(safeNextPath());
+    }).catch(()=>{});
+  }
   setMode(new URLSearchParams(location.search).get('mode') === 'signup' ? 'signup' : 'login');
 })();
