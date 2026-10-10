@@ -11,6 +11,26 @@ Treat this document as the acceptance criteria for the homepage and client enqui
 - Keep section IDs, in-page links, mobile navigation, keyboard navigation, and scroll offsets consistent.
 - Do not duplicate sections or remove existing content.
 
+## Project source links and full catalogue
+
+- The “View all projects and source code” action must open a real `projects.html` catalogue, not redirect back to the homepage.
+- The catalogue must list every showcased project and include working search and category filters.
+- Use verified per-project repository paths for: Plant Disease Detector (`projects/plant-disease-detector`), PlayMatch Sports Network (`projects/playmatch-sports-network`), Titanic Kaggle ML (`projects/titanic-kaggle-ml`), PlayMate Finder (`projects/playmate-finder`), and Python Assignments (`projects/python-assignments`).
+- Do not point projects to unrelated folders or to a generic profile while labeling the action “Open source”.
+- Business Sales Management currently has no dedicated public source folder linked from this portfolio; its link must be clearly labeled as browsing available repositories, not as the exact source.
+- OEMLinker must offer the live website link when available, and must not imply that a dedicated public source repository exists unless one is verified.
+- Keep project details, technology labels, and source links consistent between the homepage project modal and the full catalogue.
+
+## “Request a similar build” enquiry handoff
+
+- The action must pass the chosen project title, summary, technology context, and intended service into the enquiry flow; it must not merely jump to Services or to a blank form.
+- For signed-out visitors, scroll to and prefill the public enquiry form with the inspiration project and service. Leave name and email blank and required so the visitor supplies their own details.
+- Ask for the visitor’s name and email, with optional company/organisation, project goal, audience, scope, budget, deadline, reference links, project details, and a specific “what would you change or add?” field.
+- Preserve the draft in temporary session storage. Include the inspiration project and additional answers in the submitted lead description; do not silently drop the new fields.
+- Selecting “Request a similar build” must not automatically submit anything. The visitor must review and submit the form.
+- For authenticated clients, transfer the inspiration project, summary, selected service and draft into the existing client dashboard proposal modal. Save through the existing `proposals` flow and return to the Project requests tab after a confirmed insert.
+- Keep the client ID session-derived; never accept an arbitrary client ID from URL parameters. Keep admin routing separate.
+
 ## Client-first conversion flow
 
 1. Every “Start a Project” CTA should lead to Services first.
@@ -84,6 +104,11 @@ Treat this document as the acceptance criteria for the homepage and client enqui
 - Validate JavaScript syntax and HTML structure.
 - Check for duplicate IDs and broken internal links.
 - Test desktop and mobile navigation and the requested section order.
+- Open “View all projects and source code” and verify the catalogue is a real page with working search and category filters.
+- Verify each project source link opens its matching existing repository path; confirm the two projects without a dedicated public source do not claim to have one.
+- From each project modal and catalogue card, test “Request a similar build”: the project context and service must carry into the enquiry form, while name/email remain required visitor inputs.
+- Confirm company/organisation and “what would you change or add?” details survive draft preservation and are included in the submitted enquiry.
+- Confirm a signed-in client is sent to the dashboard modal with the project title/summary preserved and is returned to the Project requests tab after a successful save.
 - Test each service selection and custom enquiry for signed-out visitors.
 - Test that a signed-in client is sent Services → client dashboard modal with the exact service preselected; verify the homepage enquiry form is hidden for clients but remains available to signed-out visitors.
 - Test that a signed-in request creates exactly one row in `proposals` with `client_id = auth.uid()`, appears in the Project requests tab after submission, and never creates a duplicate `leads` row.
