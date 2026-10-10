@@ -49,7 +49,7 @@ jobs:
           scripts = re.findall(r'<script\b([^>]*)>([\s\S]*?)</script>', html, re.IGNORECASE)
           checked = 0
           for attributes, source in scripts:
-              module = re.search(r'\btype\s*=\s*["\\']module["\\']', attributes, re.IGNORECASE)
+              module = "type=\"module\"" in attributes.lower()
               command = ["node", "--check", "--input-type=module"] if module else ["node", "--check"]
               result = subprocess.run(command, input=source, text=True, capture_output=True)
               if result.returncode:
