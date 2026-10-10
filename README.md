@@ -29,7 +29,8 @@ Cloudflare Pages route rewrites are defined in `develop-with-raman/_redirects`. 
 - `/admin-portal.html` — administrator workspace for clients, projects, milestones, deliverables, proposals, and invoices.
 - `/profile.html` — account details and security settings.
 - `/reset-password.html` — password reset completion.
-- `/dashboard.html` and `/dashboard` — compatibility routes that forward to the canonical workspace instead of presenting a second login/dashboard implementation.
+- `/dashboard.html` — legacy sign-in URL that forwards to `/auth.html` (or the password-reset completion page for old recovery links).
+- `/dashboard` — compatibility route to the role-aware workspace at `/welcome.html`.
 
 Google and email/password are the current sign-in methods. GitHub and Microsoft/Azure OAuth are intentionally deferred until the Supabase providers and their OAuth credentials/redirect URLs are configured and tested.
 
