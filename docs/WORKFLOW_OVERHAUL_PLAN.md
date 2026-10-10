@@ -2,7 +2,7 @@
 
 **Repository:** `ramanmanoharsingh/portfolio`  
 **Production branch:** `main`  
-**Working branch:** `docs/workflow-overhaul-plan`  
+**Working branch:** `feature/workflow-overhaul`  
 **Application:** Static HTML, CSS, and vanilla JavaScript hosted on Cloudflare Pages; existing Supabase Auth and Postgres backend.
 
 ## Mission
@@ -297,11 +297,40 @@ References consulted:
 - The leads schema includes `project_type`, status, and timestamps, which can support a provisional service-interest view only if its values are confirmed to represent the service categories consistently. Missing or inconsistent historical values must be reported rather than guessed.
 - Project/milestone due dates exist in the current admin code and can support an initial deadline view. A full timesheet or time-entry feature is not yet supported by evidence of an existing time-entry schema.
 
+
+## Delivery priorities, weights, and acceptance measurements
+
+Use a 100-point priority score to keep implementation ordered by client impact, workflow criticality, and security risk. Scores are planning weights, not measured user analytics.
+
+| Priority | Workstream | Weight | Why this order | Acceptance measurement |
+|---|---|---:|---|---|
+| P0 | Preserve authentication and role routing | 25/100 | Every protected client/admin workflow depends on it | Client login reaches client workspace; admin login reaches admin portal; signed-out protected routes return to sign-in; safe local return paths still work |
+| P0 | Client homepage continuity | 15/100 | Clients should not feel separated from the public portfolio | Authenticated header retains profile/avatar, exposes a client-only dashboard/updates shortcut, and sign-out restores visitor controls |
+| P1 | Client request lifecycle and activity centre | 25/100 | The client needs visibility after submitting an enquiry | Request and project activity comes from the signed-in user's Supabase records; each update opens the correct dashboard section; empty/loading/error states remain usable |
+| P1 | Client dashboard usability and account controls | 15/100 | Clients need one clear place to see projects, milestones, deliverables, and billing | Mobile/desktop layout remains usable; no duplicate submission; request form preserves intended service/project context |
+| P1 | Supabase data permissions and privacy audit | 15/100 | UI role checks alone are not authorization | Inspect actual schema and RLS policies; verify one client cannot read or update another client's records; do not weaken policies as a workaround |
+| P2 | Admin operational overview and graphs | 5/100 | Build after client events and underlying data definitions are reliable | Graphs use verified database fields and display empty/error states; metrics reconcile to source queries |
+
+### Release gates
+
+1. **Static validation:** parse every edited JavaScript file and inspect changed HTML/CSS for broken selectors, missing panel IDs, and inaccessible controls.
+2. **Journey validation:** test anonymous enquiry, client sign-in, request submission, request status visibility, dashboard navigation, admin sign-in, and sign-out.
+3. **Authorization validation:** verify the same flows with separate client and admin accounts; check database RLS rather than relying on hidden UI.
+4. **Regression validation:** check desktop and mobile navigation, existing project pages, profile editing, billing, milestones, and the public contact form.
+5. **Release validation:** merge only after the above pass, then verify Cloudflare Pages deployment and the live site. A commit is not proof of deployment.
+
+### Implementation note
+
+The first client activity centre derives its items from existing, authenticated Supabase project/request/milestone/deliverable/invoice records, so it does not invent notifications or require a speculative schema migration. Its initial read/unread marker is browser-local. Durable cross-device notifications and email delivery should follow only after the notifications table, event triggers, and RLS policies are confirmed and reviewed.
+
 ### Updated task status
 
 - [x] Add expanded three-workstream scope to this plan.
 - [x] Make and verify the focused “Request similar” route change on the feature branch.
 - [x] Identify the existing public enquiry path and the protected client proposal path.
+- [x] Add a client-only updates shortcut to the main-site authenticated header and correct admin header routing.
+- [x] Add a dashboard Updates panel derived from the client's existing requests, projects, milestones, deliverables, and invoices.
+- [x] Make homepage/dashboard update links open the requested dashboard section; syntax-validate the edited client portal script.
 - [ ] Verify service enquiry handling end-to-end.
 - [ ] Complete live schema/RLS audit before adding feedback storage or changing admin data access.
 - [ ] Add admin project overview, service analytics, and time-management views using verified fields.
