@@ -406,8 +406,9 @@ const openP=c=>{
  const p=P[c.dataset.i],d=$('#dg'),info=PROJECT_LINKS[p[1]]||{source:'https://github.com/ramanmanoharsingh?tab=repositories',label:'Browse available repositories ↗',service:'Something else'};
  const summary=[p[3],p[4],'Technology: '+p[5]].join(' ');
  const liveAction=info.live?'<a class="btn s" href="'+info.live+'" target="_blank" rel="noopener noreferrer" style="color:var(--ink)">View live website ↗</a>':'';
- d.innerHTML='<h2 id="dt">'+esc(p[1])+'</h2><p><b>Problem.</b> '+esc(p[3])+'</p><p><b>Solution.</b> '+esc(p[4])+'</p><p><b>Outcome.</b> '+esc(p[6])+'</p><p class="cap">'+esc(p[5])+'</p><div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap"><a class="btn" href="'+info.source+'" target="_blank" rel="noopener noreferrer" style="color:var(--canvas)">'+info.label+'</a>'+liveAction+'<button class="btn s" type="button" data-request-similar data-project-title="'+esc(p[1])+'" data-project-service="'+esc(info.service)+'" data-project-summary="'+esc(summary)+'">Request a similar build ↗</button><button class="btn s" type="button" onclick="this.closest(\\'dialog\\').close()">Close</button></div>';
+ d.innerHTML='<h2 id="dt">'+esc(p[1])+'</h2><p><b>Problem.</b> '+esc(p[3])+'</p><p><b>Solution.</b> '+esc(p[4])+'</p><p><b>Outcome.</b> '+esc(p[6])+'</p><p class="cap">'+esc(p[5])+'</p><div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap"><a class="btn" href="'+info.source+'" target="_blank" rel="noopener noreferrer" style="color:var(--canvas)">'+info.label+'</a>'+liveAction+'<button class="btn s" type="button" data-request-similar data-project-title="'+esc(p[1])+'" data-project-service="'+esc(info.service)+'" data-project-summary="'+esc(summary)+'">Request a similar build ↗</button><button class="btn s" type="button" data-close-project-dialog>Close</button></div>';
  d.showModal();
+ d.querySelector('[data-close-project-dialog]')?.addEventListener('click',()=>d.close());
 };
 $('#pg').onclick=e=>{const c=e.target.closest('.pj');if(c)openP(c)};
 $('#pg').onkeydown=e=>{if(e.key!=='Enter'&&e.key!==' ')return;const c=e.target.closest('.pj');if(c){e.preventDefault();openP(c)}};
