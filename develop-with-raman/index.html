@@ -400,6 +400,39 @@ form?.addEventListener("submit",async ev=>{
  }catch(err){console.error("Project request submission failed",err);status.textContent="We could not submit your request just now. Please check your connection and try again; your details have not been confirmed as sent.";}
  finally{button.disabled=false;button.textContent="Submit project request ↗";}
 });
+
+// Keep the main-site account action in sync with the persisted Supabase session.
+// Returning from either portal should show Sign out while the visitor is authenticated.
+const accountAction=document.querySelector(".top-action");
+if(accountAction){
+ const signedOutLabel=accountAction.textContent.trim()||"Sign in";
+ const syncAccountAction=session=>{
+  const signedIn=Boolean(session?.user);
+  accountAction.textContent=signedIn?"Sign out":signedOutLabel;
+  accountAction.setAttribute("aria-label",signedIn?"Sign out of your account":"Sign in to your dashboard");
+  accountAction.dataset.authenticated=String(signedIn);
+  accountAction.removeAttribute("aria-disabled");
+ };
+ client.auth.getSession().then(({data,error})=>{
+  if(error)console.warn("Could not restore main-site auth state:",error);
+  syncAccountAction(data?.session||null);
+ }).catch(error=>console.warn("Could not restore main-site auth state:",error));
+ client.auth.onAuthStateChange((_event,session)=>syncAccountAction(session));
+ accountAction.addEventListener("click",async event=>{
+  if(accountAction.dataset.authenticated!=="true")return;
+  event.preventDefault();
+  accountAction.textContent="Signing out…";
+  accountAction.setAttribute("aria-disabled","true");
+  const {error}=await client.auth.signOut();
+  if(error){
+   console.error("Sign out failed:",error);
+   accountAction.textContent="Sign out";
+   accountAction.removeAttribute("aria-disabled");
+   return;
+  }
+  syncAccountAction(null);
+ });
+}
 </script>
 
 </body></html>
