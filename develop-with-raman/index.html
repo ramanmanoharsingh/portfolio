@@ -590,7 +590,12 @@ header.top nav{
 <details><summary>Can a student handle client work?</summary><p>Yes, at a scale that fits. I prototype first so you see progress before committing.</p></details>
 <details><summary>How long does a build take?</summary><p>A landing page takes 3–5 days; larger builds take 2–3 weeks.</p></details>
 <details><summary>Do I own the result?</summary><p>Yes. You receive the full source and a handoff walkthrough.</p></details>
-<details><summary>How does hiring work?</summary><p>Send an enquiry, discuss goals and deliverables, review a written scope and quote, then confirm the timeline. Work starts only after you approve the scope and the agreed initial payment. You review the agreed milestones before final handoff.</p></details><details><summary>What payment methods are available?</summary><p>UPI, bank transfer, or a secure payment link can be agreed after the scope is approved. This site does not take payment directly. You receive the written scope and exact amount before paying.</p></details><details><summary>When can I hire you?</summary><p>You can send an enquiry any time. I will confirm availability and response timing before accepting the project; a start date is agreed together.</p></details></div></section>
+<details><summary>How does hiring work?</summary><p>Send an enquiry, discuss goals and deliverables, review a written scope and quote, then confirm the timeline. Work starts only after you approve the scope and the agreed initial payment. You review the agreed milestones before final handoff.</p></details><details><summary>What payment methods are available?</summary><p>UPI, bank transfer, or a secure payment link can be agreed after the scope is approved. This site does not take payment directly. You receive the written scope and exact amount before paying.</p></details><details><summary>When can I hire you?</summary><p>You can send an enquiry any time. I will confirm availability and response timing before accepting the project; a start date is agreed together.</p></details>
+<div class="res" id="public-questions"><div class="eb">Community questions</div><h3 class="ch">Questions &amp; answers</h3><p class="cap">Questions are reviewed before an answer is published here.</p><div id="public-questions-list" aria-live="polite"><p class="cap">Loading published answers…</p></div></div>
+<form id="public-question-form" class="public-feedback-form"><div class="eb">Ask a question</div><div class="fl"><label for="public-question-text">Your question</label><textarea id="public-question-text" name="question" rows="3" minlength="5" maxlength="3000" required></textarea></div><div class="fl"><label for="public-question-email">Email for a reply (optional)</label><input id="public-question-email" name="email" type="email" maxlength="254" autocomplete="email"></div><div class="hp-field" aria-hidden="true"><label for="question-website">Leave this field blank</label><input id="question-website" name="website" tabindex="-1" autocomplete="off"></div><button class="btn" type="submit">Send question ↗</button><p class="fine" id="public-question-status" role="status" aria-live="polite"></p></form>
+<div class="res" id="public-testimonials"><div class="eb">Client feedback</div><h3 class="ch">Feedback shared with permission</h3><div id="public-testimonials-list" aria-live="polite"><p class="cap">Loading approved feedback…</p></div></div>
+<form id="public-feedback-form" class="public-feedback-form"><div class="eb">Leave feedback</div><div class="fl"><label for="public-feedback-rating">Rating</label><select id="public-feedback-rating" name="rating" required><option value="5">5 — Excellent</option><option value="4">4 — Very good</option><option value="3">3 — Good</option><option value="2">2 — Could be better</option><option value="1">1 — Needs improvement</option></select></div><div class="fl"><label for="public-feedback-service">Service (optional)</label><input id="public-feedback-service" name="service" maxlength="180" placeholder="Website, automation, or other service"></div><div class="fl"><label for="public-feedback-name">Display name (optional)</label><input id="public-feedback-name" name="display_name" maxlength="120" autocomplete="name"></div><div class="fl"><label for="public-feedback-text">Your feedback</label><textarea id="public-feedback-text" name="text" rows="3" maxlength="4000" required></textarea></div><div class="hp-field" aria-hidden="true"><label for="feedback-website">Leave this field blank</label><input id="feedback-website" name="website" tabindex="-1" autocomplete="off"></div><button class="btn s" type="submit">Submit feedback ↗</button><p class="fine" id="public-feedback-status" role="status" aria-live="polite"></p><p class="cap">Feedback stays private unless it is reviewed and approved for public display.</p></form>
+</div></section>
 
 <section class="sec contact" id="contact"><div class="c two" style="align-items:start"><div><div class="eb">Contact</div><h2>Let’s build something real.</h2><p class="lead" style="margin:16px 0 32px">Tell me the goal and I’ll reply within 24 hours.</p>
 <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn s" href="mailto:ramanmanoharsingh@gmail.com">Email directly</a><a class="btn" href="#account">Client portal</a></div>
@@ -988,6 +993,37 @@ async function submitLead(ev){
   }catch(err){setStatus(err?.message||"Could not submit enquiry. Please try again shortly.","error");}
   finally{button.disabled=false;button.textContent="Submit enquiry";}
 }
+
+async function loadPublicQuestions(){
+ const box=$id("public-questions-list");if(!box||!supabase)return;
+ try{const {data,error}=await supabase.from("questions").select("id,question,answer,answered_at").eq("published",true).not("answer","is",null).order("answered_at",{ascending:false}).limit(20);if(error)throw error;
+ box.innerHTML=data?.length?data.map(q=>'<details><summary>'+safe(q.question)+'</summary><p>'+safe(q.answer)+'</p><p class="cap">Answered '+safe(dateText(q.answered_at))+'</p></details>').join(''):'<p class="cap">No published answers yet. Send a question and it may be answered here.</p>';
+ }catch(error){box.innerHTML='<p class="cap">Published answers are temporarily unavailable.</p>';console.warn('[public questions]',error.message);}
+}
+async function loadApprovedTestimonials(){
+ const box=$id("public-testimonials-list");if(!box||!supabase)return;
+ try{const {data,error}=await supabase.from("feedback").select("id,rating,text,service,display_name,created_at").eq("approved",true).order("created_at",{ascending:false}).limit(6);if(error)throw error;
+ box.innerHTML=data?.length?data.map(f=>'<article class="request-row"><div><strong>'+safe('★'.repeat(Math.max(1,Math.min(5,Number(f.rating)||1)))+' · '+(f.display_name||'Client feedback'))+'</strong><span>'+safe(f.service||'General feedback')+'</span><p>'+safe(f.text)+'</p></div></article>').join(''):'<p class="cap">No public testimonials yet. Feedback appears here only after approval.</p>';
+ }catch(error){box.innerHTML='<p class="cap">Approved feedback is temporarily unavailable.</p>';console.warn('[public feedback]',error.message);}
+}
+async function submitPublicIntake(form,kind,payload,statusId,successMessage){
+ const status=$id(statusId),button=form.querySelector('button[type="submit"]');
+ if(!supabase){if(status)status.textContent='The secure submission service is unavailable. Please try again later.';return;}
+ button.disabled=true;const old=button.textContent;button.textContent='Sending…';if(status)status.textContent='Sending securely…';
+ try{const {data,error}=await supabase.functions.invoke('public-intake',{body:{...payload,kind}});if(error){let detail=error.message||'Please try again.';try{const body=await error.context?.json();if(body?.error)detail=body.error;}catch{}throw new Error(detail);}if(data?.ok!==true)throw new Error(data?.error||'Submission could not be saved. Please try again.');
+ form.reset();if(status)status.textContent=successMessage;
+ }catch(error){if(status)status.textContent=error?.message||'Submission failed. Please try again.';}
+ finally{button.disabled=false;button.textContent=old;}
+}
+$id("public-question-form")?.addEventListener("submit",async event=>{
+ event.preventDefault();const form=event.currentTarget;
+ await submitPublicIntake(form,"question",{website:$id("question-website").value,question:$id("public-question-text").value.trim(),email:$id("public-question-email").value.trim()},"public-question-status","Question submitted. Raman will review it before any answer is published.");
+});
+$id("public-feedback-form")?.addEventListener("submit",async event=>{
+ event.preventDefault();const form=event.currentTarget;
+ await submitPublicIntake(form,"feedback",{website:$id("feedback-website").value,rating:Number($id("public-feedback-rating").value),service:$id("public-feedback-service").value.trim(),display_name:$id("public-feedback-name").value.trim(),text:$id("public-feedback-text").value.trim()},"public-feedback-status","Feedback submitted for review. It will remain private unless approved.");
+});
+
 async function loadUser(user,{scrollToLogin=false,landing="welcome"}={}){
   const seq=++authLoadSequence;
   clearDash();currentUser=user;currentProfile=null;syncAuthActions(user);
@@ -1017,7 +1053,7 @@ async function loadUser(user,{scrollToLogin=false,landing="welcome"}={}){
   else if(allowedLanding==="profile")openProfile();
   else showWelcome();
 }
-if(configReady){const sessionOnly=document.cookie.split(';').some(c=>c.trim()==='portal_session=1');supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{storage:sessionOnly?sessionStorage:localStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});supabase.auth.onAuthStateChange((event,session)=>{
+if(configReady){const sessionOnly=document.cookie.split(';').some(c=>c.trim()==='portal_session=1');supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{storage:sessionOnly?sessionStorage:localStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});void loadPublicQuestions();void loadApprovedTestimonials();supabase.auth.onAuthStateChange((event,session)=>{
   const user=session?.user||null;
   if(event==="TOKEN_REFRESHED"&&user&&currentUser?.id===user.id){currentUser=user;syncAuthActions(user);return;}
   if(user&&currentUser?.id===user.id&&(currentProfile||profileResolvingUserId===user.id)){currentUser=user;syncAuthActions(user);return;}
