@@ -5,13 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const fail=(heading,detail)=>{title.textContent=heading;message.textContent=detail;action.hidden=false;};
   const params=new URLSearchParams(location.search);
   const hash=new URLSearchParams(location.hash.replace(/^#/,''));
-  const safeNextPath=()=>{
-    const candidate=params.get('next');
-    return candidate && candidate.startsWith('/') && !candidate.startsWith('//') && !candidate.includes('\\') &&
-      !/^\/(?:auth(?:\.html)?|login|reset-password(?:\.html)?|auth-callback(?:\.html)?)(?:[/?#]|$)/i.test(candidate)
-      ? candidate : '/welcome.html';
-  };
-
   const error=params.get('error_description')||params.get('error')||hash.get('error_description')||hash.get('error');
   if(error){
     const code=params.get('error_code')||hash.get('error_code')||'';
@@ -28,6 +21,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(!data.session){fail('No active session found','The sign-in link may have expired or the provider may not be configured. Return to sign in and try again.');return;}
     title.textContent='You’re signed in';
     message.textContent='Taking you to your workspace…';
-    location.replace(safeNextPath());
+    location.replace('/welcome.html');
   }catch(err){fail('Could not verify your session',err?.message||'Please return to sign in and try again.');}
 });
