@@ -72,3 +72,11 @@ The app uses root-relative paths such as `/auth.html` and `/client-dashboard.htm
 - The client and project identifiers use UUIDs because they reference Supabase Auth users and existing foreign keys. UUIDs are fixed-size 16-byte values; changing them to shorter IDs would require broad schema and relationship changes for negligible savings and is not recommended.
 - Keep project lists bounded and select only columns the UI needs. Avoid storing duplicate client profile fields in project tables, but retain foreign keys such as `client_id` on invoices and proposals because they support access control and efficient filtering.
 - Before removing indexes, review real query plans and usage over time. An index can show zero use on a small/new project while still protecting future queries.
+
+
+## Email verification and invitation delivery
+
+- Client workspaces are invitation-only. The legacy dashboard sign-in now no longer offers public account creation; use the invitation flow after a project is accepted.
+- Confirmation/invitation links should return to `https://ramans.pages.dev/auth-callback.html`; password recovery should return to `https://ramans.pages.dev/reset-password.html`. Add these exact URLs to Supabase Authentication → URL Configuration (redirect allow list) and ensure the project Site URL is `https://ramans.pages.dev`.
+- Supabase's default mail service is restricted and intended for testing. For reliable delivery to client addresses, configure a custom SMTP provider in Supabase Authentication → SMTP Settings. Use `developwithraman@gmail.com` as the sender only after the provider has verified/authorized it. Gmail SMTP may be used with a Google App Password if enabled on the account, but a transactional email provider is generally more appropriate; never commit SMTP passwords or provider API keys to this repository.
+- Check Supabase Authentication logs for `mail.send` events and delivery errors. A logged send attempt does not guarantee inbox delivery; also check spam and the provider's delivery logs.
