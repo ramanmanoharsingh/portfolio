@@ -83,3 +83,6 @@
 .client-update-unread{width:8px;height:8px;flex:none;border-radius:50%;background:currentColor}
 [data-mark-updates-read]{white-space:nowrap}
 @media(max-width:650px){.client-update-row{gap:10px;padding:13px 0}.client-update-icon{width:32px;height:32px}.client-update-copy strong{font-size:12px}}
+
+/* Admin workspace quick actions */
+.portal-header-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}.portal-header-actions .muted{font-size:12px}.portal-nav-button{width:100%;text-align:left;padding:12px 14px;border:0;border-radius:12px;background:transparent;color:#696a65;font:inherit;font-size:14px;cursor:pointer}.portal-nav-button:hover{background:#f1f2ed;color:#151515}.portal-nav-button span{display:inline-block;width:26px}@media(max-width:760px){.portal-header-actions{align-items:flex-start;gap:8px}.portal-header-actions .button{min-height:40px}}
