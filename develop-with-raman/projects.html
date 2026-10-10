@@ -191,16 +191,15 @@
       }));
       search.addEventListener('input', render);
       document.querySelectorAll('[data-request-similar]').forEach(button => button.addEventListener('click', () => {
-        // Send every visitor through the same authenticated proposal flow. The dashboard
-        // validates the current Supabase session and preserves this context through sign-in.
+        // Reuse the main site's existing request handler. It routes signed-in clients
+        // to their proposal form and lets anonymous visitors use the public enquiry form.
         const params = new URLSearchParams({
           request: '1',
           project: button.dataset.projectTitle || 'Selected project',
           service: button.dataset.projectService || 'Something else',
-          summary: button.dataset.projectSummary || '',
-          title: 'Build inspired by ' + (button.dataset.projectTitle || 'this project')
+          summary: button.dataset.projectSummary || ''
         });
-        location.assign('/client-dashboard.html?' + params.toString() + '#requests');
+        location.assign('/?' + params.toString() + '#contact');
       }));
       render();
     })();
