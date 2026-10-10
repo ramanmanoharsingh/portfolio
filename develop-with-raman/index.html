@@ -447,7 +447,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.117.1";
 const client=createClient("https://nmqntqxvficakxkticxc.supabase.co","sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const form=document.getElementById("f"),status=document.getElementById("request-status"),service=document.getElementById("t");
 const requestAccountLink=document.getElementById("request-account-link");
-const params=new URLSearchParams(location.search);const fromQuery=params.get("service");if(fromQuery&&service&&[...service.options].some(o=>o.value===fromQuery))service.value=fromQuery;\n// Keep the primary CTA service-first; after a service is chosen, its card links to the enquiry form.\nif(params.get("flow")==="services"){const target=document.getElementById("services");if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}));}
+const params=new URLSearchParams(location.search);const fromQuery=params.get("service");if(fromQuery&&service&&[...service.options].some(o=>o.value===fromQuery))service.value=fromQuery;
+// Keep the primary CTA service-first; after a service is chosen, its card links to the enquiry form.
+if(params.get("flow")==="services"){const target=document.getElementById("services");if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}));}
 form?.addEventListener("submit",async ev=>{
  ev.preventDefault();if(!form.reportValidity())return;const button=document.getElementById("sd");button.disabled=true;button.textContent="Submitting…";status.textContent="Sending your request securely…";
  try{
