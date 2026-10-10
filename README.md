@@ -52,6 +52,12 @@ The connected database currently has both `public.enquiries` and `public.leads`,
 
 The current database audit found row-level security enabled on every table in the `public` schema. Admin access is checked through the private `private.is_admin()` helper and profile role, while client reads are scoped by user/project ownership. The Supabase advisors still report policy-overlap and unused-index notices; review these against actual policy predicates and query history before changing production policies or removing indexes.
 
+## Database migrations
+
+Reviewed schema changes are tracked under `supabase/migrations/`. The latest additive migration, `20261010080526_enforce_portal_data_integrity.sql`, is applied to the connected Supabase project. It enforces that an invoice's selected project belongs to the same client and adds database constraints for project/milestone progress (0–100), non-negative invoice amounts, and non-negative optional proposal budgets. The preflight audit found no existing rows that violate these rules.
+
+Keep the migration filename/version aligned with the Supabase migration history. Do not replay the initial setup SQL against production or make schema changes outside reviewed migrations.
+
 ## Deployment
 
 Cloudflare Pages should deploy the `develop-with-raman/` directory as the site root, with no framework build command required for the static HTML/CSS/JavaScript site. Confirm the Pages project’s configured root directory and production branch before changing deployment settings.
