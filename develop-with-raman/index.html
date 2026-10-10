@@ -521,7 +521,7 @@ if(accountAction){
   if(error)console.warn("Could not restore main-site auth state:",error);
   syncAccountAction(data?.session||null);
  }).catch(error=>console.warn("Could not restore main-site auth state:",error));
- client.auth.onAuthStateChange((_event,session)=>{syncAccountAction(session);});
+ client.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>syncAccountAction(session),0);});
  accountAction.addEventListener("click",async event=>{
   if(accountAction.dataset.authenticated!=="true")return;
   event.preventDefault();
