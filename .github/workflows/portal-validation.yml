@@ -36,6 +36,31 @@ jobs:
             node --check "$file"
           done < <(find develop-with-raman -type f -name '*.js' -print0)
 
+      - name: Syntax-check inline scripts in homepage HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          import subprocess
+          from pathlib import Path
+
+          html = Path("develop-with-raman/index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r'<script\\b([^>]*)>([\\s\\S]*?)</script>', html, re.IGNORECASE)
+          checked = 0
+          for attributes, source in scripts:
+              module = re.search(r'\\btype\\s*=\\s*["\\']module["\\']', attributes, re.IGNORECASE)
+              command = ["node", "--check", "--input-type=module"] if module else ["node", "--check"]
+              result = subprocess.run(command, input=source, text=True, capture_output=True)
+              if result.returncode:
+                  print(result.stderr)
+                  raise SystemExit(result.returncode)
+              checked += 1
+          if not checked:
+              raise SystemExit("No inline scripts found in homepage HTML")
+          print(f"Syntax-checked {checked} inline homepage script(s).")
+          PY
+
       - name: Validate client dashboard update hooks
         shell: bash
         run: |
