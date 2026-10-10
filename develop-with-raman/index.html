@@ -492,11 +492,20 @@ if(accountAction){
   }else avatar.textContent=initials(name);
  };
  let activeUserId="";
+ let servicesFlowHandled=false;
+ const focusServicesForFlow=session=>{
+  if(servicesFlowHandled||new URLSearchParams(location.search).get("flow")!=="services"||!session?.user?.id)return;
+  servicesFlowHandled=true;
+  const target=document.getElementById("services");
+  if(target)target.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});
+  history.replaceState(null,"",location.pathname+location.hash);
+ };
  const syncAccountAction=async session=>{
   const user=session?.user||null;
   const signedIn=Boolean(user?.id);
+  if(signedIn)focusServicesForFlow(session);
   if(!signedIn){
-   if(requestAccountLink){requestAccountLink.href="/dashboard.html";requestAccountLink.textContent="Sign in / client dashboard ↗";}
+   if(requestAccountLink){requestAccountLink.href="/dashboard.html?next=services";requestAccountLink.textContent="Sign in / client dashboard ↗";}
    activeUserId="";
    identityLink.hidden=true;
    identityName.textContent="";
