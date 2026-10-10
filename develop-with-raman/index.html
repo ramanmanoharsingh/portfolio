@@ -389,10 +389,10 @@ $('#b').innerHTML=['Not sure yet','Under ₹5,000','₹5,000–₹15,000','₹15
 $('#sg').addEventListener('click',e=>{const btn=e.target.closest('[data-service]');if(!btn)return;$('#t').value=btn.dataset.service;$('#project-request').scrollIntoView({behavior:rm?'auto':'smooth',block:'start'});setTimeout(()=>$('#n').focus({preventScroll:true}),350);});
 const V={
  n:v=>v.trim().length>1||'Please enter your name.',
- e:v=>/^\\S+@\\S+\\.\\S+$/.test(v)||'Please enter a valid email address.',
+ e:v=>/^\S+@\S+\.\S+$/.test(v)||'Please enter a valid email address.',
  t:v=>Boolean(v)||'Choose a service.',
  m:v=>v.trim().length>=15||'Please describe the project in at least 15 characters.',
- w:v=>!v.trim()||/^[+\\d][\\d\\s()-]{7,}$/.test(v.trim())||'Please enter a valid phone number.'
+ w:v=>!v.trim()||/^[+\d][\d\s()-]{7,}$/.test(v.trim())||'Please enter a valid phone number.'
 };
 const EM='ramanmanoharsingh@gmail.com',WA='917595974769';
 const setRequestStatus=(message,kind='')=>{const e=$('#request-status');e.textContent=message;e.className='request-status'+(kind?' '+kind:'');};
