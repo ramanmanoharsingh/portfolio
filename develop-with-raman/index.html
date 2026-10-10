@@ -401,23 +401,5 @@ form?.addEventListener("submit",async ev=>{
  finally{button.disabled=false;button.textContent="Submit project request ↗";}
 });
 </script>
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.117.1";
-const client=createClient("https://nmqntqxvficakxkticxc.supabase.co","sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const form=document.getElementById("f"),status=document.getElementById("request-status"),service=document.getElementById("t");
-const fromQuery=new URLSearchParams(location.search).get("service");if(fromQuery&&service&&[...service.options].some(o=>o.value===fromQuery))service.value=fromQuery;
-form?.addEventListener("submit",async ev=>{
- ev.preventDefault();if(!form.reportValidity())return;const button=document.getElementById("sd");button.disabled=true;button.textContent="Submitting…";status.textContent="Sending your request securely…";
- try{
-  const {data,error:sessionError}=await client.auth.getSession();if(sessionError)throw sessionError;const session=data?.session||null;
-  const name=document.getElementById("n").value.trim(),email=document.getElementById("e").value.trim(),details=document.getElementById("m").value.trim();
-  const description=["Project goal: "+(document.getElementById("goal").value.trim()||"Not specified"),"Target audience: "+(document.getElementById("audience").value.trim()||"Not specified"),"Pages / features / deliverables: "+(document.getElementById("scope").value.trim()||"Not specified"),"Reference links: "+(document.getElementById("reference").value.trim()||"None provided"),"","Project details:",details].join("\n");
-  const payload={name,email,project_type:service.value||"Something else",budget_range:document.getElementById("b").value||null,deadline:document.getElementById("d").value||null,description,status:"New",user_id:session?.user?.id||null,client_email:session?.user?.email||email};
-  const {error}=await client.from("leads").insert(payload);if(error)throw error;form.reset();
-  status.textContent=session?.user?"Request received. It is now in the admin review queue and linked to your client account.":"Request received. It is now in the admin review queue. If accepted, it can be linked to your invited client workspace.";
-  if(session?.user){const link=document.createElement("a");link.href="/dashboard.html#enquiries";link.textContent="View your workspace →";status.appendChild(link);}
- }catch(err){console.error("Project request submission failed",err);status.textContent="We could not submit your request just now. Please check your connection and try again; your details have not been confirmed as sent.";}
- finally{button.disabled=false;button.textContent="Submit project request ↗";}
-});
-</script>
+
 </body></html>
