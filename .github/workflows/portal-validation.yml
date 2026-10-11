@@ -103,11 +103,10 @@ jobs:
           print("Client request modal initializes before dashboard data queries.")
           PY
           grep -q "function setupProposalModal(sb,user)" develop-with-raman/client-portal.js
-          grep -q "We could not verify your sign-in state" develop-with-raman/index.html
-          grep -Fq 'document.getElementById("sg")?.addEventListener("click"' develop-with-raman/index.html
-          grep -Fq "const sessionMode=document.cookie.split(';').some(c=>c.trim()==='portal_session=1')" develop-with-raman/index.html
-          grep -Fq 'storage:sessionMode?window.sessionStorage:window.localStorage' develop-with-raman/index.html
-          echo "Homepage and portal use the same remember-me session storage mode."
+          grep -q "safeNextPath" develop-with-raman/auth-manager.js
+          grep -q "signInWithPassword" develop-with-raman/auth-manager.js
+          grep -q "signInWithOAuth" develop-with-raman/auth-manager.js
+          echo "Current auth controller preserves safe redirects and email/social sign-in."
           # Client dashboard data sources fail independently so optional tables cannot blank the whole portal.
           python3 - <<'PY'
           from pathlib import Path
