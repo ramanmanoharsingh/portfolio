@@ -119,7 +119,7 @@ jobs:
           catch_block = helper[catch_at:]
           if "throw error;" not in catch_block or "return true;" in catch_block:
               raise SystemExit("Unverified roles must not be treated as clients.")
-          if "Could not verify your sign-in state. Your request has not been submitted" not in homepage:
+          if "We could not verify your sign-in state. Your request has not been submitted" not in homepage:
               raise SystemExit("Service-selection errors must tell users the request was not submitted.")
           if "We could not check your account just now." not in homepage:
               raise SystemExit("Similar-project handoff errors need a recoverable status message.")
