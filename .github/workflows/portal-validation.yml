@@ -92,7 +92,12 @@ jobs:
           from pathlib import Path
           source = Path("develop-with-raman/client-portal.js").read_text(encoding="utf-8")
           modal = source.find("setupProposalModal(sb,user);")
-          projects = source.find("const {data:projects,error:projectError}")
+          project_markers = [
+              source.find("const {data:projects,error:projectError}"),
+              source.find("const projects=await queryRows('projects'"),
+          ]
+          project_markers = [position for position in project_markers if position >= 0]
+          projects = min(project_markers) if project_markers else -1
           if modal < 0 or projects < 0 or modal > projects:
               raise SystemExit("Client request modal must initialize before dashboard project queries.")
           print("Client request modal initializes before dashboard data queries.")
