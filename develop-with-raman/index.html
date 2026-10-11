@@ -589,7 +589,11 @@ document.getElementById('sg').addEventListener('click',async ev=>{
    location.assign("/client-dashboard.html?request=1&service="+encodeURIComponent(selectedService));
    return;
   }
- }catch(error){console.warn("Could not resolve sign-in state before opening a service request:",error);}
+ }catch(error){
+  console.warn("Could not resolve sign-in state before opening a service request:",error);
+  if(status)status.textContent="We could not verify your sign-in state. Your request has not been submitted; please refresh and try again.";
+  return;
+ }
  // Route admins and signed-out visitors through the public enquiry form with the selected service preserved.
  try{history.replaceState(null,"",location.pathname+"#request");}catch(_e){}
  const reqTarget=document.getElementById("request");
