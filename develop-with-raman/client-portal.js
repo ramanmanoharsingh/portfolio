@@ -40,6 +40,8 @@
     $('#password-change-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const password=form.elements.new_password.value;if(password.length<8){toast('Password must contain at least 8 characters.',true);return;}const {error}=await sb.auth.updateUser({password});if(error)toast(error.message,true);else{form.reset();toast('Password updated.');}});
   }
   async function setupDashboard(sb,user,profile){
+    // Keep project intake available even if an unrelated dashboard data query fails.
+    setupProposalModal(sb,user);
     const root=$('[data-page="dashboard"]');
     const load=async(table,select,order='created_at')=>{const r=await sb.from(table).select(select).order(order,{ascending:false}).limit(100);if(r.error)throw r.error;return r.data||[];};
     const {data:projects,error:projectError}=await sb.from('projects').select('id,title,description,service_type,status,progress,due_date,live_url,updated_at').eq('client_id',user.id).order('updated_at',{ascending:false}).limit(100);if(projectError)throw projectError;
@@ -111,6 +113,9 @@
     document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-dashboard-tab]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('[data-dashboard-panel]').forEach(p=>p.hidden=p.dataset.dashboardPanel!==b.dataset.dashboardTab);}));
     const initialPanel=location.hash==='#notifications'?'notifications':location.hash==='#requests'?'requests':location.hash==='#billing'?'billing':location.hash==='#projects'?'projects':'';
     if(initialPanel)$('[data-dashboard-tab="'+initialPanel+'"]')?.click();
+  }
+
+  function setupProposalModal(sb,user){
     const modal=$('#proposal-modal');
     const proposalForm=$('#proposal-form');
     document.querySelectorAll('[data-open-proposal]').forEach(b=>b.addEventListener('click',()=>{
