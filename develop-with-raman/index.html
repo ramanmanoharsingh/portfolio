@@ -480,7 +480,7 @@ addEventListener('pointerup',()=>{if(d){d=null;r.classList.remove('dr')}});
 r.addEventListener('dragstart',e=>e.preventDefault())})();
 </script><script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.117.1";
-const sessionMode=document.cookie.split(";").some(cookie=>cookie.trim()==="portal_session=1");
+const sessionMode=document.cookie.split(';').some(c=>c.trim()==='portal_session=1');
 const client=createClient("https://nmqntqxvficakxkticxc.supabase.co","sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:sessionMode?window.sessionStorage:window.localStorage}});
 window.__dwrSupabaseClient=client;
 const form=document.getElementById("f"),status=document.getElementById("request-status"),service=document.getElementById("t");
