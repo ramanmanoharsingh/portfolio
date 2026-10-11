@@ -21,9 +21,9 @@
 /* Workspace-preview additions: use the existing dashboard design tokens and components. */
 .btn{border-radius:999px!important;font-family:"Space Grotesk","DM Sans",sans-serif!important;letter-spacing:-.015em}
 .btn.primary,.btn:not(.light):not(.soft):not(.danger){background:var(--dark);border-color:var(--dark);color:#fff}
-.btn.accent{background:var(--accent);border-color:var(--accent);color:#111}
+.btn.accent:not(.light):not(.soft):not(.danger){background:var(--accent);border-color:var(--accent);color:#111}
 .btn:hover{transform:translateY(-1px);opacity:.92}
-.preview-label{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:#ebf7d6;color:#38520f;font:700 10px "Space Grotesk",sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.mobile-brand{display:none}.preview-label{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:#ebf7d6;color:#38520f;font:700 10px "Space Grotesk",sans-serif;letter-spacing:.08em;text-transform:uppercase}
 .preview-label:before{content:"";width:6px;height:6px;border-radius:50%;background:#77a52a}
 .client-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
 .notice-bar{display:flex;gap:12px;align-items:center;padding:15px 18px;margin-bottom:22px;border:1px solid #e0e8d1;border-radius:14px;background:#f0f6e7}
@@ -78,6 +78,7 @@
 <body>
 <header class="top">
 <a class="brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a>
+<a class="mobile-brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a>
 <div class="top-right">
 <a class="top-link" href="/?view=public">View portfolio ↗</a>
 <div class="identity"><div class="avatar" aria-hidden="true">A</div><span>Alex Morgan</span></div>
