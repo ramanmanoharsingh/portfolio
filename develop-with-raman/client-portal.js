@@ -43,14 +43,29 @@
     // Keep project intake available even if an unrelated dashboard data query fails.
     setupProposalModal(sb,user);
     const root=$('[data-page="dashboard"]');
-    const load=async(table,select,order='created_at')=>{const r=await sb.from(table).select(select).order(order,{ascending:false}).limit(100);if(r.error)throw r.error;return r.data||[];};
-    const {data:projects,error:projectError}=await sb.from('projects').select('id,title,description,service_type,status,progress,due_date,live_url,updated_at').eq('client_id',user.id).order('updated_at',{ascending:false}).limit(100);if(projectError)throw projectError;
-    const ids=(projects||[]).map(p=>p.id);
+    const unavailable=[];
+    const queryRows=async(label,query)=>{
+      try{const result=await query;if(result.error)throw result.error;return result.data||[];}
+      catch(error){unavailable.push(label);console.warn('[client portal] '+label+' could not be loaded:',error);return [];}
+    };
+    // Keep each client dashboard area independent: an optional table or RLS policy
+    // must not prevent the rest of the workspace from rendering.
+    const projects=await queryRows('projects',sb.from('projects').select('id,title,description,service_type,status,progress,due_date,live_url,updated_at').eq('client_id',user.id).order('updated_at',{ascending:false}).limit(100));
+    const ids=projects.map(p=>p.id);
     let milestones=[],deliverables=[];
-    if(ids.length){const [m,d]=await Promise.all([sb.from('milestones').select('id,project_id,title,description,status,due_date,sort_order,progress,approved_at,deliverable_url').in('project_id',ids).order('sort_order'),sb.from('deliverables').select('id,project_id,title,description,file_url,status,created_at').in('project_id',ids).order('created_at',{ascending:false})]);if(m.error)throw m.error;if(d.error)throw d.error;milestones=m.data||[];deliverables=d.data||[];}
-    const [invoices,proposals,leadResult]=await Promise.all([sb.from('invoices').select('id,project_id,invoice_number,description,amount,currency,status,issued_at,due_at,paid_at,payment_url').eq('client_id',user.id).order('issued_at',{ascending:false}),sb.from('proposals').select('id,title,description,status,budget,timeline,created_at').eq('client_id',user.id).order('created_at',{ascending:false}),sb.from('leads').select('id,project_type,description,status,budget_range,deadline,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(100)]);
-    if(invoices.error)throw invoices.error;if(proposals.error)throw proposals.error;if(leadResult.error)throw leadResult.error;
-    const inv=invoices.data||[],props=proposals.data||[],leads=leadResult.data||[],active=(projects||[]).filter(p=>!['completed','cancelled'].includes(p.status));
+    if(ids.length){
+      const [milestoneRows,deliverableRows]=await Promise.all([
+        queryRows('milestones',sb.from('milestones').select('id,project_id,title,description,status,due_date,sort_order,progress,approved_at,deliverable_url').in('project_id',ids).order('sort_order')),
+        queryRows('deliverables',sb.from('deliverables').select('id,project_id,title,description,file_url,status,created_at').in('project_id',ids).order('created_at',{ascending:false}))
+      ]);
+      milestones=milestoneRows;deliverables=deliverableRows;
+    }
+    const [inv,props,leads]=await Promise.all([
+      queryRows('invoices',sb.from('invoices').select('id,project_id,invoice_number,description,amount,currency,status,issued_at,due_at,paid_at,payment_url').eq('client_id',user.id).order('issued_at',{ascending:false})),
+      queryRows('project requests',sb.from('proposals').select('id,title,description,status,budget,timeline,created_at').eq('client_id',user.id).order('created_at',{ascending:false})),
+      queryRows('website enquiries',sb.from('leads').select('id,project_type,description,status,budget_range,deadline,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(100))
+    ]);
+    const active=projects.filter(p=>!['completed','cancelled'].includes(p.status));
     $('[data-metric-projects]').textContent=active.length;
     const pendingMilestones=milestones.filter(m=>m.status==='submitted_for_approval').length;
     const pendingInvoices=inv.filter(i=>['pending','overdue'].includes(i.status));
@@ -113,6 +128,11 @@
     document.querySelectorAll('[data-dashboard-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-dashboard-tab]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('[data-dashboard-panel]').forEach(p=>p.hidden=p.dataset.dashboardPanel!==b.dataset.dashboardTab);}));
     const initialPanel=location.hash==='#notifications'?'notifications':location.hash==='#requests'?'requests':location.hash==='#billing'?'billing':location.hash==='#projects'?'projects':'';
     if(initialPanel)$('[data-dashboard-tab="'+initialPanel+'"]')?.click();
+    const warning=$('[data-error-message]');
+    if(warning){
+      if(unavailable.length){warning.hidden=false;warning.dataset.partial='true';warning.textContent='Some sections could not be loaded ('+unavailable.join(', ')+'). The rest of your dashboard is still available. Refresh the page or contact Raman if this persists.';}
+      else{warning.hidden=true;delete warning.dataset.partial;warning.textContent='';}
+    }
   }
 
   function setupProposalModal(sb,user){
