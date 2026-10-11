@@ -480,8 +480,8 @@ addEventListener('pointerup',()=>{if(d){d=null;r.classList.remove('dr')}});
 r.addEventListener('dragstart',e=>e.preventDefault())})();
 </script><script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.117.1";
-const sessionOnly=document.cookie.split(";").some(cookie=>cookie.trim()==="portal_session=1");
-const client=createClient("https://nmqntqxvficakxkticxc.supabase.co","sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:sessionOnly?window.sessionStorage:window.localStorage}});
+const sessionMode=document.cookie.split(";").some(cookie=>cookie.trim()==="portal_session=1");
+const client=createClient("https://nmqntqxvficakxkticxc.supabase.co","sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG",{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:sessionMode?window.sessionStorage:window.localStorage}});
 window.__dwrSupabaseClient=client;
 const form=document.getElementById("f"),status=document.getElementById("request-status"),service=document.getElementById("t");
 const requestAccountLink=document.getElementById("request-account-link");
@@ -518,7 +518,7 @@ const isClientSession=async session=>{
  }catch(error){
   console.warn("Could not confirm the account role before routing a project request:",error);
   // An authenticated request should not fall back into the public lead table on a profile lookup error.
-  return true;
+  throw error;
  }
 };
 
@@ -535,7 +535,7 @@ document.getElementById("sg")?.addEventListener("click",async ev=>{
   const {data,error}=await client.auth.getSession();
   if(error)throw error;
   clientSession=await isClientSession(data?.session||null);
- }catch(error){console.warn("Could not resolve sign-in state before opening a service request:",error);}
+ }catch(error){console.warn("Could not resolve sign-in state before opening a service request:",error);if(status)status.textContent="We could not verify your sign-in state. Your request has not been submitted. Please refresh the page and try again.";return;}
  if(clientSession){
   saveDashboardDraft(selectedService);
   location.assign("/client-dashboard.html?request=1&service="+encodeURIComponent(selectedService));
