@@ -17,7 +17,7 @@
   function shell(){
     let root=$('#dwr-role-workspace');
     if(!root){root=document.createElement('div');root.id='dwr-role-workspace';root.innerHTML=`<header class="dwr-topbar">
-<a class="dwr-top-brand" href="/?view=public" aria-label="Develop with Raman home">Develop with Raman</a>
+<a class="dwr-top-brand" href="/?view=public" aria-label="Develop with Raman home">Develop with Raman<span data-dwr-role>Workspace</span></a>
 <div class="dwr-top-actions">
 <a class="dwr-top-link" href="/?view=public">View portfolio ↗</a>
 <div class="dwr-top-user"><span class="dwr-avatar" data-dwr-avatar>U</span><span class="dwr-identity-copy"><strong data-dwr-name>Account</strong><small data-dwr-email></small></span></div>
