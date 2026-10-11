@@ -12,7 +12,7 @@
   const menu=()=>state.role==='admin'?[
     ['overview','Overview','◫'],['enquiries','Enquiries','✉'],['projects','Projects','▦'],['clients','Clients','♙'],['messages','Messages','◌'],['trends','Service trends','⌁'],['questions','Questions & answers','?'],['feedback','Feedback','☆'],['time','Time tracking','◷'],['activity','Audit & notifications','↻'],['settings','Settings','⚙']
   ]:[
-    ['overview','My overview','◫'],['projects','My projects','▦'],['requests','My requests','✉'],['messages','Messages','◌'],['updates','Notifications','↻'],['profile','My profile','♙']
+    ['overview','Dashboard','◫'],['projects','My projects / status','▦'],['messages','Chat with Raman','◌'],['updates','Notifications','↻'],['requests','My enquiries','✉'],['feedback','Feedback & questions','?'],['profile','Account','♙']
   ];
   function shell(){
     let root=$('#dwr-role-workspace');
@@ -78,7 +78,8 @@
       }
     }else{
       if(state.section==='overview'){
-        setHeader('Your workspace','A clear view of your requests, projects and next steps.');
+        const clientName=state.profile?.full_name||state.user?.user_metadata?.full_name||state.user?.user_metadata?.name||state.user?.email?.split('@')[0]||'there';
+        setHeader('Welcome back, '+clientName,'A clear view of your requests, projects and next steps.');
         html='<div class="dwr-metrics">'+metric('My projects',state.projects.length,'Assigned to your account')+metric('My requests',state.proposals.length,'Project briefs submitted')+metric('Unread updates',state.notifications.length,'Available in your workspace')+'</div>'+sectionCard('My projects','<button class="dwr-text-button" data-dwr-section="projects">View projects ↗</button>',projectRows(state.projects)) +sectionCard('Recent requests','<button class="dwr-text-button" data-dwr-section="requests">View requests ↗</button>',state.proposals.length?'<div class="dwr-list">'+state.proposals.slice(0,5).map(p=>'<article><div><strong>'+esc(p.title)+'</strong><p>'+esc((p.description||'').slice(0,170))+'</p></div><span class="dwr-status">'+esc(labelStatus(p.status))+'</span><small>'+date(p.created_at)+'</small></article>').join('')+'</div>':empty('No requests yet','Choose a service from the portfolio and submit a project brief.'))+'<div class="dwr-cta"><div><strong>Have another idea?</strong><p>Choose a service and send a brief. Your request will be saved to this account.</p></div><a class="dwr-primary" href="/?flow=services#services">Explore services ↗</a></div>';
       }else if(state.section==='projects'){
         setHeader('My projects','Track your assigned projects and progress.');
@@ -92,9 +93,12 @@
       }else if(state.section==='updates'){
         setHeader('Notifications','Project and request updates for your account.');
         html=sectionCard('Recent updates','<a class="dwr-secondary" href="/client-dashboard.html#notifications">Open full notifications ↗</a>',empty('No unread updates','When an update is available, it will appear in your client dashboard.'));
+      }else if(state.section==='feedback'){
+        setHeader('Feedback & questions','Share feedback or ask Raman a question.');
+        html='<div class="dwr-two-col">'+sectionCard('Leave feedback','', '<form data-dwr-form="feedback"><label>Rating</label><select name="rating" required><option value="">Choose a rating</option><option value="5">5 — Excellent</option><option value="4">4 — Good</option><option value="3">3 — Okay</option><option value="2">2 — Needs improvement</option><option value="1">1 — Poor</option></select><label>Your feedback</label><textarea name="feedback" rows="4" required placeholder="Share your experience…"></textarea><button class="dwr-primary" type="submit">Submit feedback</button></form>')+sectionCard('Ask a question','', '<form data-dwr-form="question"><label>Your question</label><textarea name="question" rows="4" required placeholder="What would you like to ask Raman? "></textarea><label>Email for a reply (optional)</label><input name="reply_email" type="email" placeholder="you@example.com"><button class="dwr-primary" type="submit">Send question</button></form>')+'</div><p class="dwr-muted">Secure submission is not enabled yet because the feedback and question tables, spam controls, and row-level security policies still need to be verified. These forms will not claim success or send data until that backend is ready.</p>';
       }else if(state.section==='profile'){
-        setHeader('My profile','Your account details and settings.');
-        html=sectionCard('Profile','<a class="dwr-primary" href="/profile.html">Manage profile ↗</a>','<p class="dwr-muted">Name and profile photo are read from your account profile. Profile editing stays in the dedicated protected page.</p>');
+        setHeader('Account','Your account details and settings.');
+        html=sectionCard('Profile','<a class="dwr-primary" href="/profile.html">Manage profile ↗</a>','<p class="dwr-muted">Your name and profile photo remain visible. Manage profile settings, sign out, and review account details here.</p><button class="dwr-secondary" data-account-delete-request type="button">Request account/data deletion</button>');
       }
     }
     content.innerHTML=html;
@@ -150,12 +154,13 @@
     const tab=e.target.closest('[data-enquiry-tab]');if(tab){state.enquiryTab=tab.dataset.enquiryTab;render();return;}
     const read=e.target.closest('[data-mark-read]');if(read){read.disabled=true;try{await markRead(read.dataset.markRead);}catch(err){notice('Could not mark enquiry as read: '+err.message,true);}finally{read.disabled=false;}return;}
     const create=e.target.closest('[data-create-project]');if(create){if(!confirm('Create a new project from this enquiry? The enquiry content will remain unchanged.'))return;create.disabled=true;try{await createProject(create.dataset.createProject);}catch(err){notice('Could not create project: '+err.message,true);}finally{create.disabled=false;}return;}
+    if(e.target.closest('[data-account-delete-request]')){notice('Account/data deletion requests are not connected yet. No request was sent.',true);return;}
     if(e.target.closest('[data-dwr-refresh]')){await load();notice('Workspace refreshed.');return;}
     if(e.target.closest('.dwr-signout')){const {error}=await state.client.auth.signOut();if(error){notice('Sign out failed: '+error.message,true);return;}clear();location.assign('/');}
   }
   function onInput(e){if(e.target.matches('[data-enquiry-search]')){state.search=e.target.value;const cursor=e.target.selectionStart;render();const input=$('[data-enquiry-search]');input?.focus();input?.setSelectionRange(cursor,cursor);}}
   function onChange(e){if(e.target.matches('[data-enquiry-search]')){state.search=e.target.value;render();}}
-  async function onSubmit(e){if(e.target.matches('[data-dwr-form]')){e.preventDefault();}}
+  async function onSubmit(e){if(e.target.matches('[data-dwr-form]')){e.preventDefault();notice('This form is displayed for review but is not connected to a secure submission table yet. No data was sent.',true);}}
   function clear(){document.documentElement.classList.remove('dwr-portal-active');$('#dwr-role-workspace')?.remove();state.role=null;state.user=null;state.profile=null;}
   async function init(client){
     if(!client?.auth)return;
