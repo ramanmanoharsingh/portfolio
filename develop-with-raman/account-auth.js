@@ -38,12 +38,15 @@
     } catch (error) {
       console.warn('Could not load account role after sign-in:', error.message);
     }
-    if (next) {
-      if (role === 'admin' && (next.startsWith('/client-dashboard') || next === '/?flow=services')) return '/admin-portal.html';
-      if (role !== 'admin' && next.startsWith('/admin-portal')) return '/client-dashboard.html';
-      return next;
+    if (role === 'admin') {
+      if (next && next.startsWith('/client-dashboard')) return '/admin-portal.html';
+      return next || '/admin-portal.html';
     }
-    return role === 'admin' ? '/admin-portal.html' : '/client-dashboard.html';
+    // Client sign-in returns to the public homepage; portal-transform.js turns it
+    // into the authenticated client workspace without losing the homepage URL.
+    if (!next || next === '/welcome.html' || next.startsWith('/client-dashboard')) return '/';
+    if (next.startsWith('/admin-portal')) return '/';
+    return next;
   }
   const setMode = mode => {
     state.mode=mode; clearMessage();
