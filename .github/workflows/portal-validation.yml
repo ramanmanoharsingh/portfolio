@@ -127,12 +127,14 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
 
-          homepage = Path("develop-with-raman/index.html").read_text(encoding="utf-8")
           auth = Path("develop-with-raman/auth-manager.js").read_text(encoding="utf-8")
           portal = Path("develop-with-raman/client-portal.js").read_text(encoding="utf-8")
-          for route in ("/auth.html", "client-dashboard.html", "admin-portal.html"):
-              if route not in homepage + auth + portal:
-                  raise SystemExit("Expected authentication/portal route is missing: " + route)
+          for path in ("develop-with-raman/auth.html", "develop-with-raman/client-dashboard.html", "develop-with-raman/admin-portal.html"):
+              if not Path(path).is_file():
+                  raise SystemExit("Expected authentication/portal file is missing: " + path)
+          for route in ("client-dashboard.html", "admin-portal.html"):
+              if route not in portal:
+                  raise SystemExit("Client/admin role routing is missing: " + route)
           for required in ("signInWithPassword", "signInWithOAuth", "safeNextPath"):
               if required not in auth:
                   raise SystemExit("Auth controller is missing: " + required)
