@@ -133,7 +133,7 @@ jobs:
           dashboard = Path("develop-with-raman/dashboard.html").read_text(encoding="utf-8")
           expected_routes = [
               '<a class="top-action" href="dashboard.html"',
-              '<a href="dashboard.html">Sign in / Client & Admin Portal</a>',
+              '<a href="dashboard.html">Sign in / Client &amp; Admin Portal</a>',
               'id="request-account-link" href="/dashboard.html"',
               'requestAccountLink.href="/dashboard.html?next=services"',
               'identityLink.href="/dashboard.html";',
