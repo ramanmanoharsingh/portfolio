@@ -103,6 +103,28 @@ jobs:
           grep -Fq "const sessionMode=document.cookie.split(';').some(c=>c.trim()==='portal_session=1')" develop-with-raman/index.html
           grep -Fq 'storage:sessionMode?window.sessionStorage:window.localStorage' develop-with-raman/index.html
           echo "Homepage and portal use the same remember-me session storage mode."
+          # A failed role lookup must stop the handoff, not be treated as a verified client role.
+          python3 - <<'PY'
+          from pathlib import Path
+
+          homepage = Path("develop-with-raman/index.html").read_text(encoding="utf-8")
+          start = homepage.find("const isClientSession=async session=>")
+          end = homepage.find("const draftFields=", start)
+          if start < 0 or end < 0:
+              raise SystemExit("Could not locate the homepage account-role helper.")
+          helper = homepage[start:end]
+          catch_at = helper.find("}catch(error){")
+          if catch_at < 0:
+              raise SystemExit("Account-role lookup needs an explicit error handler.")
+          catch_block = helper[catch_at:]
+          if "throw error;" not in catch_block or "return true;" in catch_block:
+              raise SystemExit("Unverified roles must not be treated as clients.")
+          if "We could not verify your sign-in state. Your request has not been submitted" not in homepage:
+              raise SystemExit("Service-selection errors must tell users the request was not submitted.")
+          if "We could not check your account just now." not in homepage:
+              raise SystemExit("Similar-project handoff errors need a recoverable status message.")
+          print("Account-role lookup failures stop and surface the request handoff.")
+          PY
           echo "Client request intake and service-selection safeguards are present."
           grep -q 'href="#milestones-admin"' develop-with-raman/admin-portal.html
           grep -q 'href="#deliverables-admin"' develop-with-raman/admin-portal.html
