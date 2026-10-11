@@ -1,7 +1,7 @@
 /* Role-aware homepage workspace. Uses the existing authenticated Supabase client and database RLS. */
 (function(){
   'use strict';
-  const state={client:null,role:null,user:null,profile:null,section:'overview',enquiryTab:'anonymous',search:'',leads:[],projects:[],clients:[],proposals:[],messages:[],notifications:[]};
+  const state={client:null,role:null,user:null,profile:null,section:'overview',enquiryTab:'anonymous',search:'',leads:[],projects:[],clients:[],proposals:[],messages:[],notifications:[],heroOriginal:null};
   const $=(s,r=document)=>r.querySelector(s);
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const date=v=>v?new Date(v).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}):'—';
@@ -14,28 +14,44 @@
   ]:[
     ['overview','Dashboard','◫'],['projects','My projects / status','▦'],['messages','Chat with Raman','◌'],['updates','Notifications','↻'],['requests','My enquiries','✉'],['feedback','Feedback & questions','?'],['profile','Account','♙']
   ];
+  function personalizeHomepageHero(){
+    const hero=$('#top');if(!hero)return;
+    const copy=$('.hc p',hero),cta=$('.hc a.ex',hero);
+    if(!copy||!cta)return;
+    if(!state.heroOriginal)state.heroOriginal={copy:copy.textContent,ctaText:cta.textContent,ctaHref:cta.getAttribute('href')||'#work'};
+    let title=$('.dwr-hero-welcome',hero);
+    if(!title){title=document.createElement('h2');title.className='dwr-hero-welcome';copy.before(title);}
+    const name=state.profile?.full_name||state.user?.user_metadata?.full_name||state.user?.user_metadata?.name||state.user?.email?.split('@')[0]||'there';
+    title.textContent='Welcome back, '+name+'.';
+    copy.textContent=state.role==='admin'?'Your portfolio, client projects, and incoming requests are ready in one place.':'Your projects, updates, and conversations are ready when you are.';
+    cta.textContent=state.role==='admin'?'Open your workspace ↘':'Open my workspace ↘';
+    cta.href='#dwr-role-workspace';
+    hero.classList.add('dwr-client-hero');
+  }
+  function restoreHomepageHero(){
+    const hero=$('#top');if(!hero)return;
+    $('.dwr-hero-welcome',hero)?.remove();
+    hero.classList.remove('dwr-client-hero');
+    const copy=$('.hc p',hero),cta=$('.hc a.ex',hero);
+    if(state.heroOriginal){
+      if(copy)copy.textContent=state.heroOriginal.copy;
+      if(cta){cta.textContent=state.heroOriginal.ctaText;cta.href=state.heroOriginal.ctaHref;}
+    }
+    state.heroOriginal=null;
+  }
   function shell(){
     let root=$('#dwr-role-workspace');
-    if(!root){root=document.createElement('div');root.id='dwr-role-workspace';root.innerHTML=`<header class="dwr-topbar">
-<a class="dwr-top-brand" href="/?view=public" aria-label="Develop with Raman home">Develop with Raman<span data-dwr-role>Workspace</span></a>
-<div class="dwr-top-actions">
-<a class="dwr-top-link" href="/?view=public">View portfolio ↗</a>
-<div class="dwr-top-user"><span class="dwr-avatar" data-dwr-avatar>U</span><span class="dwr-identity-copy"><strong data-dwr-name>Account</strong><small data-dwr-email></small></span></div>
-<button class="dwr-signout" type="button">Sign out ↗</button>
-</div></header>
-<div class="dwr-workspace-layout">
-<aside class="dwr-sidebar">
-<div class="dwr-sidebar-head"><div class="dwr-eyebrow">WORKSPACE NAVIGATION</div><p class="dwr-sidebar-note">Your work, all in one place.</p></div>
-<nav class="dwr-nav" aria-label="Workspace navigation"></nav>
-<div class="dwr-sidebar-bottom"><span class="dwr-sidebar-footnote">Private workspace · Access is based on your account role.</span></div>
-</aside>
-<main class="dwr-main">
-<header class="dwr-header"><div><div class="dwr-kicker" data-dwr-kicker>WORKSPACE</div><h1 data-dwr-title>Overview</h1><p data-dwr-subtitle>Your work, in one place.</p></div><div class="dwr-header-actions"><button class="dwr-primary" data-dwr-refresh>Refresh data ↻</button></div></header>
+    if(!root){
+      root=document.createElement('section');root.id='dwr-role-workspace';root.setAttribute('aria-label','Authenticated workspace');
+      root.innerHTML=`<div class="dwr-workspace-inner">
+<header class="dwr-header"><div><div class="dwr-kicker" data-dwr-kicker>CLIENT WORKSPACE</div><h2 data-dwr-title>Your workspace.</h2><p data-dwr-subtitle>Projects, progress, and next steps.</p></div><div class="dwr-header-actions"><a class="dwr-secondary" href="/?view=public">View portfolio ↗</a><button class="dwr-primary" type="button" data-dwr-refresh>Refresh data ↻</button></div></header>
 <div class="dwr-alert" role="status" aria-live="polite" hidden></div>
-<section class="dwr-content"></section>
-<footer class="dwr-footer">Develop with Raman · Private workspace</footer>
-</main></div><div id="dwr-toast" role="status" aria-live="polite"></div>`;;
-      document.body.appendChild(root);
+<div class="dwr-workspace-layout">
+<aside class="dwr-sidebar"><div class="dwr-sidebar-head"><div class="dwr-eyebrow" data-dwr-role>CLIENT WORKSPACE</div><p class="dwr-sidebar-note">Your work, all in one place.</p></div><nav class="dwr-nav" aria-label="Workspace navigation"></nav><div class="dwr-sidebar-bottom"><span class="dwr-sidebar-footnote">Private workspace · Your account permissions apply.</span></div></aside>
+<main class="dwr-main"><section class="dwr-content"></section></main>
+</div><footer class="dwr-footer">Develop with Raman · Private workspace</footer></div><div id="dwr-toast" role="status" aria-live="polite"></div>`;
+      const hero=$('#top');
+      if(hero)hero.insertAdjacentElement('afterend',root);else document.body.appendChild(root);
       root.addEventListener('click',onClick);
       root.addEventListener('submit',onSubmit);
       root.addEventListener('input',onInput);
@@ -43,11 +59,8 @@
     }
     root.querySelector('.dwr-nav').innerHTML=menu().map(([id,name,ico])=>'<button type="button" class="dwr-nav-item '+(state.section===id?'active':'')+'" data-dwr-section="'+id+'"><span class="dwr-nav-icon">'+ico+'</span><span>'+name+'</span>'+(id==='questions'&&state.role==='admin'?'<i data-badge="questions"></i>':'')+(id==='feedback'&&state.role==='admin'?'<i data-badge="feedback"></i>':'')+'</button>').join('');
     $('[data-dwr-role]',root).textContent=roleName();
-    $('[data-dwr-name]',root).textContent=state.profile?.full_name||state.user?.user_metadata?.full_name||state.user?.user_metadata?.name||state.user?.email?.split('@')[0]||'Account';
-    $('[data-dwr-email]',root).textContent=state.user?.email||'';
-    const avatar=$('[data-dwr-avatar]',root),photo=state.profile?.avatar_url||state.user?.user_metadata?.avatar_url||state.user?.user_metadata?.picture;
-    if(photo){avatar.innerHTML='<img alt="" referrerpolicy="no-referrer" src="'+esc(photo)+'">';}else avatar.textContent=initials($('[data-dwr-name]',root).textContent);
     document.documentElement.classList.add('dwr-portal-active');
+    personalizeHomepageHero();
     render();
   }
   function setHeader(title,subtitle){$('[data-dwr-title]').textContent=title;$('[data-dwr-subtitle]').textContent=subtitle;$('[data-dwr-kicker]').textContent=roleName().toUpperCase();}
@@ -97,7 +110,7 @@
     }else{
       if(state.section==='overview'){
         const clientName=state.profile?.full_name||state.user?.user_metadata?.full_name||state.user?.user_metadata?.name||state.user?.email?.split('@')[0]||'there';
-        setHeader('Welcome back, '+clientName,'A clear view of your requests, projects and next steps.');
+        setHeader('Your dashboard','A clear view of your requests, projects and next steps.');
         html='<div class="dwr-metrics">'+metric('My projects',state.projects.length,'Assigned to your account')+metric('My requests',state.proposals.length,'Project briefs submitted')+metric('Unread updates',state.notifications.length,'Available in your workspace')+'</div>'+sectionCard('My projects','<button class="dwr-text-button" data-dwr-section="projects">View projects ↗</button>',projectRows(state.projects)) +sectionCard('Recent requests','<button class="dwr-text-button" data-dwr-section="requests">View requests ↗</button>',state.proposals.length?'<div class="dwr-list">'+state.proposals.slice(0,5).map(p=>'<article><div><strong>'+esc(p.title)+'</strong><p>'+esc((p.description||'').slice(0,170))+'</p></div><span class="dwr-status">'+esc(labelStatus(p.status))+'</span><small>'+date(p.created_at)+'</small></article>').join('')+'</div>':empty('No requests yet','Choose a service from the portfolio and submit a project brief.'))+'<div class="dwr-cta"><div><strong>Have another idea?</strong><p>Choose a service and send a brief. Your request will be saved to this account.</p></div><a class="dwr-primary" href="/?view=public&flow=services#services">Explore services ↗</a></div>';
       }else if(state.section==='projects'){
         setHeader('My projects','Track your assigned projects and progress.');
@@ -179,7 +192,7 @@
   function onInput(e){if(e.target.matches('[data-enquiry-search]')){state.search=e.target.value;const cursor=e.target.selectionStart;render();const input=$('[data-enquiry-search]');input?.focus();input?.setSelectionRange(cursor,cursor);}}
   function onChange(e){if(e.target.matches('[data-enquiry-search]')){state.search=e.target.value;render();}}
   async function onSubmit(e){if(e.target.matches('[data-dwr-form]')){e.preventDefault();notice('This form is displayed for review but is not connected to a secure submission table yet. No data was sent.',true);}}
-  function clear(){document.documentElement.classList.remove('dwr-portal-active');$('#dwr-role-workspace')?.remove();state.role=null;state.user=null;state.profile=null;}
+  function clear(){restoreHomepageHero();document.documentElement.classList.remove('dwr-portal-active');$('#dwr-role-workspace')?.remove();state.role=null;state.user=null;state.profile=null;}
   async function init(client){
     if(!client?.auth)return;
     if(new URLSearchParams(location.search).get('view')==='public'){clear();return;}
