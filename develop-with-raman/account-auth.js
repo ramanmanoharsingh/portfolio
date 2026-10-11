@@ -39,7 +39,7 @@
       console.warn('Could not load account role after sign-in:', error.message);
     }
     if (next) {
-      if (role === 'admin' && next.startsWith('/client-dashboard')) return '/admin-portal.html';
+      if (role === 'admin' && (next.startsWith('/client-dashboard') || next === '/?flow=services')) return '/admin-portal.html';
       if (role !== 'admin' && next.startsWith('/admin-portal')) return '/client-dashboard.html';
       return next;
     }
