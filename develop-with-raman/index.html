@@ -490,8 +490,8 @@ const isClientSession=async session=>{
   return data?.role!=="admin";
  }catch(error){
   console.warn("Could not confirm the account role before routing a project request:",error);
-  // An authenticated request should not fall back into the public lead table on a profile lookup error.
-  return true;
+  // Do not guess the role or downgrade into anonymous intake when verification fails.
+  throw error;
  }
 };
 const draftFields=["n","e","company","t","b","d","goal","similar-project","adaptations","audience","scope","reference","m"];
