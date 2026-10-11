@@ -109,7 +109,7 @@
       state.user=user;state.profile=profile;state.role=profile.role==='admin'?'admin':'client';
       if(state.role==='admin'){
         const [l,p,c,q]=await Promise.all([
-          sb.from('leads').select('id,created_at,user_id,client_email,name,email,whatsapp,project_type,budget_range,deadline,description,status,is_read,project_id').order('created_at',{ascending:false}).limit(500),
+          sb.from('leads').select('*').order('created_at',{ascending:false}).limit(500),
           sb.from('projects').select('id,client_id,title,status,progress,due_date,updated_at').order('updated_at',{ascending:false}).limit(300),
           sb.from('profiles').select('id,full_name,company_name,created_at,avatar_url,role').eq('role','client').order('created_at',{ascending:false}).limit(300),
           sb.from('proposals').select('id,client_id,title,description,budget,timeline,status,created_at').order('created_at',{ascending:false}).limit(300)
