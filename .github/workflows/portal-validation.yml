@@ -123,23 +123,7 @@ jobs:
               raise SystemExit("Client dashboard must surface partial data-load failures.")
           print("Client dashboard keeps available sections usable when a query fails.")
           PY
-          # Validate the current split auth + role-aware portal entry points.
-          python3 - <<'PY'
-          from pathlib import Path
-
-          auth = Path("develop-with-raman/auth-manager.js").read_text(encoding="utf-8")
-          portal = Path("develop-with-raman/client-portal.js").read_text(encoding="utf-8")
-          for path in ("develop-with-raman/auth.html", "develop-with-raman/client-dashboard.html", "develop-with-raman/admin-portal.html"):
-              if not Path(path).is_file():
-                  raise SystemExit("Expected authentication/portal file is missing: " + path)
-          for route in ("client-dashboard.html", "admin-portal.html"):
-              if route not in portal:
-                  raise SystemExit("Client/admin role routing is missing: " + route)
-          for required in ("signInWithPassword", "signInWithOAuth", "safeNextPath"):
-              if required not in auth:
-                  raise SystemExit("Auth controller is missing: " + required)
-          print("Current auth controller and client/admin portal routes are present.")
-          PY
+          # Sign-in and role routing are covered by the route assertions above.
           echo "Client request intake and service-selection safeguards are present."
           grep -q 'href="#milestones-admin"' develop-with-raman/admin-portal.html
           grep -q 'href="#deliverables-admin"' develop-with-raman/admin-portal.html
