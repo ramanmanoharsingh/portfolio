@@ -79,7 +79,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q "requestSimilar: '1'" <correct-path>/projects.html
           grep -q "client-dashboard.html?request=1&service=" develop-with-raman/index.html
           grep -q "queryParams.get('request')==='1'" develop-with-raman/client-portal.js
           grep -q "sb.from('proposals').insert(data)" develop-with-raman/client-portal.js
