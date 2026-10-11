@@ -99,7 +99,7 @@ jobs:
           PY
           grep -q "function setupProposalModal(sb,user)" develop-with-raman/client-portal.js
           grep -q "We could not verify your sign-in state" develop-with-raman/index.html
-          grep -q "document.getElementById('sg').addEventListener('click'" develop-with-raman/index.html
+          grep -Fq 'document.getElementById("sg")?.addEventListener("click"' develop-with-raman/index.html
           grep -Fq "const sessionMode=document.cookie.split(';').some(c=>c.trim()==='portal_session=1')" develop-with-raman/index.html
           grep -Fq 'storage:sessionMode?window.sessionStorage:window.localStorage' develop-with-raman/index.html
           echo "Homepage and portal use the same remember-me session storage mode."
