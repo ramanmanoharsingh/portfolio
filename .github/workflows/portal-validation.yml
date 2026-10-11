@@ -125,6 +125,38 @@ jobs:
               raise SystemExit("Similar-project handoff errors need a recoverable status message.")
           print("Account-role lookup failures stop and surface the request handoff.")
           PY
+          # Public sign-in must enter the role-aware auth page, not the legacy combined dashboard.
+          python3 - <<'PY'
+          from pathlib import Path
+
+          homepage = Path("develop-with-raman/index.html").read_text(encoding="utf-8")
+          auth = Path("develop-with-raman/account-auth.js").read_text(encoding="utf-8")
+          stale_routes = [
+              '<a class="top-action" href="dashboard.html"',
+              '<a href="dashboard.html">Sign in / Client & Admin Portal</a>',
+              'id="request-account-link" href="/dashboard.html"',
+              'requestAccountLink.href="/dashboard.html?next=services"',
+              'identityLink.href="/dashboard.html";',
+              'accountAction.href="/dashboard.html";',
+          ]
+          for route in stale_routes:
+              if route in homepage:
+                  raise SystemExit("Legacy dashboard entry route remains: " + route)
+          required = [
+              '<a class="top-action" href="/auth.html"',
+              '<a href="/auth.html">Sign in / Client & Admin Portal</a>',
+              'id="request-account-link" href="/auth.html?next=%2F%3Fflow%3Dservices"',
+              'requestAccountLink.href="/auth.html?next=%2F%3Fflow%3Dservices"',
+              'identityLink.href="/client-dashboard.html";',
+              'accountAction.href="/auth.html";',
+          ]
+          for route in required:
+              if route not in homepage:
+                  raise SystemExit("Required public portal route is missing: " + route)
+          if "next === '/?flow=services'" not in auth or "role === 'admin'" not in auth:
+              raise SystemExit("Service-first sign-in return must preserve admin role routing.")
+          print("Public sign-in, services-first handoff, and role-aware portal routing are consistent.")
+          PY
           echo "Client request intake and service-selection safeguards are present."
           grep -q 'href="#milestones-admin"' develop-with-raman/admin-portal.html
           grep -q 'href="#deliverables-admin"' develop-with-raman/admin-portal.html
