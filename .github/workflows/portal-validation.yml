@@ -87,6 +87,20 @@ jobs:
           grep -Fq "root.dataset.role==='admin'&&role!=='admin'" develop-with-raman/client-portal.js
           grep -Fq "root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'" develop-with-raman/client-portal.js
           echo "Request handoff, proposal submission, and client/admin role-routing hooks are present."
+          # Request intake must be wired before optional dashboard data is loaded.
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path("develop-with-raman/client-portal.js").read_text(encoding="utf-8")
+          modal = source.find("setupProposalModal(sb,user);")
+          projects = source.find("const {data:projects,error:projectError}")
+          if modal < 0 or projects < 0 or modal > projects:
+              raise SystemExit("Client request modal must initialize before dashboard project queries.")
+          print("Client request modal initializes before dashboard data queries.")
+          PY
+          grep -q "function setupProposalModal(sb,user)" develop-with-raman/client-portal.js
+          grep -q "We could not verify your sign-in state" develop-with-raman/index.html
+          grep -q "document.getElementById('sg').addEventListener('click'" develop-with-raman/index.html
+          echo "Client request intake and service-selection safeguards are present."
           grep -q 'href="#milestones-admin"' develop-with-raman/admin-portal.html
           grep -q 'href="#deliverables-admin"' develop-with-raman/admin-portal.html
           grep -q 'href="#billing-admin"' develop-with-raman/admin-portal.html
