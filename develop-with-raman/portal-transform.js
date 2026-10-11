@@ -16,7 +16,25 @@
   ];
   function shell(){
     let root=$('#dwr-role-workspace');
-    if(!root){root=document.createElement('div');root.id='dwr-role-workspace';root.innerHTML='<aside class="dwr-sidebar"><a class="dwr-brand" href="/?view=public" aria-label="Develop with Raman homepage"><span class="dwr-brand-mark">R</span><span>Develop with Raman<small data-dwr-role></small></span></a><nav class="dwr-nav" aria-label="Workspace navigation"></nav><div class="dwr-sidebar-bottom"><a class="dwr-back" href="/?view=public">↖ View public portfolio</a><div class="dwr-user"><span class="dwr-avatar" data-dwr-avatar>U</span><span><strong data-dwr-name>Account</strong><small data-dwr-email></small></span></div><button class="dwr-signout" type="button">Sign out ↗</button></div></aside><main class="dwr-main"><header class="dwr-header"><div><div class="dwr-kicker" data-dwr-kicker>WORKSPACE</div><h1 data-dwr-title>Overview</h1><p data-dwr-subtitle>Your work, in one place.</p></div><div class="dwr-header-actions"><a class="dwr-secondary" href="/?view=public" target="_self">Public site ↗</a><button class="dwr-primary" data-dwr-refresh>Refresh data ↻</button></div></header><div class="dwr-alert" role="status" aria-live="polite" hidden></div><section class="dwr-content"></section><footer class="dwr-footer">Private workspace · Your account permissions determine what you can access.</footer></main><div id="dwr-toast" role="status" aria-live="polite"></div>';
+    if(!root){root=document.createElement('div');root.id='dwr-role-workspace';root.innerHTML=`<header class="dwr-topbar">
+<a class="dwr-top-brand" href="/?view=public" aria-label="Develop with Raman home">Develop with Raman</a>
+<div class="dwr-top-actions">
+<a class="dwr-top-link" href="/?view=public">View portfolio ↗</a>
+<div class="dwr-top-user"><span class="dwr-avatar" data-dwr-avatar>U</span><span class="dwr-identity-copy"><strong data-dwr-name>Account</strong><small data-dwr-email></small></span></div>
+<button class="dwr-signout" type="button">Sign out ↗</button>
+</div></header>
+<div class="dwr-workspace-layout">
+<aside class="dwr-sidebar">
+<div class="dwr-sidebar-head"><div class="dwr-eyebrow">WORKSPACE NAVIGATION</div><p class="dwr-sidebar-note">Your work, all in one place.</p></div>
+<nav class="dwr-nav" aria-label="Workspace navigation"></nav>
+<div class="dwr-sidebar-bottom"><span class="dwr-sidebar-footnote">Private workspace · Access is based on your account role.</span></div>
+</aside>
+<main class="dwr-main">
+<header class="dwr-header"><div><div class="dwr-kicker" data-dwr-kicker>WORKSPACE</div><h1 data-dwr-title>Overview</h1><p data-dwr-subtitle>Your work, in one place.</p></div><div class="dwr-header-actions"><button class="dwr-primary" data-dwr-refresh>Refresh data ↻</button></div></header>
+<div class="dwr-alert" role="status" aria-live="polite" hidden></div>
+<section class="dwr-content"></section>
+<footer class="dwr-footer">Develop with Raman · Private workspace</footer>
+</main></div><div id="dwr-toast" role="status" aria-live="polite"></div>`;;
       document.body.appendChild(root);
       root.addEventListener('click',onClick);
       root.addEventListener('submit',onSubmit);
