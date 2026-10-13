@@ -71,8 +71,9 @@
   };
   const getClient = () => {
     const remember=$('#auth-remember')?.checked!==false;
-    document.cookie='portal_session='+(remember?'0':'1')+'; Path=/; SameSite=Lax; Secure'+(remember?'; Max-Age=31536000':'');
-    document.cookie=remember?'portal_session=; Max-Age=0; Path=/; SameSite=Lax':'portal_session=1; Max-Age=86400; Path=/; SameSite=Lax';
+    document.cookie=remember
+      ? 'portal_session=; Max-Age=0; Path=/; SameSite=Lax; Secure'
+      : 'portal_session=1; Max-Age=86400; Path=/; SameSite=Lax; Secure';
     if(typeof window.createPortalSupabaseClient==='function'){state.client=window.createPortalSupabaseClient(remember);return state.client;}
     if(window.supabaseClient)return window.supabaseClient;
     throw new Error('The authentication service did not load. Please refresh and try again.');
