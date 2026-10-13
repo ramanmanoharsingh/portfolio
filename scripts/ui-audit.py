@@ -88,7 +88,7 @@ for page in HTML_FILES:
 
     # The client dashboard must use one shared site-style sign-out control.
     if relative == "develop-with-raman/client-dashboard.html":
-        signout_buttons = [m.group(1) for m in BUTTON_RE.finditer(static) if re.search(r"\\bdata-sign-out(?:\\s|=|$)", m.group(1), re.I)]
+        signout_buttons = [m.group(1) for m in BUTTON_RE.finditer(static) if re.search(r"\bdata-sign-out(?:\s|=|$)", m.group(1), re.I)]
         if len(signout_buttons) != 1:
             fail(relative, f"expected one shared sign-out control, found {len(signout_buttons)}")
         elif not all(token in signout_buttons[0] for token in ("site-topbar-signout", "top-link")):
