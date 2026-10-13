@@ -20,7 +20,7 @@
 
   const showMessage = (text, kind='error') => { message.textContent=text; message.dataset.kind=kind; message.setAttribute('role',kind==='error'?'alert':'status'); };
   const clearMessage = () => { message.textContent=''; delete message.dataset.kind; message.removeAttribute('role'); };
-  const setBusy = (busy, label) => { state.busy=busy; submit.disabled=busy; submitLabel.textContent=busy?'Please wait…':label; submit.setAttribute('aria-busy',String(busy)); $('.auth-social').forEach(button=>{button.disabled=busy;}); };
+  const setBusy = (busy, label) => { state.busy=busy; submit.disabled=busy; submitLabel.textContent=busy?'Please wait…':label; submit.setAttribute('aria-busy',String(busy)); $$('.auth-social').forEach(button=>{button.disabled=busy;}); };
   function safeNextPath() {
     const next = new URLSearchParams(location.search).get('next');
     if (!next || !next.startsWith('/') || next.startsWith('//') ||
@@ -100,7 +100,7 @@
   forgotLink.addEventListener('click',event=>{event.preventDefault();setMode('reset');});
   $('#auth-back-login').addEventListener('click',event=>{event.preventDefault();setMode('login');});
   $('#auth-back-home')?.addEventListener('click',event=>{event.preventDefault();location.href='/';});
-  $('.auth-social').forEach(button=>button.addEventListener('click',async()=>{
+  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{
     if(state.busy)return;
     const provider=button.dataset.provider;
     const providerName=provider==='github'?'GitHub':provider==='google'?'Google':'';
