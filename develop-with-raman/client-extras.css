@@ -1,0 +1,12 @@
+.chat{display:flex;flex-direction:column;gap:12px;min-height:340px}
+.chat-head{padding-bottom:10px;border-bottom:1px solid var(--portal-line)}
+.chat-log{display:flex;flex-direction:column;gap:10px;max-height:50vh;min-height:200px;overflow:auto;padding:4px}
+.bubble{max-width:78%;padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+.bubble p{margin:0;white-space:pre-wrap}.bubble small{display:block;margin-top:5px;font-size:10px;opacity:.65}
+.bubble.me{align-self:flex-end;background:var(--portal-ink);color:var(--portal-bg);border-bottom-right-radius:5px}
+.bubble.them{align-self:flex-start;background:var(--portal-bg);border:1px solid var(--portal-line);border-bottom-left-radius:5px}
+.chat-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.chat-form textarea{width:100%;border:1px solid var(--portal-line);border-radius:14px;padding:12px 14px;font:inherit;font-size:14px;background:var(--portal-card);color:var(--portal-ink);resize:vertical}
+.ce-stars{display:flex;gap:8px;flex-wrap:wrap}
+.ce-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media(max-width:820px){.ce-grid{grid-template-columns:1fr}}
