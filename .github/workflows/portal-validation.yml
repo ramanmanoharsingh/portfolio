@@ -156,6 +156,10 @@ jobs:
           grep -q "Dashboard data refreshed." develop-with-raman/admin-portal.js
           echo "Admin navigation and refresh controls are present."
 
+
+      - name: Deep static UI and theme regression checks
+        run: python3 scripts/ui-audit.py
+
       - name: Confirm workflow docs exist
         run: |
           test -f docs/WORKFLOW_OVERHAUL_PLAN.md

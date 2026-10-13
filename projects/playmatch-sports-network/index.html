@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{var t=localStorage.getItem('t');if(t!=='light'&&t!=='dark'){var old=localStorage.getItem('playmatchTheme');if(old==='light'||old==='dark'){t=old;localStorage.setItem('t',t)}}document.documentElement.dataset.theme=(t==='light'||t==='dark')?t:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PlayMatch — Find Your Next Game</title>
@@ -879,8 +880,11 @@
   @media (max-width:960px){.match-lab{grid-template-columns:1fr;}.rating-result-grid{grid-template-columns:1fr;}}
   @media (max-width:760px){.rating-proof,.match-network{grid-template-columns:repeat(2,minmax(0,1fr));}}
 </style>
+<link rel="stylesheet" href="/theme.css?v=20261013">
+<link rel="stylesheet" href="/ui-controls.css?v=20261013">
+<script defer src="/theme.js?v=20261013"></script>
 </head>
-<body>
+<body data-site-app="playmatch">
 
 <div class="ticker-bar">
   <div class="ticker-track" id="tickerTrack"></div>
@@ -904,7 +908,7 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.1-7-11a7 7 0 1 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
         <select id="localitySelect"></select>
       </div>
-      <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode" title="Toggle light/dark mode">
+      <button class="icon-btn theme-toggle" id="themeToggle" data-theme-toggle type="button" aria-label="Switch to light mode" title="Toggle light/dark mode">
         <svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
         <svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 7 7 0 1 0 20.5 14.5Z"/></svg>
       </button>
@@ -920,8 +924,8 @@
       <h1>Find your next <span>opponent</span>,<br>not another group chat.</h1>
       <p class="lead">PlayMatch surfaces genuinely playable partners near you — filtered by sport, skill, and free time — ranked by a rating system built for fairness, not vanity.</p>
       <div class="hero-actions">
-        <button class="btn btn-primary" id="heroFind">Find Players Near Me</button>
-        <button class="btn btn-ghost" id="heroHow">See How Ratings Work</button>
+        <button type="button" class="btn btn-primary" id="heroFind">Find Players Near Me</button>
+        <button type="button" class="btn btn-ghost" id="heroHow">See How Ratings Work</button>
       </div>
       <div class="stat-row">
         <div class="stat"><span class="num" id="statPlayers">—</span><span class="lbl">Active players</span></div>
@@ -938,7 +942,7 @@
       <div class="fc-field">
         <label>Your locality</label>
         <select id="fcLocality"></select>
-        <button class="fc-geoloc" id="geolocBtn">
+        <button type="button" class="fc-geoloc" id="geolocBtn">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 21s-7-6.1-7-11a7 7 0 1 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
           Use my current location
         </button>
@@ -983,7 +987,7 @@
         <p>Sorted for <span id="sortLocalityLabel"></span> — locally popular sports surface first.</p>
       </div>
       <div class="section-head-actions">
-        <button class="icon-btn" id="refreshBtn">
+        <button type="button" class="icon-btn" id="refreshBtn">
           <svg id="refreshIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           Refresh
         </button>
@@ -993,10 +997,10 @@
     <div class="search-bar">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <input type="text" id="searchInput" placeholder="Search by name, sport, or locality — e.g. 'Priya' or 'Badminton'">
-      <button class="search-clear" id="searchClear">
+      <button type="button" class="search-clear" id="searchClear" aria-label="Clear search">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
-      <button class="btn btn-primary btn-sm" id="searchBtn">
+      <button type="button" class="btn btn-primary btn-sm" id="searchBtn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <span>Search</span>
       </button>
@@ -1030,7 +1034,7 @@
             <label class="switch"><input type="checkbox" id="availNow"><span class="slider"></span></label>
           </div>
         </div>
-        <button class="clear-filters" id="clearFilters">Clear all filters</button>
+        <button type="button" class="clear-filters" id="clearFilters">Clear all filters</button>
       </aside>
 
       <div>
@@ -1038,11 +1042,11 @@
           <div class="result-count"><b id="resultCount">0</b> players found</div>
           <div class="toolbar-right">
             <div class="view-toggle">
-              <button class="active" data-view="grid" id="viewGridBtn">
+              <button type="button" class="active" data-view="grid" id="viewGridBtn">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                 Grid
               </button>
-              <button data-view="rankings" id="viewRankBtn">
+              <button type="button" data-view="rankings" id="viewRankBtn">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M4 19h16M7 19V9m5 10V4m5 15v-7"/></svg>
                 Rankings
               </button>
@@ -1062,7 +1066,7 @@
           </table>
         </div>
         <div class="load-more-wrap" id="loadMoreWrap">
-          <button class="btn btn-ghost" id="loadMoreBtn">Load more players</button>
+          <button type="button" class="btn btn-ghost" id="loadMoreBtn">Load more players</button>
         </div>
       </div>
     </div>
@@ -1139,8 +1143,8 @@
         <p>A dedicated matchmaking space for sports people — built for practice partners, casual games, and competitive matches.</p>
       </div>
       <div class="footer-col"><h5>Product</h5><a href="#discover">Discover Players</a><a href="#ratings">Rating System</a><a href="#popular">Regional Trends</a></div>
-      <div class="footer-col"><h5>Sports</h5><a href="#">Badminton</a><a href="#">Football</a><a href="#">Table Tennis</a></div>
-      <div class="footer-col"><h5>About this build</h5><a href="#">Hackathon prototype</a><a href="#">Mocked data, live logic</a></div>
+      <div class="footer-col"><h5>Sports</h5><a href="#discover" data-filter-sport="Badminton">Badminton</a><a href="#discover" data-filter-sport="Football">Football</a><a href="#discover" data-filter-sport="Table Tennis">Table Tennis</a></div>
+      <div class="footer-col"><h5>About this build</h5><span class="footer-note">Hackathon prototype</span><span class="footer-note">Mocked data, live logic</span></div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 PlayMatch — demo prototype, not a live product.</span>
@@ -1158,7 +1162,7 @@
   <div class="modal">
     <div class="modal-head">
       <div class="mp-profile" id="modalProfile"></div>
-      <button class="modal-close" data-close="modalOverlay">
+      <button type="button" class="modal-close" data-close="modalOverlay" aria-label="Close player details">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
@@ -1171,7 +1175,7 @@
   <div class="modal narrow">
     <div class="modal-head">
       <div><h3 id="authTitle">Sign in to PlayMatch</h3><p id="authSubtitle">Sign in to send match requests and save your profile.</p></div>
-      <button class="modal-close" data-close="authOverlay">
+      <button type="button" class="modal-close" data-close="authOverlay" aria-label="Close sign-in dialog">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
@@ -1185,18 +1189,7 @@
 </div>
 
 <script>
-const THEME_KEY = "playmatchTheme";
-function applyTheme(theme){
-  const normalized = theme === "light" ? "light" : "dark";
-  document.body.classList.toggle("light-mode", normalized === "light");
-  localStorage.setItem(THEME_KEY, normalized);
-  const toggle = document.getElementById("themeToggle");
-  if(toggle){
-    toggle.setAttribute("aria-label", normalized === "light" ? "Switch to dark mode" : "Switch to light mode");
-    toggle.title = normalized === "light" ? "Switch to dark mode" : "Switch to light mode";
-  }
-}
-applyTheme(localStorage.getItem(THEME_KEY) || "dark");
+// Theme persistence and UI state are provided by the shared /theme.js.
 
 /* ============================================================
    MOCK DATA
@@ -1397,7 +1390,7 @@ function fillSportSelect(){
 function fillFilterChips(){
   const wrap = document.getElementById('filterSports');
   const sports = ["All", ...ALL_SPORTS];
-  wrap.innerHTML = sports.map(s=>`<button class="chip ${s===state.filterSport?'active':''}" data-sport="${s}">${s==='All'?'All':SPORT_ICON[s]+' '+s}</button>`).join("");
+  wrap.innerHTML = sports.map(s=>`<button type="button" class="chip ${s===state.filterSport?'active':''}" data-sport="${s}">${s==='All'?'All':SPORT_ICON[s]+' '+s}</button>`).join("");
   wrap.querySelectorAll('.chip').forEach(chip=>{
     chip.addEventListener('click', ()=>{
       state.filterSport = chip.dataset.sport;
@@ -1662,7 +1655,7 @@ function cardHtml(p){
       </div>
       <div class="pcard-foot">
         <span class="dist">${dist} km away</span>
-        <button class="btn ${requested ? 'sent' : 'btn-primary'} btn-sm" data-request="${p.id}">${requested ? 'Request Sent' : 'Request to Play'}</button>
+        <button type="button" class="btn ${requested ? 'sent' : 'btn-primary'} btn-sm" data-request="${p.id}">${requested ? 'Request Sent' : 'Request to Play'}</button>
       </div>
     </div>`;
 }
@@ -1678,7 +1671,7 @@ function renderFeed(){
     grid.innerHTML = `<div class="empty-state">
       <h4>No players match these filters</h4>
       <p>Try widening your distance range, clearing the search, or removing a filter.</p>
-      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('clearFilters').click()">Clear filters</button>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('clearFilters').click()">Clear filters</button>
     </div>`;
     document.getElementById('loadMoreWrap').style.display = "none";
     return;
@@ -1777,7 +1770,7 @@ function openProfile(id){
       <h4>Recent Matches</h4>
       ${p.history.map(h=>`<div class="hist-row"><span>vs ${h.opp}</span><span class="hist-res ${h.res}">${h.res}</span><span class="hist-delta ${h.delta>=0?'pos':'neg'}">${h.delta>=0?'+':''}${h.delta}</span></div>`).join("")}
     </div>
-    <div class="mp-actions"><button class="btn btn-primary btn-block" id="modalRequestBtn">Request to Play</button></div>`;
+    <div class="mp-actions"><button type="button" class="btn btn-primary btn-block" id="modalRequestBtn">Request to Play</button></div>`;
   document.getElementById('modalRequestBtn').addEventListener('click', ()=>{ closeModal('modalOverlay'); requestToPlay(p.id); });
   document.getElementById('modalOverlay').classList.add('open');
 }
@@ -1824,21 +1817,21 @@ function requestToPlay(id){
 function renderAuthArea(){
   const area = document.getElementById('authArea');
   if(!auth.user){
-    area.innerHTML = `<button class="btn btn-primary btn-sm" id="signInBtn">Sign In</button>`;
+    area.innerHTML = `<button type="button" class="btn btn-primary btn-sm" id="signInBtn">Sign In</button>`;
     document.getElementById('signInBtn').addEventListener('click', ()=>openAuth("Sign in to PlayMatch","Sign in to send match requests and save your profile."));
   }else{
     area.innerHTML = `
       <div class="user-menu">
-        <button class="user-chip" id="userChipBtn">
+        <button type="button" class="user-chip" id="userChipBtn">
           <span class="av">${initials(auth.user.name)}</span>
           ${auth.user.name.split(" ")[0]}
         </button>
         <div class="user-dropdown" id="userDropdown">
           <div class="ud-head"><div class="n">${auth.user.name}</div><div class="e">${auth.user.email}</div></div>
-          <button class="ud-item" onclick="document.getElementById('you').scrollIntoView({behavior:'smooth'}); document.getElementById('userDropdown').classList.remove('open');">
+          <button type="button" class="ud-item" onclick="document.getElementById('you').scrollIntoView({behavior:'smooth'}); document.getElementById('userDropdown').classList.remove('open');">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> My Profile
           </button>
-          <button class="ud-item danger" id="signOutBtn">
+          <button type="button" class="ud-item danger" id="signOutBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg> Sign out
           </button>
         </div>
@@ -1870,12 +1863,12 @@ function openAuth(title, subtitle){
 
 function renderAuthStep_choice(){
   document.getElementById('authBody').innerHTML = `
-    <button class="auth-google" id="googleBtn">
+    <button type="button" class="auth-google" id="googleBtn">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.9 32.6 29.4 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 6 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 6 29.5 4 24 4c-7.7 0-14.3 4.4-17.7 10.7z"/><path fill="#4CAF50" d="M24 44c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.4 35 26.8 36 24 36c-5.4 0-9.9-3.4-11.6-8.2l-6.5 5C9.6 39.5 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1 3-3.1 5.5-5.9 7.2l6.3 5.3C39.5 37.3 44 31.5 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
       Continue with Google
     </button>
     <div class="auth-divider">OR</div>
-    <button class="auth-google" id="emailBtn" style="margin-bottom:0;">
+    <button type="button" class="auth-google" id="emailBtn" style="margin-bottom:0;">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
       Continue with email
     </button>
@@ -1888,11 +1881,11 @@ function renderAuthStep_googlePicker(){
   document.getElementById('authBody').innerHTML = `
     <div class="account-picker">
       ${MOCK_GOOGLE_ACCOUNTS.map((a,i)=>`
-        <button class="account-opt" data-i="${i}">
+        <button type="button" class="account-opt" data-i="${i}">
           <span class="av">${initials(a.name)}</span>
           <span class="info"><div class="n">${a.name}</div><div class="e">${a.email}</div></span>
         </button>`).join("")}
-      <button class="account-opt" id="useAnotherBtn">
+      <button type="button" class="account-opt" id="useAnotherBtn">
         <span class="av" style="background:var(--gray-100); color:var(--slate);">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
         </span>
@@ -1914,8 +1907,8 @@ function renderAuthStep_email(fromGoogle){
     <div class="auth-field"><label>${fromGoogle ? 'Google' : 'Email'} address</label><input type="email" id="authEmail" placeholder="you@example.com"></div>
     <div class="auth-field"><label>Password</label><input type="password" id="authPass" placeholder="••••••••"></div>
     <div class="auth-error" id="authError">Please enter a valid name, email, and password.</div>
-    <button class="btn btn-primary btn-block" id="authSubmit">Sign in</button>
-    <div class="auth-switch"><button id="backToChoice">← Back to sign-in options</button></div>`;
+    <button type="button" class="btn btn-primary btn-block" id="authSubmit">Sign in</button>
+    <div class="auth-switch"><button type="button" id="backToChoice">← Back to sign-in options</button></div>`;
   document.getElementById('backToChoice').addEventListener('click', renderAuthStep_choice);
   document.getElementById('authSubmit').addEventListener('click', ()=>{
     const name = document.getElementById('authName').value.trim();
@@ -1951,7 +1944,7 @@ function renderYouSection(){
     wrap.innerHTML = `<div class="you-signed-out">
       <h3>You're browsing as a guest</h3>
       <p>Sign in to see your rating, match history, and send requests to other players.</p>
-      <button class="btn btn-primary" id="youSignInBtn">Sign In</button>
+      <button type="button" class="btn btn-primary" id="youSignInBtn">Sign In</button>
     </div>`;
     document.getElementById('youSignInBtn').addEventListener('click', ()=>openAuth("Sign in to PlayMatch","Sign in to see your profile and rating."));
     return;
@@ -2044,9 +2037,7 @@ renderTicker();
 document.getElementById('statPlayers').textContent = "1,248";
 document.getElementById('statMatches').textContent = "312";
 
-document.getElementById('themeToggle').addEventListener('click', ()=>{
-  applyTheme(document.body.classList.contains('light-mode') ? 'dark' : 'light');
-});
+// Shared /theme.js owns the theme toggle and preference storage.
 document.getElementById('findNetworkMatchBtn').addEventListener('click', findNetworkMatch);
 document.getElementById('runDemoMatchBtn').addEventListener('click', runDemoMatch);
 document.getElementById('resetMatchBtn').addEventListener('click', resetMatchLab);
@@ -2162,6 +2153,16 @@ document.getElementById('loadMoreBtn').addEventListener('click', ()=>{
   renderFeed();
 });
 
+document.querySelectorAll('[data-filter-sport]').forEach(link=>link.addEventListener('click',event=>{
+  event.preventDefault();
+  const sport=link.dataset.filterSport;
+  if(!ALL_SPORTS.includes(sport))return;
+  state.filterSport=sport;
+  state.visibleCount=8;
+  fillFilterChips();
+  setView('grid');
+  document.getElementById('discover').scrollIntoView({behavior:'smooth'});
+}));
 render();
 </script>
 </body>

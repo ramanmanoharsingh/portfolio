@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{var t=localStorage.getItem('t');if(t!=='light'&&t!=='dark'){var old=localStorage.getItem('playmatchTheme');if(old==='light'||old==='dark'){t=old;localStorage.setItem('t',t)}}document.documentElement.dataset.theme=(t==='light'||t==='dark')?t:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}})();</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PlayMate Finder</title>
@@ -777,8 +778,11 @@
       .table-wrap { overflow-x: auto; }
     }
   </style>
+<link rel="stylesheet" href="/theme.css?v=20261013">
+<link rel="stylesheet" href="/ui-controls.css?v=20261013">
+<script defer src="/theme.js?v=20261013"></script>
 </head>
-<body>
+<body data-site-app="playmate-finder">
   <div class="layout">
     <aside class="sidebar">
       <div class="brand">
@@ -790,11 +794,11 @@
       </div>
 
       <nav class="nav" aria-label="Primary">
-        <button class="active" data-page="discover"><i data-lucide="radar"></i>Discover</button>
-        <button data-page="requests"><i data-lucide="send"></i>Requests</button>
-        <button data-page="matches"><i data-lucide="calendar-check"></i>Matches</button>
-        <button data-page="profile"><i data-lucide="user-round"></i>Profile</button>
-        <button data-page="accountability"><i data-lucide="shield-check"></i>Accountability</button>
+        <button type="button" class="active" data-page="discover"><i data-lucide="radar"></i>Discover</button>
+        <button type="button" data-page="requests"><i data-lucide="send"></i>Requests</button>
+        <button type="button" data-page="matches"><i data-lucide="calendar-check"></i>Matches</button>
+        <button type="button" data-page="profile"><i data-lucide="user-round"></i>Profile</button>
+        <button type="button" data-page="accountability"><i data-lucide="shield-check"></i>Accountability</button>
       </nav>
 
       <div class="sidebar-card">

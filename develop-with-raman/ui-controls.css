@@ -1,0 +1,159 @@
+/* Shared, accessible button/control design across portfolio pages and embedded demos.
+   Visual variants (primary, secondary, destructive, tabs) keep their semantic color;
+   geometry, type, focus, feedback and disabled behavior stay consistent. */
+:root{--ui-control-radius:999px;--ui-focus:#555;--ui-control-transition:background-color .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+html[data-theme="dark"]{--ui-focus:#dedede}
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"],
+.btn,
+.button,
+.top-action,
+.top-link,
+.portal-button,
+.portal-nav-button,
+.portal-tab,
+.auth-primary,
+.auth-social,
+.google,
+.icon-btn,
+.modal-close,
+.account-opt,
+.user-chip,
+.ud-item,
+.fc-geoloc,
+.search-clear,
+.clear-filters,
+.chip,
+.service-start{
+ box-sizing:border-box;
+ border-radius:var(--ui-control-radius)!important;
+ font-family:inherit;
+ font-weight:600;
+ letter-spacing:normal;
+ transition:var(--ui-control-transition);
+}
+button,input[type="button"],input[type="submit"],input[type="reset"],[role="button"]{cursor:pointer}
+a.btn,a.button,a.top-action,a.top-link,a.portal-button,a.portal-nav-button,a.portal-tab,[role="button"]{text-decoration:none}
+button:focus-visible,
+input[type="button"]:focus-visible,
+input[type="submit"]:focus-visible,
+input[type="reset"]:focus-visible,
+[role="button"]:focus-visible,
+.btn:focus-visible,
+.button:focus-visible,
+.top-action:focus-visible,
+.top-link:focus-visible,
+.portal-button:focus-visible,
+.portal-nav-button:focus-visible,
+.portal-tab:focus-visible,
+.auth-primary:focus-visible,
+.auth-social:focus-visible,
+.google:focus-visible,
+.icon-btn:focus-visible,
+.modal-close:focus-visible,
+.account-opt:focus-visible,
+.user-chip:focus-visible,
+.ud-item:focus-visible,
+.fc-geoloc:focus-visible,
+.search-clear:focus-visible,
+.clear-filters:focus-visible,
+.chip:focus-visible,
+.service-start:focus-visible{
+ outline:2px solid var(--ui-focus)!important;
+ outline-offset:3px!important;
+}
+button:hover:not(:disabled),
+input[type="button"]:hover:not(:disabled),
+input[type="submit"]:hover:not(:disabled),
+input[type="reset"]:hover:not(:disabled),
+[role="button"]:hover,
+.btn:hover,
+.button:hover,
+.top-action:hover,
+.top-link:hover,
+.portal-button:hover,
+.portal-nav-button:hover,
+.auth-primary:hover,
+.auth-social:hover,
+.google:hover,
+.icon-btn:hover,
+.modal-close:hover,
+.account-opt:hover,
+.user-chip:hover,
+.ud-item:hover,
+.fc-geoloc:hover,
+.search-clear:hover,
+.clear-filters:hover,
+.chip:hover,
+.service-start:hover{transform:translateY(-1px)}
+button:active:not(:disabled),
+input[type="button"]:active:not(:disabled),
+input[type="submit"]:active:not(:disabled),
+input[type="reset"]:active:not(:disabled),
+.btn:active,
+.button:active,
+.top-action:active,
+.top-link:active,
+.portal-button:active,
+.portal-nav-button:active,
+.auth-primary:active,
+.auth-social:active,
+.google:active,
+.icon-btn:active,
+.modal-close:active,
+.account-opt:active,
+.user-chip:active,
+.ud-item:active,
+.fc-geoloc:active,
+.search-clear:active,
+.clear-filters:active,
+.chip:active,
+.service-start:active{transform:translateY(0) scale(.99)}
+button:disabled,
+input[type="button"]:disabled,
+input[type="submit"]:disabled,
+input[type="reset"]:disabled{cursor:not-allowed;opacity:.55;transform:none}
+.site-topbar .theme-toggle{border-radius:999px!important}
+.footer-col .footer-note{display:block;color:var(--slate-soft,var(--muted,#777));font-size:12px;line-height:1.8}
+/* Shared-theme support for the two self-contained portfolio prototypes. */
+body[data-site-app="playmatch"]{
+ --navy:#0B1C39;--navy-2:#12294D;--charcoal:#1F2430;--slate:#5B6478;--slate-soft:#8891A3;--line:#E3E6EC;--line-strong:#CBD1DC;--gray-100:#F4F5F7;--bg:#F8F9FB;--white:#FFFFFF;--accent-soft:#EAF0FF;
+}
+html[data-theme="dark"] body[data-site-app="playmatch"]{
+ --navy:#000000;--navy-2:#080808;--charcoal:#F5F5F5;--slate:#B3B3B3;--slate-soft:#8A8A8A;--line:#262626;--line-strong:#363636;--gray-100:#111111;--bg:#000000;--white:#080808;--accent-soft:#171717;
+ background:#000!important;color:#F5F5F5!important;
+}
+html[data-theme="dark"] body[data-site-app="playmatch"] header.nav{background:rgba(0,0,0,.96)!important;border-color:#262626!important}
+html[data-theme="dark"] body[data-site-app="playmatch"] .finder-card,
+html[data-theme="dark"] body[data-site-app="playmatch"] .filters,
+html[data-theme="dark"] body[data-site-app="playmatch"] .search-bar,
+html[data-theme="dark"] body[data-site-app="playmatch"] .pcard,
+html[data-theme="dark"] body[data-site-app="playmatch"] .skel,
+html[data-theme="dark"] body[data-site-app="playmatch"] .modal,
+html[data-theme="dark"] body[data-site-app="playmatch"] .modal-overlay .modal,
+html[data-theme="dark"] body[data-site-app="playmatch"] .popcard,
+html[data-theme="dark"] body[data-site-app="playmatch"] .rankings,
+html[data-theme="dark"] body[data-site-app="playmatch"] .auth-panel{background:#080808!important;color:#F5F5F5!important;border-color:#262626!important}
+body[data-site-app="playmate-finder"]{
+ --bg:#f5f7fa;--surface:#ffffff;--surface-2:#f8fafc;--surface-3:#eef2f7;--line:#d9e1ec;--text:#111827;--muted:#5f6b7a;--muted-2:#8792a2;--accent:#123a6f;--accent-2:#1f5ea8;--blue:#2563eb;--orange:#b45309;--green:#047857;--red:#b42318;--on-accent:#ffffff;
+}
+html[data-theme="dark"] body[data-site-app="playmate-finder"]{
+ --bg:#000000;--surface:#080808;--surface-2:#111111;--surface-3:#171717;--line:#292929;--text:#F5F5F5;--muted:#A3A3A3;--muted-2:#858585;--accent:#EEEEEE;--accent-2:#D4D4D4;--blue:#F5F5F5;--orange:#BDBDBD;--green:#D4D4D4;--red:#E0E0E0;--on-accent:#000000;
+ background:#000!important;color:#F5F5F5!important;
+}
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .sidebar,
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .topbar,
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .sidebar-card,
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .card,
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .panel,
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .modal,
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .auth-modal,
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .table-wrap,
+html[data-theme="dark"] body[data-site-app="playmate-finder"] .player-card{background:#080808!important;color:#F5F5F5!important;border-color:#292929!important}
+@media(prefers-reduced-motion:reduce){
+ button,.btn,.button,.top-action,.top-link,.portal-button,.portal-nav-button,.portal-tab,.auth-primary,.auth-social,.google,.icon-btn,.modal-close,.account-opt,.user-chip,.ud-item,.fc-geoloc,.search-clear,.clear-filters,.chip,.service-start{transition:none!important}
+ button:hover:not(:disabled),.btn:hover,.button:hover,.top-action:hover,.top-link:hover,.portal-button:hover,.portal-nav-button:hover,.auth-primary:hover,.auth-social:hover,.google:hover,.icon-btn:hover,.modal-close:hover,.account-opt:hover,.user-chip:hover,.ud-item:hover,.fc-geoloc:hover,.search-clear:hover,.clear-filters:hover,.chip:hover,.service-start:hover{transform:none}
+}

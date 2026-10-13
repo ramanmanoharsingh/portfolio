@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><script>(function(){try{var t=localStorage.getItem('t');document.documentElement.dataset.theme=(t==='light'||t==='dark')?t:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}})();</script>
+<head><script>(function(){try{var t=localStorage.getItem('t');if(t!=='light'&&t!=='dark'){var old=localStorage.getItem('playmatchTheme');if(old==='light'||old==='dark'){t=old;localStorage.setItem('t',t)}}document.documentElement.dataset.theme=(t==='light'||t==='dark')?t:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}})();</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="/theme.css?v=20261013">
 <script defer src="/theme.js?v=20261013"></script>
 <link rel="stylesheet" href="/topbar.css?v=20261013">
+<link rel="stylesheet" href="/ui-controls.css?v=20261013">
 </head>
 <body class="portal-body account-status-page">
   <header class="site-topbar" aria-label="Site header"><a class="site-topbar-brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a><div class="site-topbar-actions"><button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme" title="Toggle theme"></button><a class="site-topbar-home" href="/" aria-label="View website" title="View website"><span aria-hidden="true">↗</span><span class="site-topbar-home-label">View website</span></a></div></header><main style="min-height:calc(100vh - 76px);display:grid;place-items:center;padding:24px">
