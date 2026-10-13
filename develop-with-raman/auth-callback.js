@@ -9,9 +9,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   if(error){
     const code=params.get('error_code')||hash.get('error_code')||'';
     const detail=String(error);
-    fail('Sign-in could not be completed',code==='provider_disabled'||/provider.*not enabled|unsupported provider/i.test(detail)
-      ?'Social sign-in is not enabled in the authentication settings yet. The site owner must enable the provider and add its OAuth credentials in Supabase.'
-      :detail);
+    const normalized=detail.toLowerCase();
+    let friendly=detail;
+    if(code==='provider_disabled'||/provider.*not enabled|unsupported provider/i.test(detail)){
+      friendly='Social sign-in is not enabled yet. The site owner must enable the provider and save its OAuth client ID and client secret in Supabase Authentication settings.';
+    }else if(/redirect_uri_mismatch|redirect uri.*match|redirect_uri/i.test(normalized)){
+      friendly='The OAuth provider rejected its callback URL. The site owner must set the provider callback to https://nmqntqxvficakxkticxc.supabase.co/auth/v1/callback and allow the website callback URL in Supabase Authentication URL Configuration.';
+    }else if(/invalid_client|client secret|client_id/i.test(normalized)){
+      friendly='The OAuth credentials may be missing or incorrect. The site owner must verify the provider client ID and client secret in Supabase Authentication settings.';
+    }else if(/access_denied|user denied|cancelled|canceled/i.test(normalized)){
+      friendly='Sign-in was cancelled. Return to the sign-in page and try again.';
+    }
+    fail('Sign-in could not be completed',friendly);
     return;
   }
   if(!window.supabaseClient?.auth){fail('Authentication service unavailable','Please reload this page. If the problem continues, contact the site owner.');return;}
