@@ -257,6 +257,15 @@ details[open]::details-content{block-size:auto;content-visibility:visible}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.3s}
 @media (prefers-reduced-motion:reduce){details::details-content{transition:none!important}.nl a::before{transition:none!important}.service-card{transform:none!important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 
+/* Site scrollbar: slim pill thumb in the page's ink colour, transparent track. */
+*{scrollbar-width:thin;scrollbar-color:var(--ink-mute,#898989) transparent}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--ink-mute,#898989);border-radius:100px;border:3px solid transparent;background-clip:content-box;transition:background .25s var(--ease)}
+::-webkit-scrollbar-thumb:hover{background:var(--ink,#000);background-clip:content-box}
+::-webkit-scrollbar-corner{background:transparent}
+@media (prefers-reduced-motion:reduce){::-webkit-scrollbar-thumb{transition:none!important}}
+
 /* Lenis smooth scrolling (skipped for reduced motion or if the CDN fails). */
 html.lenis,html.lenis body{height:auto}
 html.lenis{scroll-behavior:auto!important}
