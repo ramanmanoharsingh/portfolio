@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="R logo">
+  <rect width="512" height="512" fill="#ffffff"/>
+  <g fill="#000000">
+    <!-- Top shape: horizontal thick bar with left-facing angled diagonal cut at left,
+         extends right, curves down and back left into semi-circular loop -->
+    <path d="M 120 140 L 200 120 L 340 120 C 400 120, 440 160, 440 220 C 440 280, 400 320, 340 320 H 200 V 260 H 340 C 370 260, 390 240, 390 220 C 390 200, 370 160, 340 160 H 120 Z"/>
+    <!-- Bottom shape: separate thick diagonal slash beneath the loop,
+         running parallel to upper-left angled cut -->
+    <path d="M 240 320 L 360 440 L 300 440 L 180 320 Z"/>
+  </g>
+</svg>
