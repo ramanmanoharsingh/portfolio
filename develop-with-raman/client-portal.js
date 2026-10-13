@@ -14,7 +14,8 @@
       const sb=window.supabaseClient;
       if(!sb?.auth)throw new Error('Supabase client not configured. Check portal-supabase.js and the Supabase SDK.');
       const {data:{user},error:authError}=await sb.auth.getUser();
-      if(authError||!user){location.replace('/auth.html?next='+encodeURIComponent(location.pathname+location.search));return;}
+      if(authError)throw authError;
+      if(!user){location.replace('/auth.html?next='+encodeURIComponent(location.pathname+location.search));return;}
       let {data:profile,error:profileError}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();
       if(profileError)throw profileError;
       if(!profile){const {error}=await sb.from('profiles').insert({id:user.id,full_name:user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'',role:'client'});if(error)throw error;({data:profile,error:profileError}=await sb.from('profiles').select('*').eq('id',user.id).single());if(profileError)throw profileError;}
