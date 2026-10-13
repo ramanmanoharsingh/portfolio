@@ -117,15 +117,16 @@ AUTH_SCRIPT = SITE_ROOT / "account-auth.js"
 if AUTH_SCRIPT.is_file():
     auth_source = AUTH_SCRIPT.read_text(encoding="utf-8")
     without_multi_selector = auth_source.replace("$$('.auth-social').forEach", "")
-    # Strip the correct multi-selector form before checking for the broken single form.
-    # Strip the correct multi-selector form before checking for the broken single form.
+    # Strip valid multi-selector calls before checking for the broken single-selector pattern.
     if "$('.auth-social').forEach" in without_multi_selector:
-    if "$('.auth-social').forEach" in without_multi_selector:
+        fail("develop-with-raman/account-auth.js", "single-element selector used with forEach for social sign-in controls")
     social_iterations = auth_source.count("$$('.auth-social').forEach")
-    social_iterations = auth_source.count("$$(".replace("(", "('" + ".auth-social" + "').forEach"))
     if social_iterations != 2:
         fail("develop-with-raman/account-auth.js", f"expected two multi-element social-control iterations, found {social_iterations}")
     cookie_assignments = auth_source.count("document.cookie=")
+    if cookie_assignments != 1:
+        fail("develop-with-raman/account-auth.js", f"expected one persistence-cookie assignment, found {cookie_assignments}")
+    if "SameSite=Lax; Secure" not in auth_source:
         fail("develop-with-raman/account-auth.js", "persistence-cookie assignment must include Secure and SameSite=Lax")
 
 print(f"Audited {len(HTML_FILES)} HTML page(s); syntax-checked {checked_inline} inline JavaScript block(s).")
