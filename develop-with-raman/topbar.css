@@ -10,6 +10,8 @@
 .site-topbar .theme-toggle:focus-visible,.site-topbar-home:focus-visible,.site-topbar-brand:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .site-topbar-home{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 13px;border:1px solid #555;border-radius:999px;background:transparent;color:#fff!important;text-decoration:none!important;font-size:12px;font-weight:600;white-space:nowrap}
 .site-topbar-home span:first-child{font-size:17px;line-height:1}
+/* Keep the website-return action icon-only so it cannot collide with the theme toggle. */
+.site-topbar-home-label{display:none!important}
 .site-topbar-home:hover .site-topbar-home-label{color:#000}
 .site-topbar + .portal-shell{min-height:calc(100vh - var(--site-header-height))}
 .portal-topbar > .portal-header-brand{display:none!important}
