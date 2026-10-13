@@ -20,7 +20,7 @@
 
   const showMessage = (text, kind='error') => { message.textContent=text; message.dataset.kind=kind; message.setAttribute('role',kind==='error'?'alert':'status'); };
   const clearMessage = () => { message.textContent=''; delete message.dataset.kind; message.removeAttribute('role'); };
-  const setBusy = (busy, label) => { state.busy=busy; submit.disabled=busy; submitLabel.textContent=busy?'Please wait…':label; submit.setAttribute('aria-busy',String(busy)); };
+  const setBusy = (busy, label) => { state.busy=busy; submit.disabled=busy; submitLabel.textContent=busy?'Please wait…':label; submit.setAttribute('aria-busy',String(busy)); $('.auth-social').forEach(button=>{button.disabled=busy;}); };
   function safeNextPath() {
     const next = new URLSearchParams(location.search).get('next');
     if (!next || !next.startsWith('/') || next.startsWith('//') ||
@@ -79,14 +79,17 @@
   };
   const scorePassword = value => {if(!value)return 0;let score=0;if(value.length>=8)score++;if(value.length>=12)score++;if(/[a-z]/.test(value)&&/[A-Z]/.test(value))score++;if(/\d/.test(value)||/[^A-Za-z0-9]/.test(value))score++;return Math.min(score,4);};
   const updateStrength = () => {const score=scorePassword(password.value);strength.dataset.level=String(score);strengthLabel.textContent=!password.value?'Use at least 8 characters':['','Needs more variety','Fair password','Good password','Strong password'][score];};
-  const humanError = error => {
+  const humanError = (error, provider='') => {
     const raw=String(error?.message||'Something went wrong. Please try again.');
     if(/invalid login credentials/i.test(raw))return 'Email or password is incorrect. Check your details and try again.';
     if(/email not confirmed/i.test(raw))return 'Please verify your email using the confirmation link we sent you.';
     if(/user already registered/i.test(raw))return 'An account with this email already exists. Try signing in instead.';
     if(/password should be at least/i.test(raw))return 'Choose a longer password that meets the minimum length requirement.';
     if(/rate limit/i.test(raw))return 'Too many attempts in a short time. Please wait a moment and try again.';
-    if(/provider.*not enabled|unsupported provider/i.test(raw))return 'This social sign-in provider is not configured yet. Please use email and password for now.';
+    if(/provider_disabled|provider.*not enabled|unsupported provider/i.test(raw))return provider==='github'?'GitHub sign-in is not enabled in Supabase yet. The project owner must enable the provider and add its OAuth credentials.':'This social sign-in provider is not configured yet. Please use email and password for now.';
+    if(/redirect_uri_mismatch|redirect uri.*match|redirect_uri/i.test(raw))return 'The OAuth callback URL was rejected. Check the callback URL in the GitHub OAuth app and the redirect URL allowlist in Supabase.';
+    if(/invalid_client|client secret|client_id/i.test(raw))return 'The GitHub OAuth credentials may be missing or incorrect in Supabase. Check the provider configuration.';
+    if(/failed to fetch|networkerror|network request failed/i.test(raw))return 'Could not reach the authentication service. Check your connection and try again.';
     return raw;
   };
   tabs.forEach(tab=>tab.addEventListener('click',()=>setMode(tab.dataset.mode)));
@@ -97,7 +100,40 @@
   forgotLink.addEventListener('click',event=>{event.preventDefault();setMode('reset');});
   $('#auth-back-login').addEventListener('click',event=>{event.preventDefault();setMode('login');});
   $('#auth-back-home')?.addEventListener('click',event=>{event.preventDefault();location.href='/';});
-  $$('.auth-social').forEach(button=>button.addEventListener('click',async()=>{clearMessage();try{const provider=button.dataset.provider;try{const n=safeNextPath();if(n)sessionStorage.setItem('dwr-auth-next',n);else sessionStorage.removeItem('dwr-auth-next');}catch(_e){}const {error}=await getClient().auth.signInWithOAuth({provider,options:{redirectTo:location.origin+'/auth-callback.html',...(provider==='google'?{scopes:'email'}:{})}});if(error)throw error;}catch(error){showMessage(humanError(error));}}));
+  $('.auth-social').forEach(button=>button.addEventListener('click',async()=>{
+    if(state.busy)return;
+    const provider=button.dataset.provider;
+    const providerName=provider==='github'?'GitHub':provider==='google'?'Google':'';
+    if(!providerName){showMessage('That sign-in provider is not supported.');return;}
+    clearMessage();
+    const label=button.querySelector('span:last-child');
+    const originalLabel=label?.textContent||`Continue with ${providerName}`;
+    setBusy(true,'');
+    button.setAttribute('aria-busy','true');
+    if(label)label.textContent=`Connecting to ${providerName}…`;
+    try{
+      try{
+        const next=safeNextPath();
+        if(next)sessionStorage.setItem('dwr-auth-next',next);
+        else sessionStorage.removeItem('dwr-auth-next');
+      }catch(_e){}
+      const client=getClient();
+      const {error}=await client.auth.signInWithOAuth({
+        provider,
+        options:{
+          redirectTo:new URL('/auth-callback.html',location.origin).href,
+          ...(provider==='google'?{scopes:'email'}:{})
+        }
+      });
+      if(error)throw error;
+    }catch(error){
+      showMessage(humanError(error,provider));
+    }finally{
+      button.removeAttribute('aria-busy');
+      if(label)label.textContent=originalLabel;
+      setBusy(false,state.mode==='login'?'Sign in to your account':state.mode==='signup'?'Create your account':'Send reset link');
+    }
+  }));
   form.addEventListener('submit',async event=>{
     event.preventDefault();if(state.busy)return;clearMessage();
     const email=$('#auth-email').value.trim(),pass=password.value;
