@@ -69,3 +69,52 @@ html[data-theme="dark"] .legacy-workspace-page .portal-nav button:hover,html[dat
  .legacy-workspace-page #workspace-view>.portal-topbar>.btn{align-self:flex-start}
  .legacy-workspace-page .legacy-auth-card{padding:22px 18px}
 }
+
+/* Keep the shared theme control and website-return link in a stable, non-overlapping row. */
+.site-topbar,
+body>header.top:not(#hd){
+  box-sizing:border-box;
+  min-width:0;
+}
+.site-topbar-brand,
+body>header.top:not(#hd) .brand{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.site-topbar-actions,
+body>header.top:not(#hd) .top-right{
+  position:static;
+  display:flex;
+  flex:0 0 auto;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:nowrap;
+  gap:10px;
+  min-width:0;
+}
+.site-topbar-actions>*,
+body>header.top:not(#hd) .top-right>*{
+  position:static;
+  flex-shrink:0;
+  margin:0;
+}
+.site-topbar .theme-toggle,
+.site-topbar .site-topbar-home,
+body>header.top:not(#hd) .theme-toggle,
+body>header.top:not(#hd) .back-to-site{
+  box-sizing:border-box;
+  vertical-align:middle;
+}
+@media(max-width:560px){
+  .site-topbar{gap:8px;padding-inline:12px}
+  .site-topbar-brand,body>header.top:not(#hd) .brand{font-size:12px;letter-spacing:-.035em}
+  .site-topbar-actions,body>header.top:not(#hd) .top-right{gap:6px}
+  .site-topbar .theme-toggle{width:36px;min-width:36px;flex-basis:36px;height:36px;min-height:36px}
+  .site-topbar .site-topbar-home{width:36px;min-width:36px;min-height:36px;padding:0}
+  body>header.top:not(#hd) .theme-toggle,
+  body>header.top:not(#hd) .back-to-site{width:36px;min-width:36px;height:36px;min-height:36px;padding:0}
+}
+@media(max-width:340px){
+  .site-topbar-brand,body>header.top:not(#hd) .brand{max-width:calc(100vw - 120px)}
+}
