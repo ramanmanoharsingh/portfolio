@@ -86,6 +86,16 @@ for page in HTML_FILES:
             if not (SITE_ROOT / asset_path).is_file():
                 fail(relative, f"missing local script asset: {src}")
 
+    # The client dashboard must use one shared site-style sign-out control.
+    if relative == "develop-with-raman/client-dashboard.html":
+        signout_buttons = [m.group(1) for m in BUTTON_RE.finditer(static) if attr(m.group(1), "data-sign-out") is not None]
+        if len(signout_buttons) != 1:
+            fail(relative, f"expected one shared sign-out control, found {len(signout_buttons)}")
+        elif not all(token in signout_buttons[0] for token in ("site-topbar-signout", "top-link")):
+            fail(relative, "sign-out control must use the shared site top-bar button styling")
+        if "auth-manager.js" in source:
+            fail(relative, "client dashboard should not load the unused legacy auth-manager.js")
+
     # Syntax-check executable inline JavaScript, including generated UI templates.
     for match in SCRIPT_RE.finditer(source):
         attrs, body = match.group(1), match.group(2)

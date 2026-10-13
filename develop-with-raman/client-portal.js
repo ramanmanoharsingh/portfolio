@@ -3,11 +3,10 @@
   const $=(s,r=document)=>r.querySelector(s);
   const esc=(s='')=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const nice=s=>String(s||'').replace(/[_-]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-  const date=s=>s?new Date(s).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):'—';
+  const date=s=>{if(!s)return '—';const d=new Date(s);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});};
   const safeUrl=s=>{try{const u=new URL(String(s||''),location.origin);return u.protocol==='https:'?u.href:'';}catch{return '';}};
-  const money=(amount,currency='INR')=>new Intl.NumberFormat(undefined,{style:'currency',currency,maximumFractionDigits:2}).format(Number(amount)||0);
+  const money=(amount,currency='INR')=>{const code=/^[A-Z]{3}$/.test(String(currency||'INR'))?String(currency||'INR'):'INR';try{return new Intl.NumberFormat(undefined,{style:'currency',currency:code,maximumFractionDigits:2}).format(Number.isFinite(Number(amount))?Number(amount):0);}catch{return '₹'+(Number.isFinite(Number(amount))?Number(amount):0).toLocaleString();}};
   function toast(msg,error=false){let el=$('#portal-toast');if(!el){el=document.createElement('div');el.id='portal-toast';el.className='portal-toast';document.body.append(el);}el.textContent=msg;el.dataset.error=String(error);el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3500);}
-  function sameSiteNext(){const candidate=new URLSearchParams(location.search).get('next')||'/welcome.html';return candidate.startsWith('/')&&!candidate.startsWith('//')&&!candidate.includes('\\')?candidate:'/welcome.html';}
   async function init(){
     const root=$('[data-portal]');if(!root)return;
     try{
@@ -37,10 +36,10 @@
       document.querySelectorAll('[data-user-name]').forEach(e=>e.textContent=name);
       document.querySelectorAll('[data-user-email]').forEach(e=>{if('value' in e)e.value=user.email||'';else e.textContent=user.email||'';});
       document.querySelectorAll('[data-user-avatar]').forEach(e=>{if(safeUrl(profile.avatar_url)){const img=document.createElement('img');img.alt='';img.referrerPolicy='no-referrer';img.src=safeUrl(profile.avatar_url);e.replaceChildren(img);}else e.textContent=(name.trim()[0]||'U').toUpperCase();});
-      document.querySelectorAll('[data-sign-out]').forEach(button=>button.addEventListener('click',async()=>{const {error}=await sb.auth.signOut();if(error){toast(error.message,true);return;}location.replace('/auth.html');}));
+      document.querySelectorAll('[data-sign-out]').forEach(button=>{if(button.dataset.signOutBound==='true')return;button.dataset.signOutBound='true';button.addEventListener('click',async()=>{if(button.disabled)return;button.disabled=true;try{const {error}=await sb.auth.signOut();if(error)throw error;location.replace('/auth.html');}catch(signOutError){toast(signOutError?.message||'Could not sign out. Please try again.',true);button.disabled=false;}});});
       if(root.dataset.page==='welcome'){if(role==='admin'){location.replace('/admin-portal.html');return;}document.querySelectorAll('[data-dashboard-link]').forEach(a=>a.href='/client-dashboard.html');return;}
       if(root.dataset.page==='profile'){await setupProfile(sb,user,profile,name);return;}
-      if(root.dataset.page==='dashboard'){await setupDashboard(sb,user,profile);return;}
+      if(root.dataset.page==='dashboard'){await setupDashboard(sb,user);return;}
     }catch(error){console.error('[client portal]',error);const el=$('[data-error-message]');if(el){el.hidden=false;el.textContent='We could not load your account: '+(error.message||'Unknown error')+'.';}else toast(error.message||'Unable to load account.',true);}
   }
   async function setupProfile(sb,user,profile,name){
@@ -51,11 +50,9 @@
     form.addEventListener('submit',async e=>{e.preventDefault();const btn=form.querySelector('[type=submit]');btn.disabled=true;try{const payload={id:user.id,full_name:form.elements.full_name.value.trim(),phone:form.elements.phone.value.trim()||null,company_name:form.elements.company_name.value.trim()||null,avatar_url:safeUrl(form.elements.avatar_url.value.trim())||null,notify_email:form.elements.notify_email.checked,notify_project_updates:form.elements.notify_project_updates.checked,updated_at:new Date().toISOString()};const {error}=await sb.from('profiles').update(payload).eq('id',user.id);if(error)throw error;toast('Profile saved successfully.');document.querySelectorAll('[data-user-name]').forEach(el=>el.textContent=payload.full_name||name);document.querySelectorAll('[data-user-avatar]').forEach(el=>{if(payload.avatar_url){const img=document.createElement('img');img.alt='';img.src=payload.avatar_url;el.replaceChildren(img);}else el.textContent=(payload.full_name||name).trim()[0]?.toUpperCase()||'U';});}catch(err){toast(err.message||'Could not save profile.',true);}finally{btn.disabled=false;btn.textContent='Save changes';}});
     $('#password-change-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const password=form.elements.new_password.value;if(password.length<8){toast('Password must contain at least 8 characters.',true);return;}const {error}=await sb.auth.updateUser({password});if(error)toast(error.message,true);else{form.reset();toast('Password updated.');}});
   }
-  async function setupDashboard(sb,user,profile){
+  async function setupDashboard(sb,user){
     // Keep project intake available even if an unrelated dashboard data query fails.
     setupProposalModal(sb,user);
-    const root=$('[data-page="dashboard"]');
-    const load=async(table,select,order='created_at')=>{const r=await sb.from(table).select(select).order(order,{ascending:false}).limit(100);if(r.error)throw r.error;return r.data||[];};
     const {data:projects,error:projectError}=await sb.from('projects').select('id,title,description,service_type,status,progress,due_date,live_url,updated_at').eq('client_id',user.id).order('updated_at',{ascending:false}).limit(100);if(projectError)throw projectError;
     const ids=(projects||[]).map(p=>p.id);
     let milestones=[],deliverables=[];
