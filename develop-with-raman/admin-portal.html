@@ -114,7 +114,8 @@ input[type="submit"]{
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.117.1";
 const SUPABASE_URL = "https://nmqntqxvficakxkticxc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_0hlTmV7OmeLYkBqu3MrGmg_oCdqDMGG";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const sessionMode = document.cookie.split(";").some(cookie => cookie.trim() === "portal_session=1");
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{persistSession:true,storage:sessionMode ? window.sessionStorage : window.localStorage,autoRefreshToken:true,detectSessionInUrl:true}});
 const $ = id => document.getElementById(id);
 const esc = value => String(value == null ? "" : value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmtDate = value => {if(!value)return "Not set";const d=new Date(value+"T00:00:00");return Number.isNaN(d.getTime())?esc(value):d.toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});};
