@@ -271,7 +271,15 @@ details[open]::details-content{block-size:auto;content-visibility:visible}
 ::-webkit-scrollbar-thumb{background:var(--ink-mute,#898989);border-radius:100px;border:3px solid transparent;background-clip:content-box;transition:background .25s var(--ease)}
 ::-webkit-scrollbar-thumb:hover{background:var(--ink,#000);background-clip:content-box}
 ::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-button{display:none !important; width:0; height:0;}
 @media (prefers-reduced-motion:reduce){::-webkit-scrollbar-thumb{transition:none!important}}
+/* Darker in dark mode, lighter in light mode */
+:root[data-theme="light"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.4)}
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.7)}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.4)}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.7)}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.4)} :root:not([data-theme="dark"]) ::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.7)}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.4)} :root:not([data-theme="light"]) ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.7)}}
 
 /* Lenis smooth scrolling (skipped for reduced motion or if the CDN fails). */
 html.lenis,html.lenis body{height:auto}
