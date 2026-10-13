@@ -1,0 +1,57 @@
+/* Shared site chrome for every primary HTML page. Keep portal content/navigation page-specific. */
+:root{--site-header-height:76px}
+.site-topbar{box-sizing:border-box;position:sticky;top:0;z-index:120;width:100%;height:var(--site-header-height);min-height:var(--site-header-height);display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(18px,5vw,72px);background:#000;color:#fff;border-bottom:1px solid #262626;font-family:"Space Grotesk","DM Sans",Inter,Arial,sans-serif}
+.site-topbar-brand{display:inline-flex;align-items:center;min-width:0;color:#fff!important;text-decoration:none!important;font-size:15px;font-weight:700;line-height:1;letter-spacing:-.025em;white-space:nowrap}
+.site-topbar-brand:hover{opacity:.78}
+.site-topbar-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex:0 0 auto}
+.site-topbar .theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 42px;width:42px;min-width:42px;height:42px;min-height:42px;padding:0;border:1px solid #555;border-radius:999px;background:transparent;color:#fff;cursor:pointer}
+.site-topbar .theme-toggle svg{display:block;width:18px;height:18px}
+.site-topbar .theme-toggle:hover,.site-topbar-home:hover{background:#fff;color:#000!important;border-color:#fff;text-decoration:none}
+.site-topbar .theme-toggle:focus-visible,.site-topbar-home:focus-visible,.site-topbar-brand:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.site-topbar-home{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 13px;border:1px solid #555;border-radius:999px;background:transparent;color:#fff!important;text-decoration:none!important;font-size:12px;font-weight:600;white-space:nowrap}
+.site-topbar-home span:first-child{font-size:17px;line-height:1}
+.site-topbar-home:hover .site-topbar-home-label{color:#000}
+.site-topbar + .portal-shell{min-height:calc(100vh - var(--site-header-height))}
+.portal-topbar > .portal-header-brand{display:none!important}
+.account-status-page > main{min-height:calc(100vh - var(--site-header-height))!important}
+.account-status-page main .portal-brand{display:none!important}
+body>header.top:not(#hd){box-sizing:border-box;height:var(--site-header-height);min-height:var(--site-header-height);padding:0 clamp(18px,5vw,72px);border-bottom:1px solid #262626;background:#000;color:#fff}
+body>header.top:not(#hd) .brand{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.025em}
+body>header.top:not(#hd) .top-right{align-items:center;gap:10px}
+body>header.top:not(#hd) .top-link{border:1px solid #555;background:transparent;color:#fff;border-radius:999px}
+body>header.top:not(#hd) .top-link:hover{background:#fff;color:#000;border-color:#fff}
+body>header.top:not(#hd) .theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:42px;min-width:42px;height:42px;min-height:42px;padding:0}
+body>header.top:not(#hd) .identity{display:inline-flex;align-items:center;gap:8px;color:#fff}
+body>header.top:not(#hd) .identity[hidden],body>header.top:not(#hd) button[hidden]{display:none!important}
+body>header.top#hd{background:#000;color:#fff;border-bottom:1px solid #262626}
+header.top#hd nav{height:76px!important;min-height:76px;padding:0 clamp(18px,5vw,72px)!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important}
+header.top#hd .nl{gap:clamp(12px,1.8vw,24px)!important}
+header.top#hd .nl a{font-size:13px;white-space:nowrap}
+header.top#hd .wm{font-size:clamp(15px,1.65vw,22px)!important}
+header.top#hd .nr{gap:clamp(7px,1vw,13px)!important}
+header.top#hd .nr .si{gap:clamp(8px,1.1vw,15px)!important}
+header.top#hd .theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:42px;min-width:42px;height:42px;padding:0;border-color:#555;color:#fff;background:transparent}
+header.top#hd .theme-toggle:hover{background:#fff;color:#000;border-color:#fff}
+@media(max-width:850px){
+ header.top#hd nav{grid-template-columns:minmax(0,1fr) auto!important}
+ header.top#hd .nl{display:none!important}
+ header.top#hd .wm{justify-self:start;text-align:left;font-size:16px!important}
+ header.top#hd .nr .si{display:none!important}
+}
+@media(max-width:560px){
+ .site-topbar{height:64px;min-height:64px;padding:0 14px;gap:10px}
+ .site-topbar-brand{font-size:14px}
+ .site-topbar-actions{gap:7px}
+ .site-topbar .theme-toggle{width:38px;min-width:38px;flex-basis:38px;height:38px;min-height:38px}
+ .site-topbar-home{min-height:38px;padding:0 10px;font-size:11px}
+ .site-topbar-home-label{display:none}
+ .site-topbar + .portal-shell{min-height:calc(100vh - 64px)}
+ body>header.top:not(#hd){height:64px;min-height:64px;padding:0 14px}
+ body>header.top:not(#hd) .top-right{gap:7px}
+ body>header.top:not(#hd) .top-link{width:auto;min-width:38px;height:38px;min-height:38px;padding:0 10px}
+ body>header.top:not(#hd) .theme-toggle{width:38px;min-width:38px;height:38px;min-height:38px;padding:0}
+ header.top#hd nav{height:64px!important;min-height:64px;padding:0 14px!important}
+ header.top#hd .nr{gap:6px!important}
+ header.top#hd .wm{font-size:14px!important;white-space:normal}
+ header.top#hd .top-action,header.top#hd .nr .tg:not(.theme-toggle){min-height:36px;height:36px;padding:0 10px;font-size:11px}
+}
