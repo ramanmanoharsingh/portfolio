@@ -1,0 +1,48 @@
+/* Shared light/dark theme variables and toggle. */
+:root,html[data-theme="light"]{color-scheme:light;--bg:#f7f7f5;--surface:#fff;--ink:#171717;--muted:#747474;--line:#e6e6e2;--dark:#090909;--soft:#f0f0ec;--danger:#a52929;--shadow:0 12px 40px rgba(0,0,0,.045);--portal-bg:#f7f7f5;--portal-ink:#171717;--portal-muted:#777873;--portal-line:#e7e7e2;--portal-card:#fff;--portal-accent:#c8f169}
+html[data-theme="dark"]{color-scheme:dark;--bg:#111210;--surface:#191a17;--ink:#f3f3ee;--muted:#a5a69e;--line:#30312c;--dark:#090909;--soft:#24251f;--danger:#ff9b91;--shadow:0 14px 42px rgba(0,0,0,.28);--portal-bg:#111210;--portal-ink:#f3f3ee;--portal-muted:#a5a69e;--portal-line:#30312c;--portal-card:#191a17;--portal-accent:#c8f169}
+html[data-theme]{background:var(--bg,var(--portal-bg,#f7f7f5))}
+html[data-theme] body:not(.portal-body){background:var(--bg);color:var(--ink)}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:42px;min-width:42px;height:42px;min-height:42px;padding:0;border:1px solid var(--line,#e6e6e2);border-radius:999px;background:transparent;color:var(--ink,#171717);cursor:pointer;transition:background-color .18s,color .18s,border-color .18s,transform .18s}
+.theme-toggle svg{display:block;width:18px;height:18px}.theme-toggle:hover{transform:translateY(-1px);background:var(--soft,#f0f0ec)}.theme-toggle:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.theme-toggle-floating{position:fixed;z-index:150;top:18px;right:18px;border-color:var(--line);background:var(--surface);color:var(--ink);box-shadow:0 4px 18px #0002}
+header.top .theme-toggle{color:#fff;border-color:#ffffff85}header.top .theme-toggle:hover{background:#fff;color:#080808;border-color:#fff}
+.portal-body .theme-toggle{border-color:var(--portal-line);color:var(--portal-ink);background:var(--portal-card)}
+@media(max-width:650px){.theme-toggle{width:38px;min-width:38px;height:38px;min-height:38px}.theme-toggle-floating{top:12px;right:12px}}
+/* Legacy dashboard/admin layout. */
+html[data-theme="dark"] .sidebar,html[data-theme="dark"] .panel,html[data-theme="dark"] .stat,html[data-theme="dark"] .item,html[data-theme="dark"] .auth-wrap,html[data-theme="dark"] dialog,html[data-theme="dark"] .res,html[data-theme="dark"] .id-row{background:var(--surface);color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .side-nav button{color:var(--muted)}html[data-theme="dark"] .side-nav button.active,html[data-theme="dark"] .side-nav button:hover{background:var(--soft);color:var(--ink)}
+html[data-theme="dark"] .field label,html[data-theme="dark"] .auth-form label{color:var(--muted)}
+html[data-theme="dark"] .field input,html[data-theme="dark"] .field select,html[data-theme="dark"] .field textarea,html[data-theme="dark"] .auth-form input,html[data-theme="dark"] .message-form input,html[data-theme="dark"] #cp input{background:#20211d;color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .field input::placeholder,html[data-theme="dark"] .field textarea::placeholder,html[data-theme="dark"] .auth-form input::placeholder{color:#8b8d84}
+html[data-theme="dark"] .field input[readonly]{background:#292a25;color:var(--muted)}html[data-theme="dark"] .empty{border-color:var(--line);color:var(--muted)}
+html[data-theme="dark"] .pill{background:#292a25;color:#e0e1da}html[data-theme="dark"] .pill.green{background:#26351b;color:#c4e5a2}html[data-theme="dark"] .pill.amber{background:#3a2e19;color:#f2d29a}html[data-theme="dark"] .pill.red{background:#3a2221;color:#ffc1bb}
+html[data-theme="dark"] .progress{background:#33342e}html[data-theme="dark"] .progress span{background:#d4d6cd}
+html[data-theme="dark"] .divider:before,html[data-theme="dark"] .divider:after{background:var(--line)}
+html[data-theme="dark"] .auth-main{background:var(--surface);color:var(--ink)}html[data-theme="dark"] .auth-field label,html[data-theme="dark"] .auth-link{color:var(--ink)}
+html[data-theme="dark"] .auth-field input,html[data-theme="dark"] .auth-form input:not([type=checkbox]){background:#20211d;color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .auth-social,html[data-theme="dark"] .btn.light{background:#20211d;color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .auth-legal,html[data-theme="dark"] .auth-footer-note{color:var(--muted)}html[data-theme="dark"] .auth-legal a{color:var(--ink)}
+html[data-theme="dark"] .auth-message[data-kind=success]{color:#c8e6b7}
+/* New client portal pages; these explicit selectors override OS-only colors from older CSS. */
+html[data-theme="light"] body.portal-body,html[data-theme="dark"] body.portal-body{background:var(--portal-bg);color:var(--portal-ink)}
+html[data-theme="light"] .portal-sidebar,html[data-theme="light"] .portal-card,html[data-theme="light"] .metric-card,html[data-theme="light"] .portal-modal,html[data-theme="dark"] .portal-sidebar,html[data-theme="dark"] .portal-card,html[data-theme="dark"] .metric-card,html[data-theme="dark"] .portal-modal{background:var(--portal-card);color:var(--portal-ink);border-color:var(--portal-line)}
+html[data-theme="light"] .portal-nav a{color:#696a65}html[data-theme="dark"] .portal-nav a{color:var(--portal-muted)}
+html[data-theme="light"] .portal-nav a:hover,html[data-theme="light"] .portal-nav a.active,html[data-theme="light"] .portal-nav-button:hover,html[data-theme="light"] .project-symbol,html[data-theme="light"] .welcome-action .action-icon{background:#f1f2ed;color:#151515}
+html[data-theme="dark"] .portal-nav a:hover,html[data-theme="dark"] .portal-nav a.active,html[data-theme="dark"] .portal-nav-button:hover,html[data-theme="dark"] .project-symbol,html[data-theme="dark"] .welcome-action .action-icon{background:#272923;color:var(--portal-ink)}
+html[data-theme="light"] .portal-body .button,html[data-theme="light"] .portal-body .portal-button{background:#fff;color:var(--portal-ink);border-color:var(--portal-line)}
+html[data-theme="dark"] .portal-body .button,html[data-theme="dark"] .portal-body .portal-button{background:#20211d;color:var(--portal-ink);border-color:var(--portal-line)}
+html[data-theme="light"] .portal-body .button-dark{background:#171717;color:#fff;border-color:#171717}html[data-theme="dark"] .portal-body .button-dark{background:#f1f2eb;color:#171717;border-color:#f1f2eb}
+html[data-theme="light"] .portal-nav-button{color:#696a65}html[data-theme="dark"] .portal-nav-button{color:var(--portal-muted)}
+html[data-theme="light"] .field input,html[data-theme="light"] .field textarea,html[data-theme="light"] .field select{background:#fff;color:#171717;border-color:var(--portal-line)}
+html[data-theme="dark"] .field input,html[data-theme="dark"] .field textarea,html[data-theme="dark"] .field select{background:#20211d;color:var(--portal-ink);border-color:var(--portal-line)}
+html[data-theme="light"] .field input[readonly]{background:#f4f4f1;color:#777}html[data-theme="dark"] .field input[readonly]{background:#292a25;color:var(--portal-muted)}
+html[data-theme="dark"] .status{background:#292a25;color:#dedfd8}html[data-theme="dark"] .status-completed{background:#26351b;color:#c4e5a2}html[data-theme="dark"] .status-in_progress{background:#202d43;color:#b6ccff}
+html[data-theme="dark"] .progress i{background:var(--portal-accent)}html[data-theme="dark"] .empty-state strong{color:var(--portal-ink)}
+html[data-theme="dark"] .portal-error[data-error="false"]{background:#202a19;border-color:#38492b;color:#c7eaa9}html[data-theme="dark"] .portal-error[data-error="true"],html[data-theme="dark"] .portal-error:not([data-error]){background:#301d1b;border-color:#58312d;color:#ffb6aa}
+html[data-theme="dark"] .portal-table th,html[data-theme="dark"] .portal-table td{border-color:var(--portal-line)}html[data-theme="dark"] .portal-table th,html[data-theme="dark"] .portal-table td small{color:var(--portal-muted)}
+html[data-theme="dark"] .portal-toast{background:#24251f;color:var(--portal-ink);border:1px solid var(--portal-line)}html[data-theme="dark"] .portal-toast[data-error="true"]{background:#572a25;color:#fff1ee}
+html[data-theme="dark"] .portal-modal-backdrop{background:#000b}html[data-theme="dark"] .notification-count{background:#f1f2eb;color:#171717}
+html[data-theme="dark"] .client-update-icon{border-color:var(--portal-line)}html[data-theme="dark"] .portal-body hr{border-color:var(--portal-line)!important}
+html[data-theme="dark"] .toggle-field{color:var(--portal-muted)}html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#8b8d84;opacity:1}
+html[data-theme="dark"] .portal-body .muted{color:var(--portal-muted)}html[data-theme="dark"] .portal-body .theme-toggle{background:#20211d}
