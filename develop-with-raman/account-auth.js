@@ -138,6 +138,7 @@
     event.preventDefault();if(state.busy)return;clearMessage();
     const email=$('#auth-email').value.trim(),pass=password.value;
     if(!email){showMessage('Enter your email address.');$('#auth-email').focus();return;}
+    if(!$('#auth-email').checkValidity()){showMessage('Enter a valid email address.');$('#auth-email').focus();return;}
     if(state.mode!=='reset'&&!pass){showMessage('Enter your password.');password.focus();return;}
     if(state.mode==='signup'){
       if(pass.length<8){showMessage('Use a password with at least 8 characters.');password.focus();return;}
