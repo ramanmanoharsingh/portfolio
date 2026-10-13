@@ -14,7 +14,8 @@
       const sb=window.supabaseClient;
       if(!sb?.auth)throw new Error('Supabase client not configured. Check portal-supabase.js and the Supabase SDK.');
       const {data:{user},error:authError}=await sb.auth.getUser();
-      if(authError)throw authError;
+      const missingSession=!user&&(!authError||authError.name==='AuthSessionMissingError'||/auth session missing/i.test(authError.message||''));
+      if(authError&&!missingSession)throw authError;
       if(!user){location.replace('/auth.html?next='+encodeURIComponent(location.pathname+location.search));return;}
       let {data:profile,error:profileError}=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();
       if(profileError)throw profileError;
