@@ -23,6 +23,14 @@
       const role=profile.role||'client';
       if(root.dataset.role==='admin'&&role!=='admin'){location.replace('/client-dashboard.html');return;}
       if(root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'){location.replace('/admin-portal.html');return;}
+      // Profile settings are shared by clients and administrators; keep an admin's
+      // navigation in the admin workspace instead of presenting client destinations.
+      if(root.dataset.page==='profile'&&role==='admin'){
+        const caption=$('.portal-brand span');
+        if(caption)caption.textContent='Admin workspace';
+        const nav=$('.portal-nav');
+        if(nav)nav.innerHTML='<a href="/admin-portal.html"><span>▦</span>Admin workspace</a><a class="active" href="/profile.html"><span>◉</span>My profile</a><a href="/" ><span>↗</span>View website</a>';
+      }
       const name=profile.full_name||user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'there';
       document.querySelectorAll('[data-user-name]').forEach(e=>e.textContent=name);
       document.querySelectorAll('[data-user-email]').forEach(e=>{if('value' in e)e.value=user.email||'';else e.textContent=user.email||'';});

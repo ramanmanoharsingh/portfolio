@@ -48,3 +48,89 @@ html[data-theme="dark"] .portal-modal-backdrop{background:#000b}html[data-theme=
 html[data-theme="dark"] .client-update-icon{border-color:var(--portal-line)}html[data-theme="dark"] .portal-body hr{border-color:var(--portal-line)!important}
 html[data-theme="dark"] .toggle-field{color:var(--portal-muted)}html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#8b8d84;opacity:1}
 html[data-theme="dark"] .portal-body .muted{color:var(--portal-muted)}html[data-theme="dark"] .portal-body .theme-toggle{background:#20211d}
+
+/* Pitch-black dark theme: neutral graphite surfaces, no green-tinted blacks. */
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#000000;
+  --surface:#080808;
+  --ink:#f5f5f5;
+  --muted:#a3a3a3;
+  --line:#262626;
+  --dark:#000000;
+  --soft:#111111;
+  --danger:#ff9c94;
+  --shadow:0 18px 48px rgba(0,0,0,.6);
+  --portal-bg:#000000;
+  --portal-ink:#f5f5f5;
+  --portal-muted:#a3a3a3;
+  --portal-line:#262626;
+  --portal-card:#080808;
+  --portal-accent:#f5f5f5;
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] body.portal-body{background:#000!important;color:#f5f5f5}
+html[data-theme="dark"] .portal-sidebar,
+html[data-theme="dark"] .portal-card,
+html[data-theme="dark"] .metric-card,
+html[data-theme="dark"] .portal-modal,
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .stat,
+html[data-theme="dark"] .item,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .auth-wrap,
+html[data-theme="dark"] .res,
+html[data-theme="dark"] .id-row,
+html[data-theme="dark"] dialog{background:#080808!important;color:#f5f5f5;border-color:#262626}
+html[data-theme="dark"] .portal-shell,
+html[data-theme="dark"] .portal-main,
+html[data-theme="dark"] .wrap{background:#000!important}
+html[data-theme="dark"] .portal-nav a:hover,
+html[data-theme="dark"] .portal-nav a.active,
+html[data-theme="dark"] .portal-nav-button:hover,
+html[data-theme="dark"] .side-nav button.active,
+html[data-theme="dark"] .side-nav button:hover,
+html[data-theme="dark"] .project-symbol,
+html[data-theme="dark"] .welcome-action .action-icon{background:#171717!important;color:#f5f5f5}
+html[data-theme="dark"] .portal-body .button,
+html[data-theme="dark"] .portal-body .portal-button,
+html[data-theme="dark"] .btn.light,
+html[data-theme="dark"] .auth-social,
+html[data-theme="dark"] .google{background:#0b0b0b!important;color:#f5f5f5!important;border-color:#303030!important}
+html[data-theme="dark"] .portal-body .button-dark,
+html[data-theme="dark"] .auth-primary,
+html[data-theme="dark"] .btn:not(.light):not(.google){background:#f5f5f5!important;color:#000!important;border-color:#f5f5f5!important}
+html[data-theme="dark"] .field input,
+html[data-theme="dark"] .field textarea,
+html[data-theme="dark"] .field select,
+html[data-theme="dark"] .auth-field input,
+html[data-theme="dark"] .auth-form input:not([type=checkbox]),
+html[data-theme="dark"] .message-form input,
+html[data-theme="dark"] #cp input{
+  background:#050505!important;color:#f5f5f5!important;border-color:#303030!important;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#777!important;opacity:1}
+html[data-theme="dark"] .field input[readonly]{background:#080808!important;color:#a3a3a3!important}
+html[data-theme="dark"] .pill,
+html[data-theme="dark"] .pill.green,
+html[data-theme="dark"] .pill.amber,
+html[data-theme="dark"] .pill.red,
+html[data-theme="dark"] .status,
+html[data-theme="dark"] .status-completed,
+html[data-theme="dark"] .status-in_progress{background:#171717!important;color:#e5e5e5!important}
+html[data-theme="dark"] .progress,
+html[data-theme="dark"] .portal-body .progress{background:#242424!important}
+html[data-theme="dark"] .progress span,
+html[data-theme="dark"] .progress i{background:#f5f5f5!important}
+html[data-theme="dark"] .portal-error[data-error="false"],
+html[data-theme="dark"] .portal-error[data-error="true"],
+html[data-theme="dark"] .portal-error:not([data-error]){background:#101010!important;border-color:#303030!important;color:#ededed!important}
+html[data-theme="dark"] .portal-toast,
+html[data-theme="dark"] .toast{background:#171717!important;color:#f5f5f5!important;border:1px solid #303030}
+html[data-theme="dark"] .auth-message[data-kind="success"]{color:#dedede!important}
+html[data-theme="dark"] .portal-table th,
+html[data-theme="dark"] .portal-table td{border-color:#262626!important}
+html[data-theme="dark"] .notification-count{background:#f5f5f5!important;color:#000!important}
+html[data-theme="dark"] .avatar{background:#171717;color:#f5f5f5}
+html[data-theme="dark"] .portal-body hr{border-color:#262626!important}
