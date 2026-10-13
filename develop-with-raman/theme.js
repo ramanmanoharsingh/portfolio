@@ -23,7 +23,10 @@ function init(){
   else if(qa){const before=qa.querySelector('button');qa.insertBefore(b,before||null)}
   else{b.classList.add('theme-toggle-floating');document.body.appendChild(b)}
  }
- if(!b.dataset.bound){b.dataset.bound='1';b.addEventListener('click',()=>{const t=root.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem(KEY,t)}catch(_){}paint(t)})}
+ if(!b.dataset.bound){b.dataset.bound='1';b.addEventListener('click',()=>{const t=root.dataset.theme==='dark'?'light':'dark';try{localStorage.setItem(KEY,t)}catch(_){}
+  const go=()=>paint(t),reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(document.startViewTransition&&!reduce){let done=false;const once=()=>{if(done)return;done=true;paint(t)};
+   try{document.startViewTransition(once);setTimeout(once,300)}catch(_){once()}}else go()})}
  paint(read()||root.dataset.theme||system());
  window.addEventListener('storage',e=>{if(e.key===KEY||e.key===LEGACY_KEY)paint(read()||system())});
  if(media){const change=()=>{if(!read())paint(system())};if(media.addEventListener)media.addEventListener('change',change);else if(media.addListener)media.addListener(change)}

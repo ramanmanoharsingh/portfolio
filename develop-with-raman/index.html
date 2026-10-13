@@ -246,6 +246,18 @@ header.top{overflow:visible}
 .ra:hover{background:var(--ink);color:var(--canvas);transform:scale(1.06)}
 @media (prefers-reduced-motion:reduce){.wd>i{transform:none!important}.hero .mq,.hero .hc{animation:none!important}.pj .pm{transform:none!important}}
 
+/* Interaction polish: animated FAQ, sliding nav underline, tilt on service cards, page cross-fade. */
+html{interpolate-size:allow-keywords}
+details::details-content{block-size:0;overflow:clip;transition:block-size .45s var(--ease),content-visibility .45s allow-discrete}
+details[open]::details-content{block-size:auto;content-visibility:visible}
+.nl a{position:relative}
+.nl a::before{content:"";position:absolute;left:0;right:0;bottom:-7px;height:2px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
+.nl a:hover::before,.nl a[aria-current="true"]::before{transform:scaleX(1);transform-origin:left}
+.service-card{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .5s var(--ease),border-color .3s var(--ease);will-change:transform}
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.3s}
+@media (prefers-reduced-motion:reduce){details::details-content{transition:none!important}.nl a::before{transition:none!important}.service-card{transform:none!important}::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+
 /* Shared brand treatment: compact, calm and consistent with the sign-in portal. */
 .wm{font:700 15px/1 "Space Grotesk",Helvetica,Arial,sans-serif!important;letter-spacing:-.025em!important;text-transform:none!important;white-space:nowrap!important;margin-left:0!important}
 .top nav{padding-left:clamp(18px,5vw,72px)!important;padding-right:clamp(18px,5vw,72px)!important}
@@ -439,6 +451,7 @@ $('#b').innerHTML='<option value="">Not sure yet</option>'+['Under â‚¹5,000','â‚
 const EM='ramanmanoharsingh@gmail.com';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // command menu
+const theme=()=>{const b=document.querySelector('[data-theme-toggle]');if(b)b.click()};
 const A=[['About','#about'],['Services','#services'],['Projects','#work'],['PlayMatch case study','#playmatch'],['Portfolio & achievements','#achievements'],['Questions','#questions'],['Start a project','#request'],['Contact','#contact'],['Toggle light / dark',theme],['Email',()=>{location.href='mailto:'+EM}],['Copy email',async()=>{try{await navigator.clipboard.writeText(EM);toast('Email copied')}catch(e){toast(EM)}}]];
 const cp=$('#cp'),ci=$('#ci');let sel=0,cur=A;
 const cl=()=>{$('#cl').innerHTML=cur.map((a,i)=>`<li><button type="button" data-i="${i}" class="${i===sel?'on':''}">${a[0]}<span>${typeof a[1]==='string'?'Go':'Action'}</span></button></li>`).join('')};
@@ -469,8 +482,9 @@ addEventListener('scroll',()=>c.classList.remove('big'),{passive:true});$('#dg')
 if(scrollY<innerHeight){px+=(tx-px)*.06;py+=(ty-py)*.06;hero.style.setProperty('--px',px.toFixed(2)+'px');hero.style.setProperty('--py',py.toFixed(2)+'px')}
 requestAnimationFrame(f)})();
 $$('.ex,.bk,.btn').forEach(b=>{b.classList.add('mag');b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();b.style.translate=`${((e.clientX-r.left)/r.width-.5)*14}px ${((e.clientY-r.top)/r.height-.5)*10}px`});b.addEventListener('pointerleave',()=>b.style.translate='')});
-const pg=$('#pg');pg.addEventListener('pointermove',e=>{const m=e.target.closest('.pm');if(!m)return;const r=m.getBoundingClientRect(),a=(e.clientX-r.left)/r.width-.5,b=(e.clientY-r.top)/r.height-.5;m.style.setProperty('--ry',(a*9).toFixed(2)+'deg');m.style.setProperty('--rx',(-b*7).toFixed(2)+'deg')});
-pg.addEventListener('pointerout',e=>{const m=e.target.closest('.pm');if(m&&!m.contains(e.relatedTarget)){m.style.setProperty('--ry','0deg');m.style.setProperty('--rx','0deg')}});
+[$('#pg'),$('#sg')].forEach(box=>{if(!box)return;
+box.addEventListener('pointermove',e=>{const m=e.target.closest('.pm,.service-card');if(!m)return;const r=m.getBoundingClientRect(),a=(e.clientX-r.left)/r.width-.5,b=(e.clientY-r.top)/r.height-.5;m.style.setProperty('--ry',(a*9).toFixed(2)+'deg');m.style.setProperty('--rx',(-b*7).toFixed(2)+'deg')});
+box.addEventListener('pointerout',e=>{const m=e.target.closest('.pm,.service-card');if(m&&!m.contains(e.relatedTarget)){m.style.setProperty('--ry','0deg');m.style.setProperty('--rx','0deg')}})});
 })();
 (()=>{const r=$('#rail'),bar=$('#rbar'),pcs=$$('#rail .pc');
 const upd=()=>{bar.style.transform=`scaleX(${Math.min(1,(r.scrollLeft+r.clientWidth)/r.scrollWidth)})`;if(rm)return;pcs.forEach(p=>{const b=p.getBoundingClientRect();p.style.setProperty('--o',(((b.left+b.width/2)-innerWidth/2)/innerWidth).toFixed(3))})};

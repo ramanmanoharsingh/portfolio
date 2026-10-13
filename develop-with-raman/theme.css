@@ -134,3 +134,8 @@ html[data-theme="dark"] .portal-table td{border-color:#262626!important}
 html[data-theme="dark"] .notification-count{background:#f5f5f5!important;color:#000!important}
 html[data-theme="dark"] .avatar{background:#171717;color:#f5f5f5}
 html[data-theme="dark"] .portal-body hr{border-color:#262626!important}
+
+/* Cross-fade between portal pages (progressive: ignored where unsupported). */
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.3s}
+@media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
