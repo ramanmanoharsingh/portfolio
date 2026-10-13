@@ -32,10 +32,12 @@
         if(nav)nav.innerHTML='<a href="/admin-portal.html"><span>▦</span>Admin workspace</a><a class="active" href="/profile.html"><span>◉</span>My profile</a><a href="/" ><span>↗</span>View website</a>';
       }
       const name=profile.full_name||user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'there';
+      const topbarIdentity=$('[data-site-topbar-identity]');if(topbarIdentity)topbarIdentity.hidden=false;
+      const topbarSignOut=$('[data-site-topbar-signout]');if(topbarSignOut)topbarSignOut.hidden=false;
       document.querySelectorAll('[data-user-name]').forEach(e=>e.textContent=name);
       document.querySelectorAll('[data-user-email]').forEach(e=>{if('value' in e)e.value=user.email||'';else e.textContent=user.email||'';});
       document.querySelectorAll('[data-user-avatar]').forEach(e=>{if(safeUrl(profile.avatar_url)){const img=document.createElement('img');img.alt='';img.referrerPolicy='no-referrer';img.src=safeUrl(profile.avatar_url);e.replaceChildren(img);}else e.textContent=(name.trim()[0]||'U').toUpperCase();});
-      $('[data-sign-out]')?.addEventListener('click',async()=>{const {error}=await sb.auth.signOut();if(error){toast(error.message,true);return;}location.replace('/auth.html');});
+      document.querySelectorAll('[data-sign-out]').forEach(button=>button.addEventListener('click',async()=>{const {error}=await sb.auth.signOut();if(error){toast(error.message,true);return;}location.replace('/auth.html');}));
       if(root.dataset.page==='welcome'){if(role==='admin'){location.replace('/admin-portal.html');return;}document.querySelectorAll('[data-dashboard-link]').forEach(a=>a.href='/client-dashboard.html');return;}
       if(root.dataset.page==='profile'){await setupProfile(sb,user,profile,name);return;}
       if(root.dataset.page==='dashboard'){await setupDashboard(sb,user,profile);return;}
