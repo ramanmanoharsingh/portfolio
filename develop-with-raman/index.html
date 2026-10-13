@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Space+Grotesk:wght@400;500;700&display=swap">
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/logo.svg">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="/portal-supabase.js"></script>
+<script defer src="/client-extras.js"></script>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --canvas:#fff;--canvas-inverse:#000;--ink:#000;--ink-deep:#2f2f2f;--ink-mid:#5a5a5a;--ink-mute:#898989;--hairline:#ddd;--hairline-inv:rgba(255,255,255,.18);--link-blue:#0072f0;--gradient-sky:#88bcd8;--gradient-citrus:#f3ffc1;--radius-md:8px;--radius-pill:100px;--radius-photo:30px;--ease:cubic-bezier(.22,.61,.36,1)}
@@ -376,7 +380,8 @@ header.top .theme-toggle:hover{background:#fff;color:#080808;border-color:#fff}
 <script defer src="/theme.js?v=20261013"></script>
 </head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ck" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol><symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol><symbol id="i-ig" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/></symbol><symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l11.7 16H20L8.3 4H4zM4 20l6.8-7.2M20 4l-6.8 7.2"/></symbol><symbol id="i-th" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol><symbol id="i-ct" viewBox="0 0 24 24"><path d="M1 2h3l2.7 12.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L22 6H5.2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></symbol></svg>
-<header class="top" id="hd"><nav aria-label="Main"><div class="nl"><a href="#about" data-t="About">About</a><a href="#services" data-t="Services">Services</a><a href="#work" data-t="Projects">Projects</a><a href="#questions" data-t="Questions">Questions</a><a href="#contact" data-t="Contact">Contact</a></div><a class="wm" href="#top"><img src="/logo.svg" alt="Develop with Raman logo" class="site-logo"> <span class="wm-text">Develop with Raman</span></a><div class="nr"><div class="si"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico"><use href="#i-x"/></svg></a></div><button class="tg theme-toggle" id="th" data-theme-toggle type="button" aria-label="Toggle light or dark theme"><svg class="ico" aria-hidden="true"><use href="#i-th"/></svg></button><a class="top-action" href="dashboard.html" aria-label="Sign in to your dashboard">Sign in</a><button type="button" class="tg" id="mb" aria-label="Open menu" aria-expanded="false">Menu</button></div></nav><i class="sp" aria-hidden="true"></i></header>
+<header class="top" id="hd"><nav aria-label="Main"><div class="nl" id="public-nav"><a href="#about" data-t="About">About</a><a href="#services" data-t="Services">Services</a><a href="#work" data-t="Projects">Projects</a><a href="#questions" data-t="Questions">Questions</a><a href="#contact" data-t="Contact">Contact</a></div>
+<div class="nl" id="app-nav" style="display:none;"><a href="/?flow=app#client-dashboard" data-t="Dashboard" id="nav-dashboard">Dashboard</a><a href="/?flow=app#client-work-progress" data-t="Work Progress" id="nav-work">Work Progress</a><a href="/?flow=app#client-cost-estimator" data-t="Cost Estimator" id="nav-cost">Cost Estimator</a><a href="/?flow=app#client-talk-admin" data-t="Talk to Admin" id="nav-talk">Talk to Admin</a><a href="/?flow=app#admin-overview" data-t="Overview" id="nav-admin-overview" style="display:none;">Overview</a><a href="/?flow=app#admin-dashboard" data-t="Admin" id="nav-admin-dash" style="display:none;">Admin Dashboard</a></div><a class="wm" href="#top"><img src="/logo.svg" alt="Develop with Raman logo" class="site-logo"> <span class="wm-text">Develop with Raman</span></a><div class="nr"><div class="si"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ico"><use href="#i-gh"/></svg></a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ico"><use href="#i-ig"/></svg></a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ico"><use href="#i-in"/></svg></a><a href="https://x.com/raman470" target="_blank" rel="noopener" aria-label="X"><svg class="ico"><use href="#i-x"/></svg></a></div><button class="tg theme-toggle" id="th" data-theme-toggle type="button" aria-label="Toggle light or dark theme"><svg class="ico" aria-hidden="true"><use href="#i-th"/></svg></button><div id="auth-nav-section"><a class="top-action" href="dashboard.html" aria-label="Sign in to your dashboard" id="nav-signin">Sign in</a><button type="button" class="top-action" id="nav-signout" style="display:none;">Sign out</button></div><button type="button" class="tg" id="mb" aria-label="Open menu" aria-expanded="false">Menu</button></div></nav><i class="sp" aria-hidden="true"></i></header>
 <div id="ov" role="dialog" aria-modal="true" aria-label="Menu"><button type="button" class="tg" id="oc" aria-label="Close menu">Close</button><a href="dashboard.html">Sign in / Client &amp; Admin Portal</a><a href="#about">About</a><a href="#services">Services</a><a href="#work">Projects</a><a href="#playmatch">Case study</a><a href="#achievements">Portfolio</a><a href="#questions">Questions</a><a href="#request">Start a project</a><a href="#contact">Contact</a></div>
 
 <div id="cur" aria-hidden="true"><span></span></div>
@@ -419,6 +424,183 @@ header.top .theme-toggle:hover{background:#fff;color:#080808;border-color:#fff}
 
 <section class="sec contact" id="contact"><div class="c two contact-rebuilt" style="align-items:start"><div><div class="eb">Contact</div><h2>Prefer a direct conversation?</h2><p class="lead" style="margin:16px 0 28px">For general questions, email is the simplest way to reach me. For project work, use the request form so I have the details in one place.</p><div class="contact-actions"><a class="btn" href="/?flow=services#services">Start a project ↗</a><a class="btn s" href="mailto:ramanmanoharsingh@gmail.com">Email Raman</a></div><div class="links"><a href="https://github.com/ramanmanoharsingh" target="_blank" rel="noopener">GitHub</a><a href="https://www.instagram.com/r.amansingh_" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/in/raman-manohar-singh-a1a395408/" target="_blank" rel="noopener">LinkedIn</a><a href="https://x.com/raman470" target="_blank" rel="noopener">X</a></div></div><div class="contact-note"><div class="eb">A clearer process</div><h3 class="ch">One request. One place to follow up.</h3><p>Your request will be reviewed by Raman. If it is accepted, you will be notified by email and guided through the next steps. Once linked to your client account, you can follow the request and project progress in your client workspace.</p></div></div></section>
 
+<!-- App View for Authenticated Users -->
+<div id="app-view" style="display:none; min-height: calc(100vh - 104px);">
+  <!-- Client App View -->
+  <div id="client-app" style="display:none;">
+    <div class="app-nav" style="background: var(--canvas-inverse); color: var(--canvas); padding: 16px clamp(24px,8vw,150px); display:flex; gap:24px; flex-wrap:wrap;">
+      <button class="app-tab" data-client-tab="dashboard" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Dashboard</button>
+      <button class="app-tab" data-client-tab="work-progress" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Work Progress</button>
+      <button class="app-tab" data-client-tab="cost-estimator" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Cost Estimator</button>
+      <button class="app-tab" data-client-tab="talk-admin" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Talk to Admin</button>
+      <button class="app-tab" data-client-tab="profile" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">My Profile</button>
+    </div>
+    
+    <!-- Client Dashboard -->
+    <section id="client-dashboard" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px);">
+      <div class="c">
+        <div class="eb">Client App</div>
+        <h2>Dashboard</h2>
+        <p class="ser">Welcome to your workspace.</p>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
+          <div class="card" style="padding:24px; border:1px solid var(--hairline); border-radius:8px;">
+            <h3>Active Projects</h3>
+            <p style="margin-top:8px; color: var(--ink-mid);" id="client-active-projects">Loading...</p>
+          </div>
+          <div class="card" style="padding:24px; border:1px solid var(--hairline); border-radius:8px;">
+            <h3>Work Progress</h3>
+            <p style="margin-top:8px; color: var(--ink-mid);" id="client-work-progress">Loading...</p>
+          </div>
+          <div class="card" style="padding:24px; border:1px solid var(--hairline); border-radius:8px;">
+            <h3>Enquiries</h3>
+            <p style="margin-top:8px; color: var(--ink-mid);" id="client-enquiries">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Client Work Progress -->
+    <section id="client-work-progress-section" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px); display:none;">
+      <div class="c">
+        <h2>Work Progress</h2>
+        <p class="ser">Track your project milestones and progress.</p>
+        <div id="client-projects" class="grid" style="grid-template-columns: 1fr; gap:16px;"></div>
+      </div>
+    </section>
+    
+    <!-- Client Cost Estimator -->
+    <section id="client-cost-estimator-section" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px); display:none;">
+      <div class="c">
+        <h2>Cost Estimator</h2>
+        <p class="ser">Estimate the cost for your project based on services and requirements.</p>
+        <form id="cost-estimator-form" class="request-form" style="max-width:600px;">
+          <div class="fl" style="margin-bottom:16px;">
+            <label for="est-service">Service</label>
+            <select id="est-service">
+              <option value="">Select Service</option>
+              <option value="website">Website/Landing Page</option>
+              <option value="portfolio">Portfolio Site</option>
+              <option value="dashboard">Dashboard</option>
+              <option value="ai-workflow">AI Workflow</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="fl" style="margin-bottom:16px;">
+            <label for="est-pages">Number of Pages</label>
+            <input type="number" id="est-pages" placeholder="e.g., 5">
+          </div>
+          <div class="fl" style="margin-bottom:16px;">
+            <label for="est-features">Features (comma separated)</label>
+            <input type="text" id="est-features" placeholder="e.g., Auth, Admin Panel, Chat">
+          </div>
+          <button type="submit" class="btn">Calculate Estimate</button>
+        </form>
+        <div id="est-result" style="margin-top:24px; padding:24px; border:1px solid var(--hairline); border-radius:8px; display:none;">
+          <h3>Estimated Cost</h3>
+          <p style="font-size: 32px; font-weight:700; margin-top:8px;">₹<span id="est-amount">0</span></p>
+          <p style="color:var(--ink-mid); margin-top:8px;">This is an approximate estimate. Final cost may vary based on complexity.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Client Talk to Admin -->
+    <section id="client-talk-admin-section" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px); display:none;">
+      <div class="c">
+        <h2>Talk to Admin</h2>
+        <p class="ser">Chat with Raman for project discussions and support.</p>
+        <div class="portal-card chat" style="border:1px solid var(--hairline); border-radius:8px; padding:24px; max-width:800px;">
+          <div class="chat-log" data-chat-log style="height:400px; overflow-y:auto; border:1px solid var(--hairline); padding:16px; margin-bottom:16px; border-radius:4px; background: var(--canvas);">
+            <p class="muted">Loading chat...</p>
+          </div>
+          <form class="chat-form" data-chat-form style="display:flex; gap:12px;">
+            <textarea name="body" rows="2" maxlength="4000" required placeholder="Write a message to Raman..." style="flex:1; padding:12px; border:1px solid var(--hairline); border-radius:4px; font-family:inherit;"></textarea>
+            <button class="btn" type="submit" style="align-self:flex-end;">Send ↗</button>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Client Profile -->
+    <section id="client-profile-section" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px); display:none;">
+      <div class="c">
+        <h2>My Profile</h2>
+        <p class="ser">Your account information.</p>
+        <div style="max-width:600px;">
+          <div style="margin-bottom:16px;"><strong>Name:</strong> <span id="profile-name"></span></div>
+          <div style="margin-bottom:16px;"><strong>Email:</strong> <span id="profile-email"></span></div>
+          <div style="margin-bottom:16px;"><strong>Role:</strong> <span id="profile-role"></span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+  <!-- Admin App View -->
+  <div id="admin-app" style="display:none;">
+    <div class="app-nav" style="background: var(--canvas-inverse); color: var(--canvas); padding: 16px clamp(24px,8vw,150px); display:flex; gap:24px; flex-wrap:wrap;">
+      <button class="app-tab" data-admin-tab="overview" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Services Overview</button>
+      <button class="app-tab" data-admin-tab="questions" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Questions</button>
+      <button class="app-tab" data-admin-tab="admin-dashboard" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Admin Dashboard</button>
+      <button class="app-tab" data-admin-tab="chat-clients" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Chat with Clients</button>
+    </div>
+    
+    <!-- Admin Services Overview -->
+    <section id="admin-overview" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px);">
+      <div class="c">
+        <h2>Services Overview</h2>
+        <p class="ser">Popularity and engagement metrics for services.</p>
+        <div style="max-width:800px; margin-bottom:32px;">
+          <h3>Service Popularity</h3>
+          <canvas id="serviceChart" style="max-height:400px;"></canvas>
+        </div>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+          <div class="card" style="padding:20px; border:1px solid var(--hairline); border-radius:8px;">
+            <h4>Total Enquiries</h4>
+            <p style="font-size:28px; font-weight:700; margin-top:8px;" id="admin-total-enquiries">-</p>
+          </div>
+          <div class="card" style="padding:20px; border:1px solid var(--hairline); border-radius:8px;">
+            <h4>Active Projects</h4>
+            <p style="font-size:28px; font-weight:700; margin-top:8px;" id="admin-active-projects">-</p>
+          </div>
+          <div class="card" style="padding:20px; border:1px solid var(--hairline); border-radius:8px;">
+            <h4>Unanswered Questions</h4>
+            <p style="font-size:28px; font-weight:700; margin-top:8px;" id="admin-unanswered-questions">-</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Admin Questions -->
+    <section id="admin-questions" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px); display:none;">
+      <div class="c">
+        <h2>Questions</h2>
+        <p class="ser">Manage user questions and answers.</p>
+        <div id="admin-questions-list" class="grid" style="grid-template-columns: 1fr; gap:12px;"></div>
+      </div>
+    </section>
+    
+    <!-- Admin Dashboard -->
+    <section id="admin-admin-dashboard" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px); display:none;">
+      <div class="c">
+        <h2>Admin Dashboard</h2>
+        <p class="ser">Full admin control panel. <a href="/admin-portal.html" style="color: var(--link-blue);">Open Full Admin Portal</a></p>
+      </div>
+    </section>
+    
+    <!-- Admin Chat with Clients -->
+    <section id="admin-chat-clients" class="sec app-section" style="padding: 60px clamp(24px,8vw,150px); display:none;">
+      <div class="c">
+        <h2>Chat with Clients</h2>
+        <p class="ser">Communicate with your clients.</p>
+        <div style="border:1px solid var(--hairline); border-radius:8px; padding:24px; max-width:1000px;">
+          <div class="admin-split" style="display:grid; grid-template-columns: 300px 1fr; gap:16px;">
+            <div class="portal-card thread-list" data-threads style="border:1px solid var(--hairline); padding:16px; height:500px; overflow-y:auto; border-radius:4px;"></div>
+            <div class="portal-card chat" data-chat style="border:1px solid var(--hairline); padding:16px; height:500px; display:flex; flex-direction:column; border-radius:4px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 
 <dialog id="cp" aria-label="Command menu" data-lenis-prevent><input id="ci" placeholder="Jump to…" aria-label="Command search"><ul id="cl"></ul></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -762,6 +944,12 @@ if(accountAction){
    accountAction.setAttribute("aria-label","Sign in to your dashboard");
    accountAction.dataset.authenticated="false";
    accountAction.removeAttribute("aria-disabled");
+   try {
+     localStorage.removeItem('dwr_authenticated');
+     localStorage.removeItem('dwr_role');
+     localStorage.removeItem('dwr_name');
+     localStorage.removeItem('dwr_email');
+   } catch(_) {}
    return;
   }
   if(requestAccountLink){requestAccountLink.href="/client-dashboard.html";requestAccountLink.textContent="Open client dashboard ↗";}
@@ -794,6 +982,12 @@ if(accountAction){
    identityName.textContent=name;
    identityLink.setAttribute("aria-label","Open dashboard for "+name);
    renderAvatar(photo,name);
+   try {
+     localStorage.setItem('dwr_authenticated', 'true');
+     localStorage.setItem('dwr_role', activeUserRole);
+     localStorage.setItem('dwr_name', name);
+     localStorage.setItem('dwr_email', user.email || '');
+   } catch(_) {}
   }catch(error){console.warn("Could not load the account profile for the main-site header:",error);}
  };
  client.auth.getSession().then(({data,error})=>{
@@ -806,16 +1000,341 @@ if(accountAction){
   event.preventDefault();
   accountAction.textContent="Signing out…";
   accountAction.setAttribute("aria-disabled","true");
+  // Also handle nav signout
+  const navSignout = document.getElementById('nav-signout');
+  if (navSignout) navSignout.textContent = "Signing out…";
   const {error}=await client.auth.signOut();
   if(error){
    console.error("Sign out failed:",error);
    accountAction.textContent="Sign out";
    accountAction.removeAttribute("aria-disabled");
+   if (navSignout) navSignout.textContent = "Sign out";
    return;
   }
+  localStorage.removeItem('dwr_authenticated');
+  localStorage.removeItem('dwr_role');
+  localStorage.removeItem('dwr_name');
+  localStorage.removeItem('dwr_email');
   syncAccountAction(null);
+  // Refresh page to hide app view
+  window.location.reload();
  });
 }
+
+// Nav auth handling
+client.auth.getSession().then(({data}) => {
+  const session = data?.session;
+  const navSignin = document.getElementById('nav-signin');
+  const navSignout = document.getElementById('nav-signout');
+  if (session && session.user) {
+    if (navSignin) navSignin.style.display = 'none';
+    if (navSignout) navSignout.style.display = 'inline-flex';
+    navSignout?.addEventListener('click', async () => {
+      await client.auth.signOut();
+      localStorage.removeItem('dwr_authenticated');
+      window.location.reload();
+    });
+  } else {
+    if (navSignin) navSignin.style.display = 'inline-flex';
+    if (navSignout) navSignout.style.display = 'none';
+  }
+});
+
+// App View Functionality
+function initAppView() {
+  const appView = document.getElementById('app-view');
+  if (!appView) return;
+  
+  // Show app view after login
+  if (window.location.search.includes('flow=app') || window.localStorage.getItem('dwr_authenticated')) {
+    // Hide public sections
+    document.querySelector('.hero')?.style.setProperty('display', 'none');
+    document.querySelector('#services')?.style.setProperty('display', 'none');
+    document.querySelector('#work')?.style.setProperty('display', 'none');
+    document.querySelector('#playmatch')?.style.setProperty('display', 'none');
+    document.querySelector('#achievements')?.style.setProperty('display', 'none');
+    document.querySelector('#questions')?.style.setProperty('display', 'none');
+    document.querySelector('#request')?.style.setProperty('display', 'none');
+    document.querySelector('#contact')?.style.setProperty('display', 'none');
+    document.querySelectorAll('.sec').forEach(s => {
+      if (!s.id || !['app-view'].includes(s.id)) s.style.setProperty('display', 'none');
+    });
+    
+    appView.style.display = 'block';
+    
+    const role = window.localStorage.getItem('dwr_role') || 'client';
+    // Show app nav, hide public nav
+    document.getElementById('public-nav').style.display = 'none';
+    document.getElementById('app-nav').style.display = 'flex';
+    
+    if (role === 'admin') {
+      document.getElementById('client-app').style.display = 'none';
+      document.getElementById('admin-app').style.display = 'block';
+      // Show admin nav items
+      document.getElementById('nav-dashboard').style.display = 'none';
+      document.getElementById('nav-work').style.display = 'none';
+      document.getElementById('nav-cost').style.display = 'none';
+      document.getElementById('nav-talk').style.display = 'none';
+      document.getElementById('nav-admin-overview').style.display = 'inline-flex';
+      document.getElementById('nav-admin-dash').style.display = 'inline-flex';
+      initAdminApp();
+    } else {
+      document.getElementById('client-app').style.display = 'block';
+      document.getElementById('admin-app').style.display = 'none';
+      document.getElementById('nav-admin-overview').style.display = 'none';
+      document.getElementById('nav-admin-dash').style.display = 'none';
+      initClientApp();
+    }
+  }
+}
+
+function initClientApp() {
+  // Load dashboard data
+  const sb = window.supabaseClient;
+  if (sb) {
+    sb.auth.getUser().then(async ({data}) => {
+      const user = data?.user;
+      if (user) {
+        try {
+          const leads = await sb.from('leads').select('*').eq('user_id', user.id);
+          const enquiriesEl = document.getElementById('client-enquiries');
+          if (enquiriesEl) enquiriesEl.textContent = (leads.data?.length || 0) + ' enquiries';
+        } catch (_) {}
+        try {
+          const projects = await sb.from('projects').select('*').eq('client_id', user.id);
+          const projectsEl = document.getElementById('client-active-projects');
+          if (projectsEl) projectsEl.textContent = (projects.data?.length || 0) + ' active';
+        } catch (_) {}
+      }
+    });
+  }
+  
+  document.querySelectorAll('#client-app .app-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#client-app .app-section').forEach(sec => sec.style.display = 'none');
+      document.querySelectorAll('#client-app .app-tab').forEach(t => t.style.opacity = '0.7');
+      tab.style.opacity = '1';
+      const tabName = tab.dataset.clientTab;
+      if (tabName === 'dashboard') {
+        document.getElementById('client-dashboard').style.display = 'block';
+      } else if (tabName === 'work-progress') {
+        document.getElementById('client-work-progress-section').style.display = 'block';
+      } else if (tabName === 'cost-estimator') {
+        document.getElementById('client-cost-estimator-section').style.display = 'block';
+      } else if (tabName === 'talk-admin') {
+        document.getElementById('client-talk-admin-section').style.display = 'block';
+        initClientChat();
+      } else if (tabName === 'profile') {
+        document.getElementById('client-profile-section').style.display = 'block';
+        document.getElementById('profile-name').textContent = localStorage.getItem('dwr_name') || 'User';
+        document.getElementById('profile-email').textContent = localStorage.getItem('dwr_email') || '-';
+        document.getElementById('profile-role').textContent = localStorage.getItem('dwr_role') || 'client';
+      }
+    });
+  });
+  
+  const estimatorForm = document.getElementById('cost-estimator-form');
+  if (estimatorForm) {
+    estimatorForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const service = document.getElementById('est-service').value;
+      const pages = parseInt(document.getElementById('est-pages').value) || 0;
+      const features = document.getElementById('est-features').value.split(',').filter(f => f.trim()).length;
+      let base = 0;
+      if (service === 'website') base = 5000;
+      else if (service === 'portfolio') base = 3000;
+      else if (service === 'dashboard') base = 8000;
+      else if (service === 'ai-workflow') base = 6000;
+      else base = 4000;
+      const total = base + (pages * 500) + (features * 1000);
+      document.getElementById('est-amount').textContent = total.toLocaleString();
+      document.getElementById('est-result').style.display = 'block';
+    });
+  }
+}
+
+async function initClientChat() {
+  const log = document.querySelector('#client-talk-admin-section [data-chat-log]');
+  const form = document.querySelector('#client-talk-admin-section [data-chat-form]');
+  if (!log || !form) return;
+  const sb = window.supabaseClient;
+  if (!sb) { log.innerHTML = '<p class="muted">Chat not available.</p>'; return; }
+  let user, thread;
+  try {
+    const u = await sb.auth.getUser();
+    user = u.data?.user;
+    if (!user) { log.innerHTML = '<p class="muted">Please sign in to chat.</p>'; return; }
+    const t = await sb.from('client_threads').select('id').eq('client_id', user.id).is('project_id', null).limit(1).maybeSingle();
+    if (t.error) throw t.error;
+    if (!t.data) {
+      const ins = await sb.from('client_threads').insert({client_id: user.id}).select('id').single();
+      if (ins.error) throw ins.error;
+      thread = ins.data.id;
+    } else { thread = t.data.id; }
+    async function draw() {
+      const r = await sb.from('client_messages').select('id,sender_id,body,created_at').eq('thread_id', thread).order('created_at').limit(200);
+      if (r.error) { log.innerHTML = '<p class="muted">Could not load messages.</p>'; return; }
+      const near = log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+      log.innerHTML = r.data.length ? r.data.map(m => '<div style="margin-bottom:12px; padding:10px 14px; background:' + (m.sender_id===user.id?'#f0f0f0':'#e8f4ff') + '; border-radius:6px; max-width:70%; margin-left:' + (m.sender_id===user.id?'auto':'0') + ';"><p>' + m.body.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) + '</p><small style="color:var(--ink-mid); font-size:11px;">' + (m.sender_id===user.id?'You':'Raman') + ' · ' + (m.created_at?new Date(m.created_at).toLocaleString():'') + '</small></div>').join('') : '<p class="muted">No messages yet.</p>';
+      if (near) log.scrollTop = log.scrollHeight;
+    }
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const body = form.elements.body.value.trim();
+      if (!body) return;
+      const btn = form.querySelector('[type=submit]'); btn.disabled = true;
+      try {
+        await sb.from('client_messages').insert({thread_id: thread, sender_id: user.id, body});
+        form.reset();
+        draw();
+      } catch (err) { alert(err.message); }
+      finally { btn.disabled = false; }
+    };
+    draw();
+    setInterval(() => { if (!document.hidden) draw(); }, 10000);
+  } catch (err) { log.innerHTML = '<p class="muted">Error loading chat.</p>'; }
+}
+
+function initAdminApp() {
+  // Load admin stats
+  const sb = window.supabaseClient;
+  if (sb) {
+    Promise.all([
+      sb.from('leads').select('*', {count: 'exact', head: true}),
+      sb.from('projects').select('*', {count: 'exact', head: true}),
+      sb.from('questions').select('*', {count: 'exact', head: true}).is('answer', null)
+    ]).then(([leads, projects, qs]) => {
+      const te = document.getElementById('admin-total-enquiries');
+      const ap = document.getElementById('admin-active-projects');
+      const uq = document.getElementById('admin-unanswered-questions');
+      if (te) te.textContent = leads.count || 0;
+      if (ap) ap.textContent = projects.count || 0;
+      if (uq) uq.textContent = qs.count || 0;
+    }).catch(() => {});
+  }
+  
+  document.querySelectorAll('#admin-app .app-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#admin-app .app-section').forEach(sec => sec.style.display = 'none');
+      document.querySelectorAll('#admin-app .app-tab').forEach(t => t.style.opacity = '0.7');
+      tab.style.opacity = '1';
+      const tabName = tab.dataset.adminTab;
+      if (tabName === 'overview') {
+        document.getElementById('admin-overview').style.display = 'block';
+        setTimeout(() => drawServiceChart(), 100);
+      } else if (tabName === 'questions') {
+        document.getElementById('admin-questions').style.display = 'block';
+        loadAdminQuestions();
+      } else if (tabName === 'admin-dashboard') {
+        document.getElementById('admin-admin-dashboard').style.display = 'block';
+      } else if (tabName === 'chat-clients') {
+        document.getElementById('admin-chat-clients').style.display = 'block';
+        initAdminChat();
+      }
+    });
+  });
+}
+
+async function initAdminChat() {
+  const threadsEl = document.querySelector('#admin-chat-clients [data-threads]');
+  const chatEl = document.querySelector('#admin-chat-clients [data-chat]');
+  if (!threadsEl || !chatEl) return;
+  const sb = window.supabaseClient;
+  if (!sb) { threadsEl.innerHTML = '<p class="muted">Chat not available.</p>'; return; }
+  let currentThread = null, user;
+  try {
+    const u = await sb.auth.getUser(); user = u.data?.user;
+    if (!user) return;
+    const th = await sb.from('client_threads').select('id,client_id,clients(name),client_profiles(name)').order('created_at', {ascending: false}).limit(100);
+    if (th.error) throw th.error;
+    threadsEl.innerHTML = th.data.length ? th.data.map(t => {
+      const name = t.clients?.name || t.client_profiles?.name || 'Client';
+      return '<button type="button" style="display:block; width:100%; text-align:left; margin-bottom:8px; padding:8px; border:1px solid var(--hairline); border-radius:4px; background:var(--canvas); cursor:pointer;" data-thread="' + t.id + '">' + name + '</button>';
+    }).join('') : '<p class="muted">No threads.</p>';
+    threadsEl.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+      threadsEl.querySelectorAll('button').forEach(b => b.style.background = 'var(--canvas)');
+      btn.style.background = '#f0f0f0';
+      currentThread = btn.dataset.thread;
+      loadAdminMessages();
+    }));
+  } catch (err) { threadsEl.innerHTML = '<p class="muted">Error.</p>'; }
+}
+
+async function loadAdminMessages() {
+  const chatEl = document.querySelector('#admin-chat-clients [data-chat]');
+  if (!chatEl) return;
+  const sb = window.supabaseClient;
+  const log = document.createElement('div');
+  log.style.flex = '1'; log.style.overflowY = 'auto'; log.style.marginBottom = '12px';
+  const form = document.createElement('form');
+  form.style.display = 'flex'; form.style.gap = '8px';
+  form.innerHTML = '<textarea name="body" rows="2" style="flex:1; padding:8px; border:1px solid var(--hairline); border-radius:4px;"></textarea><button class="btn">Send</button>';
+  chatEl.innerHTML = ''; chatEl.appendChild(log); chatEl.appendChild(form);
+  async function draw() {
+    if (!currentThread) return;
+    const r = await sb.from('client_messages').select('id,sender_id,body,created_at').eq('thread_id', currentThread).order('created_at');
+    if (r.error) { log.innerHTML = '<p class="muted">Error</p>'; return; }
+    const u = await sb.auth.getUser(); const me = u.data?.user?.id;
+    const near = log.scrollHeight - log.scrollTop - log.clientHeight < 80;
+    log.innerHTML = r.data.map(m => '<div style="margin-bottom:12px; padding:8px 12px; background:' + (m.sender_id===me?'#f0f0f0':'#e8f4ff') + '; border-radius:6px; max-width:70%; margin-left:' + (m.sender_id===me?'auto':'0') + ';"><p>' + m.body.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) + '</p><small style="color:var(--ink-mid); font-size:11px;">' + (m.created_at?new Date(m.created_at).toLocaleString():'') + '</small></div>').join('');
+    if (near || !log.scrollTop) log.scrollTop = log.scrollHeight;
+  }
+  form.onsubmit = async (e) => {
+    e.preventDefault(); const body = form.elements.body.value.trim(); if (!body) return;
+    const u = await sb.auth.getUser(); const me = u.data?.user?.id;
+    await sb.from('client_messages').insert({thread_id: currentThread, sender_id: me, body});
+    form.reset(); draw();
+  };
+  draw(); setInterval(() => { if (!document.hidden) draw(); }, 5000);
+}
+
+async function loadAdminQuestions() {
+  const el = document.getElementById('admin-questions-list');
+  if (!el) return;
+  const sb = window.supabaseClient;
+  if (!sb) { el.innerHTML = '<p class="muted">Not available.</p>'; return; }
+  try {
+    const q = await sb.from('questions').select('id,question,answer,created_at').order('created_at', {ascending: false}).limit(100);
+    if (q.error) throw q.error;
+    el.innerHTML = q.data.length ? q.data.map(item => '<div style="border:1px solid var(--hairline); padding:16px; border-radius:8px;"><h4>' + item.question.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) + '</h4><p style="margin-top:8px; color:var(--ink-mid);">' + (item.answer ? 'A: ' + item.answer.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) : 'Unanswered') + '</p><small style="color:var(--ink-mute);">' + (item.created_at?new Date(item.created_at).toLocaleDateString():'') + '</small></div>').join('') : '<p class="muted">No questions yet.</p>';
+  } catch (err) { el.innerHTML = '<p class="muted">Error loading questions.</p>'; }
+}
+
+function drawServiceChart() {
+  const canvas = document.getElementById('serviceChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+  const ctx = canvas.getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Website', 'Portfolio', 'Dashboard', 'AI Workflow', 'Other'],
+      datasets: [{
+        label: 'Enquiries',
+        data: [15, 12, 8, 6, 4],
+        backgroundColor: 'rgba(0, 114, 240, 0.7)',
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+  });
+}  document.addEventListener('DOMContentLoaded', initAppView);
+  
+  // Auto-show app view when authenticated
+  setTimeout(() => {
+    const sb = window.supabaseClient;
+    if (sb) {
+      sb.auth.getSession().then(({data}) => {
+        if (data?.session && !window.location.search.includes('flow=app')) {
+          // Check if we want to auto-switch - but better to let user navigate
+        }
+      });
+    }
+  }, 500);
+
 </script>
 
 </body></html>
