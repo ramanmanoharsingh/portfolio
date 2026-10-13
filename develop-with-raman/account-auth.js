@@ -55,7 +55,12 @@
     confirmField.classList.toggle('auth-hidden',!signup);confirmPassword.required=signup;
     rememberRow.classList.toggle('auth-hidden',!login);$('#auth-social-section').classList.toggle('auth-hidden',reset);
     $('#auth-legal').classList.toggle('auth-hidden',reset);$('#auth-terms-row').classList.toggle('auth-hidden',!signup);$('#auth-back-login').classList.toggle('auth-hidden',!reset);forgotLink.classList.toggle('auth-hidden',!login);
-    $('#auth-tabs').classList.toggle('auth-hidden',reset);
+    $('#auth-tabs')?.classList.toggle('auth-hidden',reset);
+    $('#auth-switch-copy')?.classList.toggle('auth-hidden',reset);
+    const switchPrompt=$('#auth-switch-prompt');
+    if(switchPrompt)switchPrompt.textContent=signup?'Already have an account?':'New here?';
+    const switchButton=$('#auth-switch');
+    if(switchButton)switchButton.textContent=signup?'Sign in':'Create an account';
     submitLabel.textContent=login?'Sign in to your account':signup?'Create your account':'Send reset link';
     password.autocomplete=login?'current-password':'new-password';
     password.required=!reset;password.disabled=reset;password.classList.toggle('auth-hidden',reset);
@@ -85,6 +90,7 @@
     return raw;
   };
   tabs.forEach(tab=>tab.addEventListener('click',()=>setMode(tab.dataset.mode)));
+  $('#auth-switch')?.addEventListener('click',event=>{event.preventDefault();setMode(state.mode==='signup'?'login':'signup');});
   $('#auth-show-password').addEventListener('click',()=>{const reveal=password.type==='password';password.type=reveal?'text':'password';$('#auth-show-password').textContent=reveal?'Hide':'Show';$('#auth-show-password').setAttribute('aria-pressed',String(reveal));});
   $('#auth-show-confirm').addEventListener('click',()=>{const reveal=confirmPassword.type==='password';confirmPassword.type=reveal?'text':'password';$('#auth-show-confirm').textContent=reveal?'Hide':'Show';});
   password.addEventListener('input',updateStrength);
