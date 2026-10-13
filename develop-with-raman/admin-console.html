@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>(function(){try{var t=localStorage.getItem('t');if(t!=='light'&&t!=='dark'){var old=localStorage.getItem('playmatchTheme');if(old==='light'||old==='dark'){t=old;localStorage.setItem('t',t)}}document.documentElement.dataset.theme=(t==='light'||t==='dark')?t:((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin console · Develop with Raman</title>
+<link rel="stylesheet" href="/client-portal.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="/portal-supabase.js"></script>
+<script defer src="/admin-console.js"></script>
+<link rel="stylesheet" href="/theme.css?v=20261013">
+<script defer src="/theme.js?v=20261013"></script>
+<link rel="stylesheet" href="/topbar.css?v=20261013">
+<link rel="stylesheet" href="/ui-controls.css?v=20261013">
+<link rel="stylesheet" href="/admin-console.css">
+</head>
+<body class="portal-body">
+<header class="site-topbar" aria-label="Site header"><a class="site-topbar-brand" href="/" aria-label="Develop with Raman home">Develop with Raman</a><div class="site-topbar-actions"><button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme" title="Toggle theme"></button><a class="site-topbar-home" href="/" aria-label="View website" title="View website"><span aria-hidden="true">↗</span><span class="site-topbar-home-label">View website</span></a></div></header>
+<div class="portal-shell" data-portal data-page="admin" data-role="admin">
+  <aside class="portal-sidebar">
+    <a class="portal-brand" href="/">Develop with Raman<span>Admin workspace</span></a>
+    <nav class="portal-nav" aria-label="Admin sections">
+      <a href="#dashboard" data-nav="dashboard"><span>▦</span>Dashboard</a>
+      <a href="#enquiries" data-nav="enquiries"><span>✉</span>Enquiries<b class="nav-badge" data-badge="enquiries" hidden>0</b></a>
+      <a href="#projects" data-nav="projects"><span>↗</span>Projects</a>
+      <a href="#clients" data-nav="clients"><span>◉</span>Clients</a>
+      <a href="#messages" data-nav="messages"><span>✎</span>Messages<b class="nav-badge" data-badge="messages" hidden>0</b></a>
+      <a href="#trends" data-nav="trends"><span>≈</span>Service trends</a>
+      <a href="#questions" data-nav="questions"><span>?</span>Questions &amp; answers<b class="nav-badge" data-badge="questions" hidden>0</b></a>
+      <a href="#feedback" data-nav="feedback"><span>★</span>Feedback<b class="nav-badge" data-badge="feedback" hidden>0</b></a>
+      <a href="#time" data-nav="time"><span>◷</span>Time tracking</a>
+      <a href="#billing" data-nav="billing"><span>₹</span>Billing</a>
+      <a href="#deliverables" data-nav="deliverables"><span>⇧</span>Deliverables</a>
+      <a href="#settings" data-nav="settings"><span>⚙</span>Settings &amp; audit</a>
+    </nav>
+    <div class="portal-sidebar-bottom">
+      <a class="portal-button" href="/admin-portal.html">Classic workspace ↗</a>
+      <button class="portal-button" type="button" data-sign-out>Sign out ↗</button>
+    </div>
+  </aside>
+
+  <main class="portal-main">
+    <header class="portal-topbar">
+      <div>
+        <div class="eyebrow">Admin workspace</div>
+        <h1 class="portal-title" data-view-title>Dashboard</h1>
+        <p class="portal-subtitle" data-view-subtitle>Everything that needs your attention, in one place.</p>
+      </div>
+      <div class="portal-top-actions">
+        <button class="button" type="button" data-refresh>Refresh</button>
+        <div class="bell-wrap">
+          <button class="button" type="button" data-bell aria-haspopup="true" aria-expanded="false" aria-label="Notifications">♧ Updates <span class="notification-count" data-bell-count hidden>0</span></button>
+          <div class="bell-panel portal-card" data-bell-panel hidden role="region" aria-label="Notifications">
+            <div class="bell-head"><strong>Notifications</strong><button class="button" type="button" data-bell-readall>Mark all read</button></div>
+            <div data-bell-list><p class="muted">Loading…</p></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="portal-error" data-error-message hidden></div>
+
+    <section id="dashboard" data-view="dashboard" hidden></section>
+    <section id="enquiries" data-view="enquiries" hidden></section>
+    <section id="projects" data-view="projects" hidden></section>
+    <section id="clients" data-view="clients" hidden></section>
+    <section id="messages" data-view="messages" hidden></section>
+    <section id="trends" data-view="trends" hidden></section>
+    <section id="questions" data-view="questions" hidden></section>
+    <section id="feedback" data-view="feedback" hidden></section>
+    <section id="time" data-view="time" hidden></section>
+    <section id="billing" data-view="billing" hidden></section>
+    <section id="deliverables" data-view="deliverables" hidden></section>
+    <section id="settings" data-view="settings" hidden></section>
+  </main>
+</div>
+<div id="modal-root"></div>
+</body>
+</html>
