@@ -152,9 +152,9 @@ jobs:
           grep -q 'href="#deliverables-admin"' develop-with-raman/admin-portal.html
           grep -q 'href="#billing-admin"' develop-with-raman/admin-portal.html
           grep -q 'href="#proposals-admin"' develop-with-raman/admin-portal.html
-          grep -q 'data-admin-refresh' develop-with-raman/admin-portal.html
-          grep -q "Dashboard data refreshed." develop-with-raman/admin-portal.js
-          echo "Admin navigation and refresh controls are present."
+          grep -q 'await loadData();' develop-with-raman/admin-portal.html
+          grep -q 'Some workspace data could not load:' develop-with-raman/admin-portal.html
+          echo "Admin navigation and dashboard data reload handling are present."
 
 
       - name: Deep static UI and theme regression checks
