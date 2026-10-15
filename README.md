@@ -54,12 +54,18 @@ Email/password and Google sign-in should be tested independently. Never rely on 
 - The last homepage patch was committed as [`934698b`](https://github.com/ramanmanoharsingh/portfolio/commit/934698b826954748f24d3e4f5b808192cf896319). Its live behavior still needs verification in Cloudflare Pages and on a phone.
 - Supabase's security advisor currently reports leaked-password protection as disabled. Enable it in Supabase Auth settings if supported by the project plan, then test password sign-in and reset flows.
 
+## Project workflow memory
+
+See [`docs/PROJECT_WORKFLOW_MEMORY.md`](docs/PROJECT_WORKFLOW_MEMORY.md) for the consolidated role-based workflow, route/layout intent, design constraints, known audit concerns, and safe cleanup rules from previous project conversations. This is the current workflow brief; verify every item against the current code before treating it as implemented.
+
 ## Change workflow
 
-1. Inspect the current production branch and relevant files.
-2. Make a small, scoped change.
-3. Review the diff and check for accidental secret exposure.
-4. Commit with a specific message.
-5. Verify the Cloudflare deployment.
-6. Test the relevant flows on desktop and mobile.
-7. Re-check Supabase advisors if database/auth configuration changed.
+1. Work directly on `main`, as currently requested; do not create branches or pull requests for routine work.
+2. Inspect the current production commit and the relevant files/references before changing them.
+3. Make a small, scoped change that preserves the working homepage, existing design, Supabase project, and records.
+4. Review the diff and check for accidental secret exposure.
+5. Remove files only after confirming they are unreferenced; never mass-delete based on filenames alone.
+6. Commit with a specific message.
+7. Verify the Cloudflare deployment.
+8. Test the relevant anonymous, client, and admin flows on desktop and mobile.
+9. Re-check Supabase advisors if database/auth configuration changed.
