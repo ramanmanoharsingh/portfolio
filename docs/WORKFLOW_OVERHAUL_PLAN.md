@@ -2,7 +2,7 @@
 
 **Repository:** `ramanmanoharsingh/portfolio`  
 **Production branch:** `main`  
-**Working branch:** `feature/workflow-overhaul`  
+**Working mode:** direct, focused commits on `main` (current user preference)  
 **Application:** Static HTML, CSS, and vanilla JavaScript hosted on Cloudflare Pages; existing Supabase Auth and Postgres backend.
 
 ## Mission
@@ -20,7 +20,7 @@ This plan is not proof that the implementation has already changed. Each stage m
 - Do not treat a frontend-only role check as authorization.
 - Do not change the website's aesthetics unless a minimal UI adjustment is required to expose a corrected workflow.
 - Do not claim production deployment success from a Git commit alone; verify Cloudflare Pages and the deployed site.
-- Work in small commits on a feature branch; merge only after relevant checks pass.
+- Work directly on `main` in small, focused commits, as the user now explicitly prefers. Do not create branches or pull requests for routine work. Inspect the current head and relevant files before each write; never force-push. Run relevant checks and state any unverified production behavior.
 
 ## Confirmed repository context
 
