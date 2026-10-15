@@ -112,4 +112,6 @@ jobs:
       - name: Confirm workflow docs exist
         run: |
           test -f docs/WORKFLOW_OVERHAUL_PLAN.md
+          test -f docs/PROJECT_WORKFLOW_MEMORY.md
           test -f docs/DEPLOYMENT_AND_ROLLBACK.md
+          grep -q 'docs/PROJECT_WORKFLOW_MEMORY.md' README.md
