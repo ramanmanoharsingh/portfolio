@@ -57,3 +57,91 @@ header.top#hd .theme-toggle:hover{background:#fff;color:#000;border-color:#fff}
  header.top#hd .wm{font-size:14px!important;white-space:normal}
  header.top#hd .top-action,header.top#hd .nr .tg:not(.theme-toggle){min-height:36px;height:36px;padding:0 10px;font-size:11px}
 }
+
+/* Homepage hero cleanup: tighter hierarchy and less decorative clutter. */
+body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper){
+  box-sizing:border-box;
+  min-width:0;
+}
+body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(h1,.hero-title,[class*="hero-title"]){
+  max-width:13ch;
+  font-size:clamp(2.8rem,6.2vw,5.5rem);
+  line-height:.98;
+  letter-spacing:-.065em;
+  text-wrap:balance;
+}
+body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(p,.hero-description,[class*="hero-description"]){
+  max-width:56ch;
+  line-height:1.6;
+}
+body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(.hero-stats,.hero-social,.hero-scroll,.hero-decoration,.hero-decor,.hero-badge,.hero-tags,.hero-availability,.floating-badge,.scroll-indicator,[aria-label="Scroll indicator"]){
+  display:none!important;
+}
+body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(.hero-content,[class*="hero-content"]){
+  min-width:0;
+}
+body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(.hero-actions,.hero-buttons,.hero-cta,[class*="hero-actions"]){
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:22px;
+}
+body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(.hero-actions,.hero-buttons,.hero-cta,[class*="hero-actions"]) a,
+body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(.hero-actions,.hero-buttons,.hero-cta,[class*="hero-actions"]) button{
+  min-height:44px;
+}
+@media(min-width:851px){
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper){
+  padding-top:clamp(42px,6vw,88px);
+  padding-bottom:clamp(42px,6vw,88px);
+ }
+}
+@media(max-width:850px){
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper){
+  min-height:0!important;
+  padding-top:clamp(28px,7vw,54px)!important;
+  padding-bottom:clamp(30px,7vw,56px)!important;
+  gap:22px;
+ }
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(h1,.hero-title,[class*="hero-title"]){
+  max-width:12ch;
+  font-size:clamp(2.55rem,9vw,4.2rem);
+  line-height:1;
+  letter-spacing:-.06em;
+ }
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(p,.hero-description,[class*="hero-description"]){
+  max-width:38ch;
+  font-size:15px;
+ }
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(img,video,svg){
+  max-width:100%;
+ }
+}
+@media(max-width:560px){
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper){
+  padding:26px 18px 34px!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+ }
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(h1,.hero-title,[class*="hero-title"]){
+  font-size:clamp(2.35rem,11vw,3.25rem);
+  line-height:1.02;
+  max-width:11ch;
+ }
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(p,.hero-description,[class*="hero-description"]){
+  font-size:14px;
+  line-height:1.55;
+  max-width:34ch;
+ }
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(.hero-actions,.hero-buttons,.hero-cta,[class*="hero-actions"]){
+  gap:8px;
+  margin-top:18px;
+ }
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(.hero-actions,.hero-buttons,.hero-cta,[class*="hero-actions"]) a,
+ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :is(.hero-actions,.hero-buttons,.hero-cta,[class*="hero-actions"]) button{
+  min-height:42px;
+  padding:0 15px;
+  font-size:13px;
+ }
+}
