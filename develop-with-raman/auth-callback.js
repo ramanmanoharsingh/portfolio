@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try{next=sessionStorage.getItem('dwr-auth-next');sessionStorage.removeItem('dwr-auth-next');}catch(_e){}
     const safe=next&&next.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')&&!/^\/(?:auth|login)/i.test(next)?next:null;
     let dest=role==='admin'?'/admin-console.html':'/client-dashboard.html';
-    if(safe){dest=(role==='admin'&&safe.startsWith('/client-dashboard'))?'/admin-console.html':(role!=='admin'&&safe.startsWith('/admin-portal'))?'/client-dashboard.html':safe;}
+    if(safe){dest=(role==='admin'&&(safe.startsWith('/client-dashboard')||safe.startsWith('/admin-portal')))?'/admin-console.html':(role!=='admin'&&(safe.startsWith('/admin-portal')||safe.startsWith('/admin-console')))?'/client-dashboard.html':safe;}
     location.replace(dest);
   }catch(err){fail('Could not verify your session',err?.message||'Please return to sign in and try again.');}
 });
