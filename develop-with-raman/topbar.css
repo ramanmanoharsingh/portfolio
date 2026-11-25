@@ -259,3 +259,8 @@ header.top#hd .wm{min-width:0}
     letter-spacing:-.025em;
   }
 }
+
+/* Keep the mobile header sequence stable: theme, dashboard/sign-out group, then Menu. */
+header.top#hd .nr>#th{order:1}
+header.top#hd .nr>#auth-nav-section{order:2}
+header.top#hd .nr>#mb{order:3}
