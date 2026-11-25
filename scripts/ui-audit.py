@@ -145,7 +145,7 @@ if AUTH_SCRIPT.is_file():
 ADMIN_SCRIPT = SITE_ROOT / "admin-console.js"
 if ADMIN_SCRIPT.is_file():
     admin_source = ADMIN_SCRIPT.read_text(encoding="utf-8")
-    for token in ("AuthSessionMissingError", "/auth session missing/i", "if (authError && !missingSession)", "Could not verify administrator access. Check your connection"):
+    for token in ("AuthSessionMissingError", "/auth session missing/i", "if (authError && !missingSession)", "could not verify administrator access. Check your connection"):
         if token not in admin_source:
             fail("develop-with-raman/admin-console.js", f"missing safe admin-session handling: {token}")
     if "if (authError || !user)" in admin_source:
