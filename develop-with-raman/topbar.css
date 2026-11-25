@@ -145,3 +145,117 @@ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :
   font-size:13px;
  }
 }
+
+ 
+/* Homepage account controls: one role link and one sign-out action. */
+header.top#hd #auth-nav-section{
+  display:flex!important;
+  align-items:center;
+  justify-content:flex-end;
+  gap:clamp(6px,1vw,10px);
+  flex:0 1 auto;
+  min-width:0;
+}
+header.top#hd #auth-nav-section>.account-dashboard-link,
+header.top#hd #auth-nav-section>.account-signout{
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 1 auto;
+  min-width:0;
+  max-width:100%;
+  min-height:40px;
+  padding:0 clamp(9px,1.1vw,15px);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+header.top#hd #auth-nav-section>.account-dashboard-link[hidden]{display:none!important}
+header.top#hd #auth-nav-section>.account-signout[aria-disabled="true"]{opacity:.65;pointer-events:none}
+header.top#hd .nr{min-width:0}
+header.top#hd .wm{min-width:0}
+@media(max-width:850px){
+  header.top#hd nav{
+    grid-template-columns:minmax(0,1fr) auto!important;
+    min-width:0;
+  }
+  header.top#hd .wm{
+    justify-self:start!important;
+    min-width:0;
+    max-width:100%;
+    margin-left:0!important;
+    overflow:hidden;
+  }
+  header.top#hd .nr{
+    min-width:0;
+    flex:0 0 auto;
+    gap:6px!important;
+  }
+  header.top#hd #auth-nav-section{gap:5px}
+  header.top#hd #auth-nav-section>.account-dashboard-link,
+  header.top#hd #auth-nav-section>.account-signout{
+    min-height:36px;
+    padding:0 10px;
+    font-size:11px;
+  }
+}
+@media(max-width:560px){
+  /* Put branding and account actions on separate rows instead of compressing them together. */
+  header.top#hd nav{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto auto;
+    height:auto!important;
+    min-height:0!important;
+    padding:9px 12px!important;
+    gap:7px;
+  }
+  header.top#hd .wm{
+    grid-column:1;
+    grid-row:1;
+    justify-self:start!important;
+    margin:0!important;
+    max-width:100%;
+    font-size:14px!important;
+    white-space:nowrap;
+  }
+  header.top#hd .nr{
+    grid-column:1;
+    grid-row:2;
+    display:flex!important;
+    width:100%;
+    justify-content:flex-end;
+    gap:6px!important;
+  }
+  header.top#hd #th{
+    flex:0 0 36px;
+    width:36px;
+    min-width:36px;
+    height:36px;
+    min-height:36px;
+    padding:0;
+  }
+  header.top#hd #mb{
+    flex:0 0 auto;
+    min-height:36px;
+    height:36px;
+    padding:0 10px;
+    font-size:11px;
+  }
+  header.top#hd #auth-nav-section{
+    flex:0 1 auto;
+    min-width:0;
+    max-width:calc(100vw - 112px);
+    gap:5px;
+  }
+  header.top#hd #auth-nav-section>.account-dashboard-link,
+  header.top#hd #auth-nav-section>.account-signout{
+    flex:0 1 auto;
+    min-width:0;
+    max-width:50%;
+    min-height:36px;
+    padding:0 8px;
+    font-size:10px;
+    letter-spacing:-.025em;
+  }
+}
