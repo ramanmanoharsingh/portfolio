@@ -41,3 +41,7 @@ a.metric-card{display:block;color:inherit}a.metric-card:hover{border-color:var(-
 .portal-table select{border:1px solid var(--portal-line);border-radius:10px;padding:8px;background:var(--portal-card);color:var(--portal-ink);font:inherit;font-size:12px}
 @media(max-width:850px){.admin-split{grid-template-columns:1fr}.bar-row{grid-template-columns:100px minmax(0,1fr) 32px}.portal-top-actions{margin-left:0}}
 @media(max-width:650px){.portal-sidebar-bottom{display:flex!important;flex-wrap:wrap;gap:8px}.portal-nav a .nav-badge{margin-left:6px}}
+
+/* Admin responsive controls and headers */
+.portal-top-actions{flex-wrap:wrap;justify-content:flex-end;gap:8px}
+@media(max-width:650px){.portal-top-actions{width:100%;justify-content:flex-start}.portal-top-actions>*{max-width:100%}.thread-item{min-width:0}.request-row{flex-wrap:wrap}.request-row>*{max-width:100%}}
