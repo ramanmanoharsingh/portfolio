@@ -76,3 +76,29 @@ h2{font:600 28px/1.2 "Space Grotesk",sans-serif;letter-spacing:-.035em;margin:8p
 @media(max-width:900px){.top{height:66px;padding:0 16px}.wrap{padding:22px 14px 45px}.auth-wrap{grid-template-columns:1fr;max-width:600px}.auth-aside{min-height:220px;padding:25px}.auth-aside h1{font-size:38px;margin:14px 0}.auth-main{padding:24px}.auth-main h2{font-size:26px}}
 @media(max-width:600px){.top{padding:0 12px}.brand{font-size:13px}.top-link{width:36px;min-width:36px;height:36px}.wrap{padding:18px 12px 36px}.auth-wrap{border-radius:16px}.auth-aside{min-height:190px;padding:22px}.auth-aside h1{font-size:34px}.auth-main{padding:22px 18px}.auth-main h2{font-size:25px}.auth-row{align-items:flex-start}.auth-primary,.auth-social{min-height:40px;padding:9px 14px;font-size:12px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+/* Prevent the account header brand from colliding with header controls. */
+body>header.top:not(#hd){
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:clamp(8px,2vw,18px)!important;
+  min-width:0;
+}
+body>header.top:not(#hd) .brand{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  max-width:calc(100% - 105px)!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+body>header.top:not(#hd) .top-right{
+  flex:0 0 auto!important;
+  min-width:0!important;
+  gap:6px!important;
+}
+@media(max-width:600px){
+ body>header.top:not(#hd) .brand{font-size:12px!important;letter-spacing:-.035em!important}
+ body>header.top:not(#hd) .top-right{gap:5px!important}
+}
