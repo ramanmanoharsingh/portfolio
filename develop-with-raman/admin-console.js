@@ -106,11 +106,17 @@
       const bc = $('[data-bell-count]'); if (bc) { bc.textContent = notif.count || 0; bc.hidden = !notif.count; }
     } catch (e) { console.warn('badges', e); }
   }
+  function notificationHref(notification) {
+    const match = String(notification.link || '').match(/^\/(?:admin-portal|admin-console)\.html#([a-z]+)$/);
+    if (match && Object.prototype.hasOwnProperty.call(VIEWS, match[1])) return '#' + match[1];
+    const routes = { new_enquiry: '#enquiries', new_message: '#messages', new_question: '#questions', new_feedback: '#feedback', account_deletion_request: '#settings' };
+    return routes[notification.type] || '#dashboard';
+  }
   async function loadBell() {
     const list = $('[data-bell-list]');
     try {
       const rows = await q(S.sb.from('notifications').select('id,type,title,body,link,read_at,created_at').eq('user_id', S.user.id).order('created_at', { ascending: false }).limit(25));
-      list.innerHTML = rows.length ? rows.map(n => '<a class="client-update-row' + (n.read_at ? ' is-read' : '') + '" href="' + esc((/^\/admin-portal\.html#\w+$/.test(n.link || '') ? n.link.replace('/admin-portal.html', '') : ({ new_enquiry: '#enquiries', new_message: '#messages', new_question: '#questions', new_feedback: '#feedback', account_deletion_request: '#settings' }[n.type] || '#dashboard'))) + '" data-notif="' + esc(n.id) + '"><span class="client-update-copy"><strong>' + esc(n.title) + '</strong><span>' + esc(n.body) + '</span><small>' + esc(fmtDateTime(n.created_at)) + '</small></span>' + (n.read_at ? '' : '<i class="client-update-unread" aria-label="Unread"></i>') + '</a>').join('') : empty('You’re all caught up');
+      list.innerHTML = rows.length ? rows.map(n => '<a class="client-update-row' + (n.read_at ? ' is-read' : '') + '" href="' + esc(notificationHref(n)) + '" data-notif="' + esc(n.id) + '"><span class="client-update-copy"><strong>' + esc(n.title) + '</strong><span>' + esc(n.body) + '</span><small>' + esc(fmtDateTime(n.created_at)) + '</small></span>' + (n.read_at ? '' : '<i class="client-update-unread" aria-label="Unread"></i>') + '</a>').join('') : empty('You’re all caught up');
     } catch (e) { list.innerHTML = '<p class="muted">Could not load notifications.</p>'; }
   }
 
