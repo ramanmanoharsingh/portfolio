@@ -1,5 +1,5 @@
 /auth/callback /auth-callback 302
 /login /auth 302
 /dashboard/client /client-dashboard 302
-/dashboard/admin /admin-portal 302
-/admin /admin-portal 302
+/dashboard/admin /admin-console 302
+/admin /admin-console 302
