@@ -128,3 +128,174 @@ body>header.top:not(#hd) .back-to-site{
 .portal-body input,.portal-body select,.portal-body textarea{max-width:100%;min-width:0}
 @media(max-width:850px){.portal-shell{grid-template-columns:1fr!important}.portal-sidebar{position:static!important;height:auto!important;min-height:0!important;overflow:visible!important;padding:16px!important;gap:14px!important}.portal-main{padding:24px clamp(14px,4vw,28px)!important}.portal-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.portal-topbar{align-items:flex-start!important}}
 @media(max-width:600px){.portal-main{padding:18px 12px 30px!important}.portal-topbar{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important;margin-bottom:22px!important}.portal-topbar>.button,.portal-topbar>.portal-button{width:100%!important}.portal-tabs{display:flex;flex-wrap:wrap;gap:6px!important}.portal-tab{max-width:100%;flex:1 1 auto;min-width:120px}.portal-grid{grid-template-columns:1fr!important}.portal-two-col{grid-template-columns:1fr!important}.portal-card,.metric-card{padding:16px!important}.portal-section-head,.panel-head{align-items:flex-start!important;flex-direction:column!important}.portal-section-head>*:last-child,.panel-head>*:last-child{max-width:100%}.portal-form{grid-template-columns:1fr!important}.field.full{grid-column:auto!important}.portal-body button,.portal-body .button,.portal-body .portal-button{max-width:100%}.portal-table{overflow-x:auto}}
+
+
+/* GREAT UNIFICATION — signed-in identity and sign-out never compete for header space. */
+.site-topbar.top{
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:clamp(10px,2vw,22px);
+  min-width:0;
+}
+.site-topbar.top .site-topbar-brand{
+  flex:0 1 auto;
+  min-width:0;
+  max-width:min(34vw,280px);
+}
+.site-topbar.top .site-topbar-actions,
+.site-topbar.top .top-right{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex:0 1 auto;
+  flex-wrap:nowrap;
+  gap:clamp(6px,1vw,10px);
+  min-width:0;
+  max-width:72%;
+}
+.site-topbar.top .site-topbar-identity,
+.site-topbar.top #top-identity{
+  display:inline-flex!important;
+  align-items:center;
+  flex:0 1 auto;
+  gap:8px;
+  min-width:0;
+  max-width:clamp(84px,19vw,190px);
+}
+.site-topbar.top .site-topbar-identity [data-user-name],
+.site-topbar.top #top-name,
+.site-topbar.top .site-topbar-identity a{
+  display:block;
+  min-width:0;
+  max-width:clamp(60px,15vw,150px);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-family:var(--site-font-body,"DM Sans",Arial,sans-serif);
+  font-size:12px;
+  font-weight:600;
+  line-height:1.2;
+}
+.site-topbar.top .site-topbar-signout,
+.site-topbar.top #top-signout{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  min-width:max-content;
+  min-height:40px;
+  padding:0 14px;
+  white-space:nowrap;
+  font-family:var(--site-font-body,"DM Sans",Arial,sans-serif)!important;
+  font-size:12px!important;
+  font-weight:600!important;
+}
+.site-topbar.top .site-topbar-identity[hidden],
+.site-topbar.top #top-identity[hidden],
+.site-topbar.top .site-topbar-signout[hidden],
+.site-topbar.top #top-signout[hidden]{
+  display:none!important;
+}
+@media(max-width:900px){
+  .site-topbar.top{
+    height:auto!important;
+    min-height:64px;
+    padding:8px 14px!important;
+    gap:8px;
+  }
+  .site-topbar.top .site-topbar-brand{
+    display:inline-flex!important;
+    flex:0 1 auto;
+    max-width:30vw;
+    font-size:12px!important;
+    line-height:1.15;
+  }
+  .site-topbar.top .site-topbar-actions,
+  .site-topbar.top .top-right{
+    flex:0 1 auto;
+    max-width:70%;
+    gap:6px!important;
+    margin-left:auto;
+  }
+  .site-topbar.top .site-topbar-identity,
+  .site-topbar.top #top-identity{
+    max-width:clamp(64px,18vw,118px);
+    gap:6px;
+  }
+  .site-topbar.top .site-topbar-identity [data-user-name],
+  .site-topbar.top #top-name{
+    max-width:clamp(52px,14vw,100px);
+    font-size:11px;
+  }
+  .site-topbar.top .site-topbar-signout,
+  .site-topbar.top #top-signout{
+    min-height:36px;
+    padding:0 11px;
+    font-size:11px!important;
+  }
+  .site-topbar.top .site-topbar-home.back-to-site{
+    width:36px;
+    min-width:36px;
+    height:36px;
+    min-height:36px;
+    padding:0!important;
+  }
+}
+@media(max-width:480px){
+  .site-topbar.top{
+    min-height:62px;
+    padding:7px 10px!important;
+    gap:6px;
+  }
+  .site-topbar.top .site-topbar-brand{
+    max-width:30vw;
+    font-size:11px!important;
+    letter-spacing:-.035em;
+  }
+  /* The linked brand already returns home; remove the duplicate arrow at phone widths. */
+  .site-topbar.top .site-topbar-home.back-to-site{
+    display:none!important;
+  }
+  .site-topbar.top .site-topbar-actions,
+  .site-topbar.top .top-right{
+    max-width:70%;
+    gap:5px!important;
+  }
+  .site-topbar.top .site-topbar-identity,
+  .site-topbar.top #top-identity{
+    max-width:clamp(48px,17vw,64px);
+    gap:0;
+    font-size:10px;
+  }
+  .site-topbar.top .site-topbar-identity .avatar,
+  .site-topbar.top #top-avatar{
+    display:none!important;
+  }
+  .site-topbar.top .site-topbar-identity [data-user-name],
+  .site-topbar.top #top-name{
+    max-width:clamp(48px,17vw,64px);
+    font-size:10px;
+  }
+  .site-topbar.top .theme-toggle{
+    width:34px;
+    min-width:34px;
+    height:34px;
+    min-height:34px;
+    flex-basis:34px;
+  }
+  .site-topbar.top .site-topbar-signout,
+  .site-topbar.top #top-signout{
+    min-height:34px;
+    padding:0 9px;
+    font-size:10px!important;
+  }
+}
+@media(max-width:360px){
+  .site-topbar.top .site-topbar-brand{max-width:27vw}
+  .site-topbar.top .site-topbar-identity,
+  .site-topbar.top #top-identity,
+  .site-topbar.top .site-topbar-identity [data-user-name],
+  .site-topbar.top #top-name{max-width:48px}
+}
