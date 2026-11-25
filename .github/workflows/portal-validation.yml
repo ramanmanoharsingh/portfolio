@@ -86,6 +86,10 @@ jobs:
           grep -Fq 'identityLink.href=activeUserRole==="admin"?"/admin-portal.html":"/client-dashboard.html";' develop-with-raman/index.html
           grep -Fq "root.dataset.role==='admin'&&role!=='admin'" develop-with-raman/client-portal.js
           grep -Fq "root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'" develop-with-raman/client-portal.js
+          grep -Fq "location.replace('/admin-console.html')" develop-with-raman/client-portal.js
+          ! grep -Fq "location.replace('/admin-portal.html')" develop-with-raman/client-portal.js
+          grep -q "function notificationHref" develop-with-raman/admin-console.js
+          ! grep -q "Classic workspace" develop-with-raman/admin-console.html
           echo "Request handoff, proposal submission, and client/admin role-routing hooks are present."
           # Request intake must be wired before optional dashboard data is loaded.
           python3 - <<'PY'
