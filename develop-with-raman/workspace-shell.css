@@ -299,3 +299,20 @@ body>header.top:not(#hd) .back-to-site{
   .site-topbar.top .site-topbar-identity [data-user-name],
   .site-topbar.top #top-name{max-width:48px}
 }
+
+/* Role navigation in signed-in headers: no homepage return action in workspace. */
+.site-topbar-actions .site-topbar-home[aria-label="View website"],
+.site-topbar-actions .site-topbar-home[title="View website"],
+.site-topbar-actions .back-to-site[aria-label="Back to website"]{display:none!important}
+/* Stable account cluster with separate columns and no text overlap. */
+.site-topbar-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:nowrap;min-width:0}
+.site-topbar-identity{max-width:min(28vw,180px);flex:0 1 auto}
+.site-topbar-identity #top-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-topbar-signout{flex:0 0 auto;white-space:nowrap}
+@media(max-width:560px){
+ .site-topbar-actions{gap:5px}
+ .site-topbar-identity{max-width:64px}
+ .site-topbar-identity .avatar{display:none!important}
+ .site-topbar-identity #top-name{max-width:64px;font-size:10px}
+ .site-topbar-signout{min-height:34px!important;padding:0 9px!important;font-size:10px!important}
+}
