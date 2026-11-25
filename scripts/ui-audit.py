@@ -30,9 +30,8 @@ if not HTML_FILES:
 for page in HTML_FILES:
     source = page.read_text(encoding="utf-8")
     relative = page.relative_to(ROOT).as_posix()
-    controls_links = re.findall(r"<link\b[^>]*\bhref\s*=\s*(['"])/ui-controls\.css(?:\?[^'"]*)?\1[^>]*>", source, re.I)
-    if len(controls_links) != 1:
-        fail(relative, f"expected exactly one shared ui-controls.css link, found {len(controls_links)}")
+    if source.count('/ui-controls.css') != 1:
+        fail(relative, "expected exactly one shared ui-controls.css link")
     if source.count('/theme.js?v=20261013') != 1:
         fail(relative, "expected exactly one shared theme.js script")
     head = source.split("</head>", 1)[0] if "</head>" in source else source
