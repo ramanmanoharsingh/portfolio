@@ -45,3 +45,45 @@ a.metric-card{display:block;color:inherit}a.metric-card:hover{border-color:var(-
 /* Admin responsive controls and headers */
 .portal-top-actions{flex-wrap:wrap;justify-content:flex-end;gap:8px}
 @media(max-width:650px){.portal-top-actions{width:100%;justify-content:flex-start}.portal-top-actions>*{max-width:100%}.thread-item{min-width:0}.request-row{flex-wrap:wrap}.request-row>*{max-width:100%}}
+
+
+/* GREAT UNIFICATION — admin actions use the shared site control language. */
+.portal-sidebar-bottom{
+  display:grid;
+  align-items:stretch;
+  gap:9px;
+  min-width:0;
+}
+.portal-sidebar-bottom > :is(.portal-button,button,a){
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  min-height:42px;
+  justify-content:center;
+  font-family:var(--site-font-body,"DM Sans",Arial,sans-serif)!important;
+  font-size:13px!important;
+  font-weight:600!important;
+  letter-spacing:-.012em!important;
+}
+.portal-top-actions{
+  align-items:center;
+  gap:8px;
+}
+.portal-top-actions > button,
+.portal-top-actions .bell-wrap > button{
+  min-height:42px;
+}
+@media(max-width:650px){
+  .portal-sidebar-bottom > :is(.portal-button,button,a){
+    min-height:40px;
+    font-size:12px!important;
+  }
+  .portal-top-actions{
+    width:100%;
+    justify-content:flex-start;
+  }
+  .portal-top-actions > button,
+  .portal-top-actions .bell-wrap > button{
+    min-height:40px;
+  }
+}
