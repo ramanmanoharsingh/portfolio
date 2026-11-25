@@ -440,11 +440,11 @@ header.top .theme-toggle:hover{background:#fff;color:#080808;border-color:#fff}
   <!-- Client App View -->
   <div id="client-app" style="display:none;">
     <div class="app-nav" style="background: var(--canvas-inverse); color: var(--canvas); padding: 16px clamp(24px,8vw,150px); display:flex; gap:24px; flex-wrap:wrap;">
-      <button class="app-tab" data-client-tab="dashboard" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Dashboard</button>
-      <button class="app-tab" data-client-tab="work-progress" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Work Progress</button>
-      <button class="app-tab" data-client-tab="cost-estimator" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Cost Estimator</button>
-      <button class="app-tab" data-client-tab="talk-admin" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Talk to Admin</button>
-      <button class="app-tab" data-client-tab="profile" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">My Profile</button>
+      <button type="button" class="app-tab" data-client-tab="dashboard" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Dashboard</button>
+      <button type="button" class="app-tab" data-client-tab="work-progress" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Work Progress</button>
+      <button type="button" class="app-tab" data-client-tab="cost-estimator" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Cost Estimator</button>
+      <button type="button" class="app-tab" data-client-tab="talk-admin" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Talk to Admin</button>
+      <button type="button" class="app-tab" data-client-tab="profile" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">My Profile</button>
     </div>
     
     <!-- Client Dashboard -->
@@ -548,10 +548,10 @@ header.top .theme-toggle:hover{background:#fff;color:#080808;border-color:#fff}
   <!-- Admin App View -->
   <div id="admin-app" style="display:none;">
     <div class="app-nav" style="background: var(--canvas-inverse); color: var(--canvas); padding: 16px clamp(24px,8vw,150px); display:flex; gap:24px; flex-wrap:wrap;">
-      <button class="app-tab" data-admin-tab="overview" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Services Overview</button>
-      <button class="app-tab" data-admin-tab="questions" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Questions</button>
-      <button class="app-tab" data-admin-tab="admin-dashboard" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Admin Dashboard</button>
-      <button class="app-tab" data-admin-tab="chat-clients" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Chat with Clients</button>
+      <button type="button" class="app-tab" data-admin-tab="overview" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Services Overview</button>
+      <button type="button" class="app-tab" data-admin-tab="questions" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Questions</button>
+      <button type="button" class="app-tab" data-admin-tab="admin-dashboard" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Admin Dashboard</button>
+      <button type="button" class="app-tab" data-admin-tab="chat-clients" style="background:transparent; color:inherit; border:1px solid rgba(255,255,255,.3); padding:8px 16px; border-radius:8px; cursor:pointer;">Chat with Clients</button>
     </div>
     
     <!-- Admin Services Overview -->
@@ -1279,7 +1279,7 @@ async function loadAdminMessages() {
   log.style.flex = '1'; log.style.overflowY = 'auto'; log.style.marginBottom = '12px';
   const form = document.createElement('form');
   form.style.display = 'flex'; form.style.gap = '8px';
-  form.innerHTML = '<textarea name="body" rows="2" style="flex:1; padding:8px; border:1px solid var(--hairline); border-radius:4px;"></textarea><button class="btn">Send</button>';
+  form.innerHTML = '<textarea name="body" rows="2" style="flex:1; padding:8px; border:1px solid var(--hairline); border-radius:4px;"></textarea><button class="btn" type="submit">Send</button>';
   chatEl.innerHTML = ''; chatEl.appendChild(log); chatEl.appendChild(form);
   async function draw() {
     if (!currentThread) return;
