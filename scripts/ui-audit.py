@@ -12,6 +12,7 @@ SCRIPT_RE = re.compile(r"<script\b([^>]*)>([\s\S]*?)</script\s*>", re.I)
 ID_RE = re.compile(r"\bid\s*=\s*(['\"])(.*?)\1", re.I)
 BUTTON_RE = re.compile(r"<button\b([^>]*)>", re.I)
 ANCHOR_RE = re.compile(r"<a\b([^>]*)>", re.I)
+IMAGE_RE = re.compile(r"<img\b([^>]*)>", re.I)
 ATTR_RE = lambda name: re.compile(r"\b" + re.escape(name) + r"\s*=\s*(['\"])(.*?)\1", re.I)
 failures = []
 checked_inline = 0
@@ -86,6 +87,15 @@ for page in HTML_FILES:
             if not (SITE_ROOT / asset_path).is_file():
                 fail(relative, f"missing local script asset: {src}")
 
+    # Check local image paths as well; this catches missing assets after homepage
+    # images or gallery files are moved out of inline HTML.
+    for match in IMAGE_RE.finditer(static):
+        src = attr(match.group(1), "src")
+        if src and src.startswith("/"):
+            asset_path = src.split("?", 1)[0].split("#", 1)[0].lstrip("/")
+            if not (SITE_ROOT / asset_path).is_file():
+                fail(relative, f"missing local image asset: {src}")
+
     # The client dashboard must use one shared site-style sign-out control.
     if relative in {"develop-with-raman/client-dashboard.html", "develop-with-raman/profile.html", "develop-with-raman/welcome.html"}:
         if relative == "develop-with-raman/client-dashboard.html":
@@ -128,6 +138,18 @@ if AUTH_SCRIPT.is_file():
         fail("develop-with-raman/account-auth.js", f"expected one persistence-cookie assignment, found {cookie_assignments}")
     if "SameSite=Lax; Secure" not in auth_source:
         fail("develop-with-raman/account-auth.js", "persistence-cookie assignment must include Secure and SameSite=Lax")
+
+
+# Admin auth must distinguish a genuinely missing session from a verification/network
+# error. Redirecting on every auth error can create a confusing login loop during outages.
+ADMIN_SCRIPT = SITE_ROOT / "admin-console.js"
+if ADMIN_SCRIPT.is_file():
+    admin_source = ADMIN_SCRIPT.read_text(encoding="utf-8")
+    for token in ("AuthSessionMissingError", "/auth session missing/i", "if (authError && !missingSession)", "Could not verify administrator access. Check your connection"):
+        if token not in admin_source:
+            fail("develop-with-raman/admin-console.js", f"missing safe admin-session handling: {token}")
+    if "if (authError || !user)" in admin_source:
+        fail("develop-with-raman/admin-console.js", "all auth errors must not be treated as a missing session")
 
 print(f"Audited {len(HTML_FILES)} HTML page(s); syntax-checked {checked_inline} inline JavaScript block(s).")
 if failures:

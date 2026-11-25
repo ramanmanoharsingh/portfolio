@@ -560,14 +560,59 @@
     const stop = msg => { errBox.hidden = false; errBox.textContent = msg; };
     S.sb = window.supabaseClient;
     if (!S.sb) { stop('The secure database connection did not initialise. Reload the page; if it persists, check the Supabase script.'); return; }
-    const { data: { user }, error: authError } = await S.sb.auth.getUser();
-    if (authError || !user) { location.replace('/auth.html?next=' + encodeURIComponent('/admin-console.html' + location.hash)); return; }
+    let authResult;
+    try {
+      authResult = await S.sb.auth.getUser();
+    } catch (error) {
+      console.error('[admin] Could not verify the active session.', error);
+      stop('We could not verify administrator access. Check your connection and refresh the page.');
+      return;
+    }
+    const user = authResult?.data?.user || null;
+    const authError = authResult?.error || null;
+    const missingSession = !user && (!authError || authError.name === 'AuthSessionMissingError' || /auth session missing/i.test(authError.message || ''));
+    if (authError && !missingSession) {
+      console.error('[admin] Session verification failed.', authError);
+      stop('We could not verify administrator access. Check your connection and refresh the page.');
+      return;
+    }
+    if (!user) {
+      location.replace('/auth.html?next=' + encodeURIComponent('/admin-console.html' + location.hash));
+      return;
+    }
     S.user = user;
-    const { data: profile, error: profileError } = await S.sb.from('profiles').select('role').eq('id', user.id).maybeSingle();
-    if (profileError) { stop('We could not verify administrator access. Please refresh and try again.'); return; }
-    if (profile?.role !== 'admin') { location.replace('/client-dashboard.html'); return; }
+    let profileResult;
+    try {
+      profileResult = await S.sb.from('profiles').select('role').eq('id', user.id).maybeSingle();
+    } catch (error) {
+      console.error('[admin] Could not load the account role.', error);
+      stop('We could not verify administrator access. Please refresh and try again.');
+      return;
+    }
+    const { data: profile, error: profileError } = profileResult;
+    if (profileError) {
+      console.error('[admin] Could not load the account role.', profileError);
+      stop('We could not verify administrator access. Please refresh and try again.');
+      return;
+    }
+    if (profile?.role !== 'admin') {
+      location.replace('/client-dashboard.html');
+      return;
+    }
 
-    $('[data-sign-out]').addEventListener('click', async () => { const { error } = await S.sb.auth.signOut(); if (error) { toast(error.message, true); return; } location.replace('/'); });
+    const signOutButton = $('[data-sign-out]');
+    signOutButton?.addEventListener('click', async () => {
+      if (signOutButton.disabled) return;
+      signOutButton.disabled = true;
+      try {
+        const { error } = await S.sb.auth.signOut();
+        if (error) throw error;
+        location.replace('/');
+      } catch (error) {
+        toast(error?.message || 'Could not sign out. Please try again.', true);
+        signOutButton.disabled = false;
+      }
+    });
     $('[data-refresh]').addEventListener('click', refresh);
     const bell = $('[data-bell]'), panel = $('[data-bell-panel]');
     bell.addEventListener('click', async () => { panel.hidden = !panel.hidden; bell.setAttribute('aria-expanded', String(!panel.hidden)); if (!panel.hidden) await loadBell(); });
