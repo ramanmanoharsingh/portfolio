@@ -110,6 +110,18 @@ jobs:
           echo "Client request intake, profile role routing, admin navigation, and data-error handling are present."
 
 
+      - name: Validate successful sign-in returns to homepage
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "function postAuthPath() { return '/'; }" develop-with-raman/account-auth.js
+          grep -Fq "location.replace(postAuthPath())" develop-with-raman/account-auth.js
+          grep -Fq "emailRedirectTo:location.origin+'/'" develop-with-raman/account-auth.js
+          grep -Fq "message.textContent='Returning to the homepage…';" develop-with-raman/auth-callback.js
+          grep -Fq "location.replace('/')" develop-with-raman/auth-callback.js
+          grep -Fq 'identityLink.href=activeUserRole==="admin"?"/admin-portal.html":"/client-dashboard.html";' develop-with-raman/index.html
+          echo "Password sign-in, signup confirmation and OAuth return to the original homepage; the role-aware dashboard action stays in the homepage navigation."
+
       - name: Deep static UI and theme regression checks
         run: python3 scripts/ui-audit.py
 
