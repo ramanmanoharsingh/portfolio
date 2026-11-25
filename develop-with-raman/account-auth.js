@@ -43,7 +43,7 @@
       if (role !== 'admin' && next.startsWith('/admin-portal')) return '/client-dashboard.html';
       return next;
     }
-    return role === 'admin' ? '/admin-portal.html' : '/client-dashboard.html';
+    return role === 'admin' ? '/admin-console.html' : '/client-dashboard.html';
   }
   const setMode = mode => {
     state.mode=mode; clearMessage();
