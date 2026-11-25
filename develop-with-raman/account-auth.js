@@ -21,30 +21,8 @@
   const showMessage = (text, kind='error') => { message.textContent=text; message.dataset.kind=kind; message.setAttribute('role',kind==='error'?'alert':'status'); };
   const clearMessage = () => { message.textContent=''; delete message.dataset.kind; message.removeAttribute('role'); };
   const setBusy = (busy, label) => { state.busy=busy; submit.disabled=busy; submitLabel.textContent=busy?'Please wait…':label; submit.setAttribute('aria-busy',String(busy)); $$('.auth-social').forEach(button=>{button.disabled=busy;}); };
-  function safeNextPath() {
-    const next = new URLSearchParams(location.search).get('next');
-    if (!next || !next.startsWith('/') || next.startsWith('//') ||
-        next.indexOf(String.fromCharCode(92)) !== -1 ||
-        next.startsWith('/auth') || next.startsWith('/login')) return null;
-    return next;
-  }
-  async function postAuthPath(client, user) {
-    const next = safeNextPath();
-    let role = 'client';
-    try {
-      const { data, error } = await client.from('profiles').select('role').eq('id', user.id).maybeSingle();
-      if (error) throw error;
-      role = data?.role || 'client';
-    } catch (error) {
-      console.warn('Could not load account role after sign-in:', error.message);
-    }
-    if (next) {
-      if (role === 'admin' && (next.startsWith('/client-dashboard') || next.startsWith('/admin-portal') || next === '/?flow=services')) return '/admin-console.html';
-      if (role !== 'admin' && (next.startsWith('/admin-portal') || next.startsWith('/admin-console'))) return '/client-dashboard.html';
-      return next;
-    }
-    return role === 'admin' ? '/admin-console.html' : '/client-dashboard.html';
-  }
+  function postAuthPath() { return '/'; }
+
   const setMode = mode => {
     state.mode=mode; clearMessage();
     const login=mode==='login', signup=mode==='signup', reset=mode==='reset';
@@ -113,11 +91,7 @@
     button.setAttribute('aria-busy','true');
     if(label)label.textContent=`Connecting to ${providerName}…`;
     try{
-      try{
-        const next=safeNextPath();
-        if(next)sessionStorage.setItem('dwr-auth-next',next);
-        else sessionStorage.removeItem('dwr-auth-next');
-      }catch(_e){}
+      try{sessionStorage.removeItem('dwr-auth-next');}catch(_e){}
       const client=getClient();
       const {error}=await client.auth.signInWithOAuth({
         provider,
@@ -152,10 +126,10 @@
       if(state.mode==='login'){
         const {data,error}=await client.auth.signInWithPassword({email,password:pass});if(error)throw error;
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
-        showMessage('Signed in successfully. Opening your workspace…','success');location.assign(await postAuthPath(client,data.user));
+        showMessage('Signed in successfully. Returning to the homepage…','success');location.replace(postAuthPath());
       }else if(state.mode==='signup'){
         const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/auth.html'}});if(error)throw error;
-        if(data.session){showMessage('Your account is ready. Opening your workspace…','success');location.assign(await postAuthPath(client,data.user));}
+        if(data.session){showMessage('Your account is ready. Returning to the homepage…','success');location.replace(postAuthPath());}
         else{setMode('login');showMessage('Account created. Check your inbox for the email confirmation link, then return here to sign in.','success');}
       }else{
         const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/reset-password.html'});if(error)throw error;
