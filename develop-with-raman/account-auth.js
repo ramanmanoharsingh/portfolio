@@ -128,7 +128,7 @@
         if(!data.session)throw new Error('Your session could not be started. Please try again.');
         showMessage('Signed in successfully. Returning to the homepage…','success');location.replace(postAuthPath());
       }else if(state.mode==='signup'){
-        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/auth.html'}});if(error)throw error;
+        const {data,error}=await client.auth.signUp({email,password:pass,options:{data:{full_name:$('#auth-name').value.trim()},emailRedirectTo:location.origin+'/'}});if(error)throw error;
         if(data.session){showMessage('Your account is ready. Returning to the homepage…','success');location.replace(postAuthPath());}
         else{setMode('login');showMessage('Account created. Check your inbox for the email confirmation link, then return here to sign in.','success');}
       }else{
