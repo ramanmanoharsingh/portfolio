@@ -39,8 +39,8 @@
       console.warn('Could not load account role after sign-in:', error.message);
     }
     if (next) {
-      if (role === 'admin' && (next.startsWith('/client-dashboard') || next === '/?flow=services')) return '/admin-portal.html';
-      if (role !== 'admin' && next.startsWith('/admin-portal')) return '/client-dashboard.html';
+      if (role === 'admin' && (next.startsWith('/client-dashboard') || next.startsWith('/admin-portal') || next === '/?flow=services')) return '/admin-console.html';
+      if (role !== 'admin' && (next.startsWith('/admin-portal') || next.startsWith('/admin-console'))) return '/client-dashboard.html';
       return next;
     }
     return role === 'admin' ? '/admin-console.html' : '/client-dashboard.html';
