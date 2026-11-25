@@ -29,14 +29,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(error)throw error;
     if(!data.session){fail('No active session found','The sign-in link may have expired or the provider may not be configured. Return to sign in and try again.');return;}
     title.textContent='You’re signed in';
-    message.textContent='Taking you to your workspace…';
-    let role='client';
-    try{const {data:profile}=await window.supabaseClient.from('profiles').select('role').eq('id',data.session.user.id).maybeSingle();role=profile?.role||'client';}catch(_e){}
-    let next=null;
-    try{next=sessionStorage.getItem('dwr-auth-next');sessionStorage.removeItem('dwr-auth-next');}catch(_e){}
-    const safe=next&&next.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')&&!/^\/(?:auth|login)/i.test(next)?next:null;
-    let dest=role==='admin'?'/admin-console.html':'/client-dashboard.html';
-    if(safe){dest=(role==='admin'&&(safe.startsWith('/client-dashboard')||safe.startsWith('/admin-portal')))?'/admin-console.html':(role!=='admin'&&(safe.startsWith('/admin-portal')||safe.startsWith('/admin-console')))?'/client-dashboard.html':safe;}
-    location.replace(dest);
+    message.textContent='Returning to the homepage…';
+    try{sessionStorage.removeItem('dwr-auth-next');}catch(_e){}
+    location.replace('/');
   }catch(err){fail('Could not verify your session',err?.message||'Please return to sign in and try again.');}
 });
