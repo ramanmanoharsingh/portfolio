@@ -83,7 +83,11 @@ jobs:
           grep -q "queryParams.get('request')==='1'" develop-with-raman/client-portal.js
           grep -q "sb.from('proposals').insert(data)" develop-with-raman/client-portal.js
           grep -q "location.replace('/client-dashboard.html?submitted=1#requests')" develop-with-raman/client-portal.js
-          grep -Fq 'identityLink.href=activeUserRole==="admin"?"/admin-portal.html":"/client-dashboard.html";' develop-with-raman/index.html
+          grep -Fq 'dashboardLink.href=isAdmin?"/admin-console.html":"/client-dashboard.html";' develop-with-raman/index.html
+          grep -Fq 'dashboardLink.textContent=isAdmin?"Admin dashboard":"Client dashboard";' develop-with-raman/index.html
+          ! grep -q 'loadPortalTransform' develop-with-raman/index.html
+          ! grep -q 'DWRPortalTransform' develop-with-raman/index.html
+          ! grep -q 'id="nav-signout"' develop-with-raman/index.html
           grep -Fq "root.dataset.role==='admin'&&role!=='admin'" develop-with-raman/client-portal.js
           grep -Fq "root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'" develop-with-raman/client-portal.js
           grep -Fq "location.replace('/admin-console.html')" develop-with-raman/client-portal.js
@@ -119,7 +123,13 @@ jobs:
           grep -Fq "emailRedirectTo:location.origin+'/'" develop-with-raman/account-auth.js
           grep -Fq "message.textContent='Returning to the homepage…';" develop-with-raman/auth-callback.js
           grep -Fq "location.replace('/')" develop-with-raman/auth-callback.js
-          grep -Fq 'identityLink.href=activeUserRole==="admin"?"/admin-portal.html":"/client-dashboard.html";' develop-with-raman/index.html
+          grep -q 'auth-nav-section' develop-with-raman/topbar.css
+          grep -q 'account-dashboard-link' develop-with-raman/topbar.css
+          grep -Fq 'dashboardLink.href=isAdmin?"/admin-console.html":"/client-dashboard.html";' develop-with-raman/index.html
+          grep -Fq 'dashboardLink.textContent=isAdmin?"Admin dashboard":"Client dashboard";' develop-with-raman/index.html
+          ! grep -q 'loadPortalTransform' develop-with-raman/index.html
+          ! grep -q 'DWRPortalTransform' develop-with-raman/index.html
+          ! grep -q 'id="nav-signout"' develop-with-raman/index.html
           echo "Password sign-in, signup confirmation and OAuth return to the original homepage; the role-aware dashboard action stays in the homepage navigation."
 
       - name: Deep static UI and theme regression checks
