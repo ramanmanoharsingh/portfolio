@@ -145,10 +145,3 @@ body:not(.portal-body) :is(.hero,#hero,.hero-section,.home-hero,.hero-wrapper) :
   font-size:13px;
  }
 }
-
-/* Unified monogram lockup and responsive alignment */
-.site-topbar-brand,.brand,.portal-brand,.portal-header-brand,header.top#hd .wm{display:inline-flex;align-items:center;gap:10px;min-width:0}
-.site-topbar-brand:before,body>header.top:not(#hd) .brand:before,.portal-brand:before,.portal-header-brand:before,header.top#hd .wm:before{content:"";display:inline-block;flex:0 0 30px;width:30px;height:30px;background:#fff url('/logo.svg') center/contain no-repeat;border-radius:5px}
-.portal-brand:before{width:26px;height:26px;flex-basis:26px}
-.portal-brand span{min-width:0}
-@media(max-width:650px){.site-topbar-brand:before,body>header.top:not(#hd) .brand:before,.portal-brand:before,.portal-header-brand:before,header.top#hd .wm:before{width:26px;height:26px;flex-basis:26px}}
