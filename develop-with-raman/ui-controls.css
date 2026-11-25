@@ -157,3 +157,111 @@ html[data-theme="dark"] body[data-site-app="playmate-finder"] .player-card{backg
  button,.btn,.button,.top-action,.top-link,.portal-button,.portal-nav-button,.portal-tab,.auth-primary,.auth-social,.google,.icon-btn,.modal-close,.account-opt,.user-chip,.ud-item,.fc-geoloc,.search-clear,.clear-filters,.chip,.service-start{transition:none!important}
  button:hover:not(:disabled),.btn:hover,.button:hover,.top-action:hover,.top-link:hover,.portal-button:hover,.portal-nav-button:hover,.auth-primary:hover,.auth-social:hover,.google:hover,.icon-btn:hover,.modal-close:hover,.account-opt:hover,.user-chip:hover,.ud-item:hover,.fc-geoloc:hover,.search-clear:hover,.clear-filters:hover,.chip:hover,.service-start:hover{transform:none}
 }
+
+/* GREAT UNIFICATION — one site-wide type and control system.
+   Keep semantic colour variants, but share the same font, weight, geometry and feedback. */
+:root{
+  --site-font-body:"DM Sans",Arial,sans-serif;
+  --site-font-display:"Space Grotesk","DM Sans",Arial,sans-serif;
+  --site-control-radius:999px;
+  --site-control-height:42px;
+  --site-control-weight:600;
+}
+body.portal-body{
+  font-family:var(--site-font-body)!important;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+body.portal-body :is(h1,h2,h3,h4,h5,h6,.portal-title,.portal-brand,.portal-header-brand){
+  font-family:var(--site-font-display)!important;
+}
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"],
+.btn,
+.button,
+.top-action,
+.top-link,
+.portal-button,
+.portal-nav-button,
+.portal-tab,
+.auth-primary,
+.auth-social,
+.google,
+.icon-btn,
+.modal-close,
+.account-opt,
+.user-chip,
+.ud-item,
+.fc-geoloc,
+.search-clear,
+.clear-filters,
+.chip,
+.service-start{
+  font-family:var(--site-font-body)!important;
+  font-weight:var(--site-control-weight)!important;
+  letter-spacing:-.012em!important;
+  -webkit-font-smoothing:antialiased;
+}
+.btn,
+.button,
+.top-action,
+.top-link,
+.portal-button,
+.auth-primary,
+.auth-social,
+.google,
+.service-start,
+button[data-sign-out]:not(.site-topbar-signout),
+button[data-site-topbar-signout]{
+  box-sizing:border-box;
+  min-height:var(--site-control-height);
+  padding:0 18px;
+  border-radius:var(--site-control-radius)!important;
+  font-size:13px!important;
+  line-height:1.15;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  vertical-align:middle;
+}
+.portal-nav-button{
+  min-height:42px;
+  font-size:13px!important;
+  line-height:1.25;
+}
+html[data-theme="light"] body.portal-body button[data-sign-out]:not(.site-topbar-signout){
+  background:#171717!important;
+  color:#fff!important;
+  border:1px solid #171717!important;
+}
+html[data-theme="dark"] body.portal-body button[data-sign-out]:not(.site-topbar-signout){
+  background:#f1f2eb!important;
+  color:#171717!important;
+  border:1px solid #f1f2eb!important;
+}
+body.portal-body .site-topbar button[data-sign-out],
+body.portal-body .site-topbar button[data-site-topbar-signout]{
+  background:transparent!important;
+  color:#fff!important;
+  border:1px solid #555!important;
+}
+body.portal-body .site-topbar button[data-sign-out]:hover,
+body.portal-body .site-topbar button[data-site-topbar-signout]:hover{
+  background:#fff!important;
+  color:#080808!important;
+  border-color:#fff!important;
+}
+@media(max-width:650px){
+  .btn,.button,.top-action,.top-link,.portal-button,
+  .auth-primary,.auth-social,.google,.service-start,
+  button[data-sign-out]:not(.site-topbar-signout),
+  button[data-site-topbar-signout]{
+    min-height:40px;
+    padding:0 14px;
+    font-size:12px!important;
+  }
+}
