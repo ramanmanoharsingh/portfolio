@@ -21,14 +21,14 @@
       if(!profile){const {error}=await sb.from('profiles').insert({id:user.id,full_name:user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'',role:'client'});if(error)throw error;({data:profile,error:profileError}=await sb.from('profiles').select('*').eq('id',user.id).single());if(profileError)throw profileError;}
       const role=profile.role||'client';
       if(root.dataset.role==='admin'&&role!=='admin'){location.replace('/client-dashboard.html');return;}
-      if(root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'){location.replace('/admin-portal.html');return;}
+      if(root.dataset.role==='client'&&role==='admin'&&root.dataset.page!=='welcome'){location.replace('/admin-console.html');return;}
       // Profile settings are shared by clients and administrators; keep an admin's
       // navigation in the admin workspace instead of presenting client destinations.
       if(root.dataset.page==='profile'&&role==='admin'){
         const caption=$('.portal-brand span');
         if(caption)caption.textContent='Admin workspace';
         const nav=$('.portal-nav');
-        if(nav)nav.innerHTML='<a href="/admin-portal.html"><span>▦</span>Admin workspace</a><a class="active" href="/profile.html"><span>◉</span>My profile</a><a href="/" ><span>↗</span>View website</a>';
+        if(nav)nav.innerHTML='<a href="/admin-console.html"><span>▦</span>Admin dashboard</a><a class="active" href="/profile.html"><span>◉</span>My profile</a>';
       }
       const name=profile.full_name||user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split('@')[0]||'there';
       const topbarIdentity=$('[data-site-topbar-identity]');if(topbarIdentity)topbarIdentity.hidden=false;
@@ -37,7 +37,7 @@
       document.querySelectorAll('[data-user-email]').forEach(e=>{if('value' in e)e.value=user.email||'';else e.textContent=user.email||'';});
       document.querySelectorAll('[data-user-avatar]').forEach(e=>{if(safeUrl(profile.avatar_url)){const img=document.createElement('img');img.alt='';img.referrerPolicy='no-referrer';img.src=safeUrl(profile.avatar_url);e.replaceChildren(img);}else e.textContent=(name.trim()[0]||'U').toUpperCase();});
       document.querySelectorAll('[data-sign-out]').forEach(button=>{if(button.dataset.signOutBound==='true')return;button.dataset.signOutBound='true';button.addEventListener('click',async()=>{if(button.disabled)return;button.disabled=true;try{const {error}=await sb.auth.signOut();if(error)throw error;location.replace('/auth.html');}catch(signOutError){toast(signOutError?.message||'Could not sign out. Please try again.',true);button.disabled=false;}});});
-      if(root.dataset.page==='welcome'){if(role==='admin'){location.replace('/admin-portal.html');return;}document.querySelectorAll('[data-dashboard-link]').forEach(a=>a.href='/client-dashboard.html');return;}
+      if(root.dataset.page==='welcome'){if(role==='admin'){location.replace('/admin-console.html');return;}document.querySelectorAll('[data-dashboard-link]').forEach(a=>a.href='/client-dashboard.html');return;}
       if(root.dataset.page==='profile'){await setupProfile(sb,user,profile,name);return;}
       if(root.dataset.page==='dashboard'){await setupDashboard(sb,user);return;}
     }catch(error){console.error('[client portal]',error);const el=$('[data-error-message]');if(el){el.hidden=false;el.textContent='We could not load your account: '+(error.message||'Unknown error')+'.';}else toast(error.message||'Unable to load account.',true);}
