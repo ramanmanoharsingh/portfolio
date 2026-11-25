@@ -87,3 +87,30 @@ a.metric-card{display:block;color:inherit}a.metric-card:hover{border-color:var(-
     min-height:40px;
   }
 }
+
+/* On narrow screens the full admin section list becomes a horizontal, keyboard-scrollable tab rail. */
+@media(max-width:850px){
+  .portal-nav{
+    display:flex;
+    flex-wrap:nowrap;
+    gap:6px;
+    max-width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:2px 2px 8px;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .portal-nav a{
+    flex:0 0 auto;
+    white-space:nowrap;
+    padding:10px 12px;
+  }
+  .portal-nav a span{width:auto;margin-right:6px}
+}
+@media(max-width:650px){
+  .portal-sidebar{min-width:0}
+  .portal-sidebar-bottom{display:flex!important;justify-content:flex-end}
+  .portal-sidebar-bottom>*{width:auto;max-width:100%;flex:0 1 auto}
+}
