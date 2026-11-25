@@ -567,7 +567,7 @@
     if (profileError) { stop('We could not verify administrator access. Please refresh and try again.'); return; }
     if (profile?.role !== 'admin') { location.replace('/client-dashboard.html'); return; }
 
-    $('[data-sign-out]').addEventListener('click', async () => { const { error } = await S.sb.auth.signOut(); if (error) { toast(error.message, true); return; } location.replace('/auth.html'); });
+    $('[data-sign-out]').addEventListener('click', async () => { const { error } = await S.sb.auth.signOut(); if (error) { toast(error.message, true); return; } location.replace('/'); });
     $('[data-refresh]').addEventListener('click', refresh);
     const bell = $('[data-bell]'), panel = $('[data-bell-panel]');
     bell.addEventListener('click', async () => { panel.hidden = !panel.hidden; bell.setAttribute('aria-expanded', String(!panel.hidden)); if (!panel.hidden) await loadBell(); });
